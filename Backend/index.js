@@ -13,6 +13,27 @@ const io = new Server(server, {
   },
 });
 
+const busLocations = {};
+
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+
+  socket.emit("initialLocations", busLocations);
+
+  socket.on("setLocation", (data) => {
+    const { busId, latitude, longitude } = data;
+    console.log("location", busId, latitude, longitude);
+    
+    busLocations[busId] = { latitude, longitude };
+
+    io.emit("getLocation", { busId, latitude, longitude });
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 
