@@ -1,10 +1,13 @@
 require("dotenv").config();
+require("./db/mongodb");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const { Server } = require("socket.io");
 const http = require("http");
+const router = require("./routes/_index.routes");
+const errorHandler = require("./middlewares/errorHandler");
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -23,7 +26,7 @@ io.on("connection", (socket) => {
   socket.on("setLocation", (data) => {
     const { busId, latitude, longitude } = data;
     console.log("location", busId, latitude, longitude);
-    
+
     busLocations[busId] = { latitude, longitude };
 
     io.emit("getLocation", { busId, latitude, longitude });
@@ -36,7 +39,9 @@ io.on("connection", (socket) => {
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use("/auth", router);
+app.use("/public", router);
+app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
