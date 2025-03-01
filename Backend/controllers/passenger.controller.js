@@ -1,5 +1,5 @@
 const Passenger = require("../models/passenger");
-const AppError = require("../utils/AppError");
+const AppError = require("../utils/appError");
 
 // passenger register
 const registerPassenger = async (req, res, next) => {
@@ -56,6 +56,9 @@ const updatePassenger = async (req, res, next) => {
     }
 
     const passenger = await Passenger.findByIdAndUpdate(req.body.id, req.body);
+    if (!passenger) {
+      return next(new AppError(404, "No passenger found"));
+    }
     passenger.save();
 
     const { _id: id, username, mobile, email, address } = passenger;

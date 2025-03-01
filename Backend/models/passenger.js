@@ -50,7 +50,7 @@ passengerSchema.pre("save", async function (next) {
   next();
 });
 
-passengerSchema.static.findByCredentials = async (email, password) => {
+passengerSchema.statics.findByCredentials = async (email, password) => {
   const passenger = await Passenger.findOne({ email });
   if (!passenger) {
     const error = new Error("User not found");
@@ -65,6 +65,8 @@ passengerSchema.static.findByCredentials = async (email, password) => {
     error.statusCode = 401;
     throw error;
   }
+
+  return passenger;
 };
 
 passengerSchema.methods.generateAuthToken = async function () {
