@@ -12,14 +12,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 50px;
   background-image: url("../../assets/images/image-bg.png");
   background-size: cover;
   color: #fff;
-  border-radius:0px 50px 50px 0px;
+  /* border-radius:0px 50px 50px 0px; */
 }
 .login-left img {
-  width: 300px;
+  width: 250px;
   opacity: 0; 
   animation: fadeIn 1.5s ease-in-out forwards;
 }

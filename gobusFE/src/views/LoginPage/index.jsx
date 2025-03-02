@@ -6,9 +6,61 @@ import logo from "../../assets/images/white-logo.png";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 
 import "./style.css";
+import { notification } from "antd";
+import { login } from "../../apis/userAPIs";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [inputErr, setInputErr] = useState({
+    email: false,
+    password: false,
+  });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleInput = (field) => (e) => {
+    setInputErr({ ...inputErr, [field]: false });
+    setCredentials({ ...credentials, [field]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!credentials.email && !credentials.password) {
+        setInputErr({ ...inputErr, email: true, password: true });
+        notification.error({
+          message: "Required email and password",
+        });
+        return;
+      } else if (!credentials.email) {
+        setInputErr({ ...inputErr, email: true });
+        notification.error({
+          message: "Required email",
+        });
+        return;
+      } else if (!credentials.password) {
+        setInputErr({ ...inputErr, password: true });
+        notification.error({
+          message: "Required password",
+        });
+        return;
+      }
+
+      setIsLoading(true);
+
+      const { data, code, msg } = await login(credentials);
+      console.log(data, code, msg);
+      setIsLoading(false);
+    } catch (error) {
+      // console.log(error);
+      setIsLoading(false);
+      notification.error({
+        message: error.response.data.msg || "Something went wrong", 
+      });
+    }
+  };
+
   return (
     <div className="login-page">
       <div className="login-left">
@@ -31,12 +83,18 @@ export default function LoginPage() {
                 prefix={<MailOutlined />}
                 placeholder="example@gmail.com"
                 type="email"
+                value={credentials.email}
+                onChange={handleInput("email")}
+                error={inputErr.email}
               />
               <MyInput
                 label="Password"
                 prefix={<LockOutlined />}
                 placeholder="******"
                 type="password"
+                value={credentials.password}
+                onChange={handleInput("password")}
+                error={inputErr.password}
               />
               <section className="remember-me">
                 <section>
@@ -54,7 +112,7 @@ export default function LoginPage() {
                 color={"#05944F"}
                 width={200}
                 loading={isLoading}
-                onClick={() => setIsLoading(!isLoading)}
+                onClick={handleSubmit}
               />
             </div>
           </div>
