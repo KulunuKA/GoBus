@@ -1,13 +1,12 @@
-import { useState } from "react";
 import "./App.css";
-import LiveLocationTracker from "./components/LiveLocationTracker";
+import LoginPage from "./views/LoginPage";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-
   return (
-    <>
-      <LiveLocationTracker />
-    </>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
   );
 }
 
