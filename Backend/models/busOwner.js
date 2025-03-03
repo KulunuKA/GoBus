@@ -11,7 +11,6 @@ const busOwnerSchema = new mongoose.Schema({
     type: String,
     default:
       "https://th.bing.com/th/id/OIP.hGSCbXlcOjL_9mmzerqAbQHaHa?rs=1&pid=ImgDetMain",
-    required: true,
   },
   email: {
     type: String,
@@ -61,11 +60,8 @@ const busOwnerSchema = new mongoose.Schema({
 busOwnerSchema.pre("save", async function (next) {
   const busOwner = this;
 
-  if (busOwner.isModified("authorityPassword")) {
-    busOwner.authorityPassword = await bcrypt.hash(
-      busOwner.authorityPassword,
-      8
-    );
+  if (busOwner.isModified("password")) {
+    busOwner.password = await bcrypt.hash(busOwner.password, 8);
   }
 
   next();

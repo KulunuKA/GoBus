@@ -15,6 +15,7 @@ export default function MyButton({
 }) {
   return (
     <Button
+      htmlType="submit"
       type="primary"
       shape="round"
       size={size}

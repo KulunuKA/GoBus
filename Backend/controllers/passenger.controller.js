@@ -4,14 +4,14 @@ const AppError = require("../utils/appError");
 // passenger register
 const registerPassenger = async (req, res, next) => {
   try {
-    if (!req.body.username || !req.body.address || !req.body.mobile) {
+    if (!req.body.username || !req.body.mobile) {
       return next(new AppError(400, "Invalid required fields"));
     }
 
     const passenger = new Passenger(req.body);
     await passenger.save();
 
-    const { _id: id, username, mobile, email, address } = passenger;
+    const { _id: id, username, mobile, email } = passenger;
     const token = await passenger.generateAuthToken();
 
     return res.status(200).send({
@@ -20,7 +20,6 @@ const registerPassenger = async (req, res, next) => {
         username,
         mobile,
         email,
-        address,
         token,
       },
       code: 0,
@@ -46,7 +45,7 @@ const registerPassenger = async (req, res, next) => {
 const updatePassenger = async (req, res, next) => {
   try {
     const updates = Object.keys(req.body);
-    const allowedUpdates = ["username", "email", "address", "mobile"];
+    const allowedUpdates = ["username", "email",  "mobile"];
     const isValidOperation = allowedUpdates.every(() => {
       allowedUpdates.includes(updates);
     });
@@ -61,14 +60,13 @@ const updatePassenger = async (req, res, next) => {
     }
     passenger.save();
 
-    const { _id: id, username, mobile, email, address } = passenger;
+    const { _id: id, username, mobile, email } = passenger;
     res.status(200).send({
       data: {
         id,
         username,
         mobile,
         email,
-        address,
       },
       code: 0,
       msg: "updated",
@@ -82,14 +80,13 @@ const updatePassenger = async (req, res, next) => {
 const deletePassenger = async (req, res, next) => {
   try {
     const passenger = await Passenger.findByIdAndDelete(req.params.id);
-    const { _id: id, username, mobile, email, address } = passenger;
+    const { _id: id, username, mobile, email } = passenger;
     res.status(200).send({
       data: {
         id,
         username,
         mobile,
         email,
-        address,
       },
       code: 0,
       msg: "deleted",

@@ -8,6 +8,7 @@ import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import "./style.css";
 import { notification } from "antd";
 import { login } from "../../apis/userAPIs";
+import SignUp_Popup from "../../components/LoginSignUpModal/LoginSignUpModal";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+  const [isRegister, setIsRegister] = useState(false);
 
   const handleInput = (field) => (e) => {
     setInputErr({ ...inputErr, [field]: false });
@@ -56,7 +58,7 @@ export default function LoginPage() {
       // console.log(error);
       setIsLoading(false);
       notification.error({
-        message: error.response.data.msg || "Something went wrong", 
+        message: error.response.data.msg || "Something went wrong",
       });
     }
   };
@@ -126,12 +128,26 @@ export default function LoginPage() {
             <section className="sign-up-link">
               <p>
                 Don't have an account?
-                <span> Sign up </span>
+                <span
+                  onClick={() => {
+                    setIsRegister(true);
+                  }}
+                >
+                  {" "}
+                  Sign up{" "}
+                </span>
               </p>
             </section>
           </div>
         </div>
       </div>
+
+      {isRegister && (
+        <SignUp_Popup
+          isOpen={isRegister}
+          isCancel={() => setIsRegister(false)}
+        />
+      )}
     </div>
   );
 }

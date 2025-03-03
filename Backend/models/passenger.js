@@ -11,6 +11,7 @@ const passengerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  //TODO: email should be unique both of Passenger and BusOwner
   email: {
     type: String,
     required: true,
@@ -21,15 +22,11 @@ const passengerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
   mobile: {
-    type: Number,
+    type: String,
     unique: true,
-    min: 1000000000,
-    max: 9999999999,
+    min: 10,
+    max: 10,
   },
   tokens: [
     {
