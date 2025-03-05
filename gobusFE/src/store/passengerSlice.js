@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   info: {
-    role: "Passenger",
+    role: "",
     username: "",
     email: "",
     address: "",
@@ -22,4 +22,5 @@ const passengerSlice = createSlice({
 });
 
 export const { setPassengerInfo } = passengerSlice.actions;
+export const passengerData = (state) => state.passenger.info;
 export default passengerSlice.reducer;

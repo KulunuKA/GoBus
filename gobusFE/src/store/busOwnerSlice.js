@@ -25,4 +25,5 @@ const busOwnerSlice = createSlice({
 });
 
 export const { setUserInfo } = busOwnerSlice.actions;
+export const busOwnerData = (state) => state.busOwner.info;
 export default busOwnerSlice.reducer;

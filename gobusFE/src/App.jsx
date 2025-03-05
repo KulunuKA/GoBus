@@ -8,6 +8,7 @@ import MyRoutes from "./views/Route/index";
 import BusOwnerLayout from "./components/Layouts/BusOwner";
 import Bus from "./views/Bus";
 import Employee from "./views/Employee";
+import RequireAuth from "./route/RequireAuth";
 
 function App() {
   return (
@@ -17,11 +18,13 @@ function App() {
       <Route path="/home" element={<Home />} />
 
       {/* Bus Owner routes */}
-      <Route path="/busowner" element={<BusOwnerLayout />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="bus" element={<Bus />} />
-        <Route path="route" element={<MyRoutes />} />
-        <Route path="employee" element={<Employee />} />
+      <Route element={<RequireAuth allowedRole={"BusOwner"} />}>
+        <Route path="/busowner" element={<BusOwnerLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="bus" element={<Bus />} />
+          <Route path="route" element={<MyRoutes />} />
+          <Route path="employee" element={<Employee />} />
+        </Route>
       </Route>
     </Routes>
   );

@@ -9,9 +9,11 @@ const addBus = async (req, res, next) => {
       !req.body.name ||
       !req.body.busNumber ||
       !req.body.password ||
-      !req.body.picture ||
+      !req.body.pictures ||
       !req.body.seatNumber ||
-      !req.body.busType
+      !req.body.busType ||
+      !req.body.district ||
+      !req.body.city
     ) {
       return next(new AppError(400, "Invalid required fields"));
     }
@@ -36,22 +38,6 @@ const addBus = async (req, res, next) => {
 const updateBus = async (req, res, next) => {
   try {
     const updates = Object.keys(req.body);
-    const allowedUpdates = [
-      "name",
-      "busNumber",
-      "password",
-      "picture",
-      "seatNumber",
-      "busType",
-      "driverID",
-    ];
-    const isValidOperation = allowedUpdates.every(() => {
-      allowedUpdates.includes(updates);
-    });
-
-    if (!isValidOperation) {
-      return next(new AppError(400, "Invalid updates"));
-    }
 
     const bus = await Bus.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -87,11 +73,29 @@ const deleteBus = async (req, res, next) => {
     res.status(200).send({
       data: {},
       code: 0,
-      msg: "deleted",
+      msg: "Bus deleted",
     });
   } catch (error) {
     next(new AppError(400, "Server error"));
   }
 };
 
-module.exports = { addBus, updateBus, deleteBus };
+//get buses by owner id
+const getBuses = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next(new AppError(400, "Invalid owner id"));
+    }
+    const buses = await Bus.find({ ownerID: req.params.id });
+
+    res.status(200).send({
+      data: buses,
+      code: 0,
+      msg: "Get buses",
+    });
+  } catch (error) {
+    next(new AppError(500, "Server error"));
+  }
+};
+
+module.exports = { addBus, updateBus, deleteBus, getBuses };

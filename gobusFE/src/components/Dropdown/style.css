@@ -1,0 +1,30 @@
+
+.ant-select-selection-item {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    font-family: Outfit !important;
+    color: rgba(104, 88, 121, 1) !important;
+  }
+  
+
+.dropdown.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 26px !important;
+  border: rgba(179, 171, 188, 1) solid 1px !important;
+  font-family: outfit;
+}
+
+.dropdown.ant-select .ant-select-selection-placeholder {
+  flex: none;
+}
+.dropdown.ant-select .ant-select-selection-item {
+  float: none;
+}
+.dropdown.ant-select .ant-select-selection-item {
+  flex: none;
+  padding-left: 10px;
+}
+@media (max-width: 768px) {
+  .dropdown {
+    width: 100% !important;
+  }
+}

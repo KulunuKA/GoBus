@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/images/logo-color.png";
 import { Modal } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { MdDashboard, MdOutlineRoute } from "react-icons/md";
 import { FaBusAlt } from "react-icons/fa";
@@ -11,9 +11,11 @@ import { ExclamationCircleFilled, LogoutOutlined } from "@ant-design/icons";
 
 import "./style.css";
 import MyButton from "../button";
+import { busOwnerData } from "../../store/busOwnerSlice";
 
 export default function SideBar() {
   const [tab, setTab] = useState("dashboard");
+  const busOwnerRedux = useSelector(busOwnerData);
   const tablist = [
     {
       name: "dashboard",
@@ -58,19 +60,15 @@ export default function SideBar() {
     const path = window.location.pathname.split("/")[2];
     setTab(path);
   }, []);
+  
   return (
     <div className="sidebar">
       <img src={logo} alt="" className="s-logo" />
       <div className="profile">
-        <img
-          src={
-            "https://th.bing.com/th/id/OIP.danQ-kcNz6YPKVOldldA5wHaFX?rs=1&pid=ImgDetMain"
-          }
-          alt=""
-        />
+        <img src={busOwnerRedux.logo} alt="Logo" />
         <section>
-          <h3>NCG Express</h3>
-          <p>ncg@gmail.com</p>
+          <h3>{busOwnerRedux.authorityName}</h3>
+          <p>{busOwnerRedux.email}</p>
         </section>
       </div>
       <div className="tabs">

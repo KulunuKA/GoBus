@@ -77,7 +77,7 @@ export default function BusOwner() {
 
       if (code === 0) {
         dispatch(setUserInfo(data));
-        navigate("/dashboard");
+        navigate("/busowner/dashboard");
       }
       setIsLoading(false);
     } catch (error) {
