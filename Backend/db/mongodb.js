@@ -5,7 +5,6 @@ mongoose.connect(mongodbURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 const connection = mongoose.connection;
 
 connection.on("error", console.error.bind(console, "connection error:"));

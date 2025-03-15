@@ -1,6 +1,4 @@
 import React from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
 import "./style.css";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import storelogo from "../../assets/images/storelogo.png";
@@ -34,8 +32,6 @@ const stepsData = [
 export default function Home() {
   return (
     <>
-      <Navbar />
-
       <section className="hero-section">
         <div className="hero-section-container sec-container">
           <div className="hero-text">
@@ -137,7 +133,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer />
     </>
   );
 }

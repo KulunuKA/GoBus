@@ -2,9 +2,16 @@ import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import logo from "../../assets/images/logo-no-background.png";
 import "./style.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { passengerData } from "../../store/passengerSlice";
+import { busOwnerData } from "../../store/busOwnerSlice";
 
 export default function Navbar() {
   const [isBusinessOpen, setIsBusinessOpen] = useState(false);
+  const passengerRedux = useSelector(passengerData);
+  const busOwnerRedux = useSelector(busOwnerData);
+
+  const role = passengerRedux?.role || busOwnerRedux?.role;
 
   return (
     <nav className="navbar">
@@ -61,9 +68,15 @@ export default function Navbar() {
             Help
           </a>
           <div className="dropdown">
-            <button className="user-button">
-              User <DownOutlined className="dropdown-icon" />
-            </button>
+            {role ? (
+              <button className="user-button">
+                User <DownOutlined className="dropdown-icon" />
+              </button>
+            ) : (
+              <a href="/login" className="nav-link">
+                Sign in
+              </a>
+            )}
           </div>
         </div>
       </div>

@@ -9,13 +9,16 @@ import BusOwnerLayout from "./components/Layouts/BusOwner";
 import Bus from "./views/Bus";
 import Employee from "./views/Employee";
 import RequireAuth from "./route/RequireAuth";
+import PassengerLayout from "./components/Layouts/PassengerLayout";
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register/:role" element={<Register />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<PassengerLayout />}>
+        <Route path="/" element={<Home />} />
+      </Route>
 
       {/* Bus Owner routes */}
       <Route element={<RequireAuth allowedRole={"BusOwner"} />}>
