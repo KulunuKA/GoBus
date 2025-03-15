@@ -1,7 +1,8 @@
 const Employee = require("../models/employee");
+const BusOwner = require("../models/busOwner");
 const AppError = require("../utils/appError");
 
-const addEmployee = async (res, req, next) => {
+const addEmployee = async (req, res, next) => {
   try {
     if (
       !req.body.ownerID ||
@@ -12,8 +13,13 @@ const addEmployee = async (res, req, next) => {
     ) {
       return next(new AppError(400, "Invalid required fields"));
     }
+    const ownerID = req.body.ownerID || req.user?.id;
 
-    //TODO: want check have owner
+    const checkOwner = await BusOwner.findOne({ _id: ownerID });
+
+    if (!checkOwner) {
+      return next(new AppError(404, "No owner found with that ID"));
+    }
 
     const employee = await Employee.create(req.body);
 
@@ -22,7 +28,7 @@ const addEmployee = async (res, req, next) => {
         employee,
       },
       code: 0,
-      msg: "Added",
+      msg: "Added employee successfully",
     });
   } catch (error) {
     next(new AppError(400, error.message));
@@ -30,7 +36,6 @@ const addEmployee = async (res, req, next) => {
 };
 
 //delete employee
-//TODO:update bus owner
 const deleteEmployee = async (req, res, next) => {
   try {
     const employee = await Employee.findByIdAndDelete(req.params.id);
@@ -38,7 +43,7 @@ const deleteEmployee = async (req, res, next) => {
       return next(new AppError(404, "No employee found with that ID"));
     }
 
-    res.status(204).send({
+    res.status(200).send({
       msg: "delete employee successfully",
       data: null,
       code: 0,
@@ -91,9 +96,7 @@ const getAllEmployeeByOwner = async (req, res, next) => {
     const employees = await Employee.find({ ownerID });
 
     res.status(200).send({
-      data: {
-        employees,
-      },
+      data: employees,
       code: 0,
       msg: "",
     });

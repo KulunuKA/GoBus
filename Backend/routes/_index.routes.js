@@ -13,6 +13,6 @@ router.use("/passenger", PassengerRouter);
 router.use("/bus", BusRouter);
 router.use("/feedback", FeedbackRouter);
 router.use("/employee", EmployeeRouter);
-router.use("/busOwner", BusOwnerRouter);
+router.use("/busowner", BusOwnerRouter);
 
 module.exports = router;

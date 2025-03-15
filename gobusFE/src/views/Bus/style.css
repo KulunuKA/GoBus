@@ -1,0 +1,79 @@
+/* General Page Styling */
+.bus-header {
+  text-align: left;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+/* Body Styling */
+.bus-body {
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.bus-body-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+.bus-body-header div {
+  width: 300px;
+}
+
+/* Table Styling */
+.center-content {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Headers */
+th {
+  background-color: #f5f5f5;
+  color: #2d3436;
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+}
+
+/* Table Rows */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.bus-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+tr:hover {
+  background-color: #f0f0f0;
+}
+
+.bnd{
+    margin-right: 10px;
+}

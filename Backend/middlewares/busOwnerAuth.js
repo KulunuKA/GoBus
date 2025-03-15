@@ -16,6 +16,8 @@ const busOwnerAuth = async (req, res, next) => {
     }
 
     req.busOwner = busOwner;
+    next();
+    
   } catch (error) {
     res.status(403).send({
       data: {},

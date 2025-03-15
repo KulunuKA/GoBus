@@ -4,11 +4,14 @@ import MyButton from "../../components/button";
 import googleLogo from "../../assets/images/google-logo.png";
 import logo from "../../assets/images/white-logo.png";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-
 import "./style.css";
 import { notification } from "antd";
 import { login } from "../../apis/userAPIs";
 import SignUp_Popup from "../../components/LoginSignUpModal/LoginSignUpModal";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setUserInfo } from "../../store/busOwnerSlice";
+import { setPassengerInfo } from "../../store/passengerSlice";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +24,8 @@ export default function LoginPage() {
     password: "",
   });
   const [isRegister, setIsRegister] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleInput = (field) => (e) => {
     setInputErr({ ...inputErr, [field]: false });
@@ -53,12 +58,21 @@ export default function LoginPage() {
 
       const { data, code, msg } = await login(credentials);
       console.log(data, code, msg);
+      if (code === 0) {
+        if (data.role === "BusOwner") {
+          dispatch(setUserInfo(data));
+          navigate("/busowner/dashboard");
+        } else if (data.role === "Passenger") {
+          dispatch(setPassengerInfo(data));
+          navigate("/home");
+        }
+      }
       setIsLoading(false);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       setIsLoading(false);
       notification.error({
-        message: error.response.data.msg || "Something went wrong",
+        message: error?.response?.data?.msg || "Something went wrong",
       });
     }
   };

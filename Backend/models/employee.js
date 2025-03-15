@@ -28,5 +28,25 @@ const employeeSchema = new mongoose.Schema({
   },
 });
 
+employeeSchema.post("save", async function (doc, next) {
+  try {
+    await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
+      $addToSet: { employeesId: doc._id },
+    });
+    next();
+  } catch (error) {}
+});
+
+employeeSchema.post("deleteOne", async function (doc, next) {
+  try {
+    await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
+      $pull: { employeesId: doc._id },
+    });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 const Employee = mongoose.model("Employee", employeeSchema);
 module.exports = Employee;
