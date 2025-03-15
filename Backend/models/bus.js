@@ -48,6 +48,10 @@ const busSchema = new mongoose.Schema({
     ref: "Employee",
     default: null,
   },
+  start_trip: {
+    type: Boolean,
+    default: false,
+  },
   tripID: [
     {
       id: {

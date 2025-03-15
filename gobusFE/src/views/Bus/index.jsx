@@ -18,6 +18,7 @@ import Loading from "../../components/Loading";
 import EmptyDataMessage from "../../components/EmptyDataMessage";
 import ErrorMessage from "../../components/ErrorMessage";
 import BusUpdateForm from "../../components/BusUpdateForm";
+import BusDetails from "../../components/BusDetails";
 
 export default function Bus() {
   const [isAdd, setIsAdd] = useState(false);
@@ -29,6 +30,8 @@ export default function Bus() {
   const [searchText, setSearchText] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
   const [selectedBus, setSelectedBus] = useState(null);
+  const [view, setView] = useState(false);
+  const [selectedBusDetails, setSelectedBusDetails] = useState(null);
 
   const fetchBuses = async () => {
     try {
@@ -102,7 +105,7 @@ export default function Bus() {
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody onClick={() => setView(!view)}>
             {loading ? (
               <tr>
                 <td colSpan="6" className="center-content">
@@ -125,7 +128,7 @@ export default function Bus() {
               buses
                 .filter((e) => e.busNumber.includes(searchText))
                 .map((bus, index) => (
-                  <tr key={bus._id}>
+                  <tr key={bus._id} onClick={() => setSelectedBusDetails(bus)}>
                     <td>
                       <img src={bus?.pictures[0]} className="bus-pic" />
                     </td>
@@ -141,7 +144,8 @@ export default function Bus() {
                         color={"#3498db"}
                         icon={<EditOutlined />}
                         mt={10}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSelectedBus(bus);
                           setIsUpdate(true);
                         }}
@@ -150,7 +154,8 @@ export default function Bus() {
                         name="Delete"
                         color={"#e74c3c"}
                         icon={<DeleteOutlined />}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           confirm({
                             title: "Do you want to delete this bus?",
                             icon: <ExclamationCircleFilled />,
@@ -194,6 +199,14 @@ export default function Bus() {
           refresh={() => {
             fetchBuses();
           }}
+        />
+      )}
+
+      {view && (
+        <BusDetails
+          isOpen={view}
+          onClose={() => setView(!view)}
+          bus={selectedBusDetails}
         />
       )}
     </div>

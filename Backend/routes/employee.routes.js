@@ -8,7 +8,7 @@ const {
 } = require("../controllers/employee.controller");
 const busOwnerAuth = require("../middlewares/busOwnerAuth");
 
-EmployeeRouter.post("/create", busOwnerAuth, addEmployee);
+EmployeeRouter.post("/add", busOwnerAuth, addEmployee);
 EmployeeRouter.get("/get/:id", busOwnerAuth, getAllEmployeeByOwner);
 EmployeeRouter.put("/update/:id", busOwnerAuth, updateEmployee);
 EmployeeRouter.delete("/delete/:id", busOwnerAuth, deleteEmployee);
