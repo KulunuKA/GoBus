@@ -10,6 +10,8 @@ import Bus from "./views/Bus";
 import Employee from "./views/Employee";
 import RequireAuth from "./route/RequireAuth";
 import PassengerLayout from "./components/Layouts/PassengerLayout";
+import Special from "./views/SpecialTripPage/Index";
+import UserAccount from "./components/UserAccount/index";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Route path="/register/:role" element={<Register />} />
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/special" element={<Special />} />
+        <Route path="/userProfile/*" element={<UserAccount />} />
       </Route>
 
       {/* Bus Owner routes */}

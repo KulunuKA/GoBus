@@ -1,0 +1,149 @@
+.special-topic-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.special-topic-section h1 {
+  color: #2d3436;
+  font-size: 40px;
+}
+
+.special-image-section {
+  width: 100%;
+  height: 45vh;
+  background-image: url(../../assets/images/specilatripbus.jpg);
+  background-position: 20% 26%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.special-menu-bar-section {
+  width: 100%;
+  margin-top: -70px;
+  margin-bottom: -20px;
+}
+
+.special-main-container {
+  width: 90%;
+  margin: auto;
+  z-index: 1000;
+}
+
+.special-menu-bar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid #f5f5f5;
+  padding: 20px 20px 20px 20px;
+  gap: 15px;
+}
+
+.special-menu-bar-title {
+  color: #2d3436;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.special-menu-bar-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.special-search-bar {
+  width: 50%;
+}
+
+.special-filters-section {
+  width: 35%;
+  display: flex;
+  gap: 10px;
+}
+
+.special-btn-section {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.special-features-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.feature-box {
+  width: 30%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  text-align: center;
+}
+
+.feature-icon-box {
+  width: 100px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon-box img {
+  width: 32px;
+}
+
+.features-text-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  text-align: center;
+}
+
+.feature-description {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.feature-title {
+  font-size: 20px;
+  color: #2d3436;
+  font-weight: 600;
+}
+
+.special-result-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+}
+
+.special-result-topic h2 {
+  color: #2d3436;
+  font-size: 25px;
+}
+
+.special-results {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding: 20px;
+}
+
+.special-result {
+  padding: 15px;
+  border-radius: 8px;
+}

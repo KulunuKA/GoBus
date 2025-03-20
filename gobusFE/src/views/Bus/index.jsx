@@ -85,6 +85,7 @@ export default function Bus() {
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              borderRadius="30px"
             />
           </div>
           <MyButton

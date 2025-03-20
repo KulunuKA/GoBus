@@ -60,7 +60,7 @@ export default function SideBar() {
     const path = window.location.pathname.split("/")[2];
     setTab(path);
   }, []);
-  
+
   return (
     <div className="sidebar">
       <img src={logo} alt="" className="s-logo" />

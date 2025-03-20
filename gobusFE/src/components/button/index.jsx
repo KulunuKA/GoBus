@@ -12,7 +12,7 @@ export default function MyButton({
   ghost,
   color,
   width,
-  mt
+  mt,
 }) {
   return (
     <Button
@@ -27,7 +27,7 @@ export default function MyButton({
       danger={danger}
       ghost={ghost}
       style={{
-        marginRight:mt,
+        marginRight: mt,
         backgroundColor: color,
         width: width,
         color: "white",

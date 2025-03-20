@@ -1,0 +1,21 @@
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  gap: 20px;
+}
+
+.account-sidebar-tabs ul li {
+  list-style: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 400;
+  color: #2D3436;
+  border-left: 6px solid #fff;
+}
+
+.account-sidebar-tabs ul li.active {
+  border-left: 6px solid #05944f;
+  background-color: #e0e0e0;
+}

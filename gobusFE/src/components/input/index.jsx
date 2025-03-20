@@ -9,6 +9,7 @@ export default function MyInput({
   label,
   prefix,
   error = false,
+  borderRadius,
 }) {
   const inputStyles = {
     width: "100%",
@@ -35,7 +36,7 @@ export default function MyInput({
         prefix={prefix}
         style={{
           backgroundColor: "#F1EFEF",
-          borderRadius: "30px",
+          borderRadius: borderRadius,
           borderColor: error ? "red" : undefined,
         }}
       />
