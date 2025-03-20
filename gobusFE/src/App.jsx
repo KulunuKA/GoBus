@@ -11,7 +11,7 @@ import Employee from "./views/Employee";
 import RequireAuth from "./route/RequireAuth";
 import PassengerLayout from "./components/Layouts/PassengerLayout";
 import Special from "./views/SpecialTripPage/Index";
-import UserAccount from "./components/UserAccount/index";
+import UserAccount from "./views/UserAccount";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
-        <Route path="/userProfile/*" element={<UserAccount />} />
+        <Route path="/userProfile/" element={<UserAccount />} />
       </Route>
 
       {/* Bus Owner routes */}

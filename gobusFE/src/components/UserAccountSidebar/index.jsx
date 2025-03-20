@@ -1,38 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./style.css";
-import { useNavigate } from "react-router-dom";
+import { useHashTab } from "../../hooks/useHashTab.js";
 
 export default function UserAccountSidebar() {
-  const [selectedTab, setSelectedTab] = useState("user");
+  const activatedTab = useHashTab("user");
 
-  const navigate = useNavigate();
   const tablist = [
     {
       name: "user",
       title: "Home",
-      query: "user",
     },
     {
       name: "account",
       title: "Personal Info",
-      query: "account",
     },
     {
       name: "security",
       title: "Security",
-      query: "security",
     },
     {
       name: "activities",
       title: "Activities",
-      query: "activities",
     },
   ];
-
-  useEffect(() => {
-    const path = window.location.pathname.split("/")[2];
-    setSelectedTab(path || "user");
-  }, []);
+  const handleTabClick = (tabName) => {
+    window.location.hash = tabName;
+  };
 
   return (
     <>
@@ -41,11 +34,10 @@ export default function UserAccountSidebar() {
           <ul>
             {tablist.map((tab) => (
               <li
-                className={selectedTab === tab.name ? "active" : ""}
+                className={activatedTab === tab.name ? "active" : ""}
                 key={tab.name}
                 onClick={() => {
-                  setSelectedTab(tab.name);
-                  navigate(`/userProfile/${tab.query}`);
+                  handleTabClick(tab.name);
                 }}
               >
                 <span>{tab.title}</span>

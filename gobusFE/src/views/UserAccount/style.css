@@ -16,3 +16,11 @@
   display: flex;
   gap: 30px;
 }
+
+.user-account-sidebar{
+  width: 20%;
+}
+
+.user-account-content{
+  width: 80%;
+}
