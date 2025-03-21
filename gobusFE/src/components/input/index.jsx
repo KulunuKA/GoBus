@@ -9,12 +9,21 @@ export default function MyInput({
   label,
   prefix,
   error = false,
+  errorMessage = "",
+  id,
+  name,
+  required = false,
+  disabled = false,
+  maxLength,
+  className = "",
+  onBlur,
+  onFocus,
 }) {
-  const inputStyles = {
+  const inputContainerStyles = {
     width: "100%",
     display: "flex",
     flexDirection: "column",
-    gap: 4,
+    gap: "8px",
   };
 
   const labelStyles = {
@@ -23,22 +32,52 @@ export default function MyInput({
     fontWeight: "500",
   };
 
+  const errorTextStyles = {
+    color: "#F5222D",
+    fontSize: "14px",
+    marginTop: "1px",
+  };
+
+  const inputId =
+    id ||
+    `input-${
+      label?.toLowerCase().replace(/\s+/g, "-") ||
+      Math.random().toString(36).substring(2, 9)
+    }`;
+
   return (
-    <div style={inputStyles}>
-      {label && <label style={labelStyles}>{label}</label>}
+    <div style={inputContainerStyles} className={className}>
+      {label && (
+        <label htmlFor={inputId} style={labelStyles}>
+          {label}
+          {required && <span style={{ color: "#F5222D" }}> *</span>}
+        </label>
+      )}
       <Input
+        id={inputId}
+        name={name || inputId}
         placeholder={placeholder}
         onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
         value={value}
         type={type}
         status={error ? "error" : ""}
         prefix={prefix}
+        disabled={disabled}
+        maxLength={maxLength}
+        aria-invalid={error}
+        aria-describedby={error ? `${inputId}-error` : undefined}
         style={{
-          backgroundColor: "#F1EFEF",
+          backgroundColor: "transparent",
           borderRadius: "30px",
-          borderColor: error ? "red" : undefined,
         }}
       />
+      {error && errorMessage && (
+        <div id={`${inputId}-error`} style={errorTextStyles} role="alert">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }

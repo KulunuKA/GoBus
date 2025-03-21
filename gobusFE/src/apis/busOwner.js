@@ -42,3 +42,23 @@ export const addEmployee = async (data) => {
 export const deleteEmployee = async (id) => {
   return await axiosInstance.delete(`auth/employee/delete/${id}`, options);
 };
+
+export const updateEmployee = async (id, data) => {
+  return await axiosInstance.put(`auth/employee/update/${id}`, data, options);
+};
+
+export const getRoutes = async (id) => {
+  return await axiosInstance.get(`auth/route/get/${id}`, options);
+};
+
+export const addRoute = async (data) => {
+  return await axiosInstance.post("auth/route/add", data, options);
+};
+
+export const deleteRoute = async (id) => {
+  return await axiosInstance.delete(`auth/route/delete/${id}`, options);
+};
+
+export const updateRoute = async (id, data) => {
+  return await axiosInstance.put(`auth/route/update/${id}`, data, options);
+};

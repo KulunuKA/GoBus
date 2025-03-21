@@ -23,6 +23,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import BusUpdateForm from "../../components/BusUpdateForm";
 import BusDetails from "../../components/BusDetails";
 import EmployeeForm from "../../components/EmployeeAddForm";
+import EmployeeUpdateForm from "../../components/EmployeeUpdate";
 
 export default function Employee() {
   const [isAdd, setIsAdd] = useState(false);
@@ -33,7 +34,7 @@ export default function Employee() {
   const [isError, setIsError] = useState("");
   const [searchText, setSearchText] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
-  const [selectedBus, setSelectedBus] = useState(null);
+  const [selectedEmp, setSelectedEmp] = useState(null);
   const [view, setView] = useState(false);
   const [selectedBusDetails, setSelectedBusDetails] = useState(null);
 
@@ -133,7 +134,7 @@ export default function Employee() {
               employees
                 .filter((e) => e.name.includes(searchText))
                 .map((emp, index) => (
-                  <tr key={emp._id} onClick={() => setSelectedBusDetails(emp)}>
+                  <tr key={emp._id}>
                     <td>{emp.name}</td>
                     <td>{emp.age}</td>
                     <td>{emp.position}</td>
@@ -147,7 +148,7 @@ export default function Employee() {
                         mt={10}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedBus(bus);
+                          setSelectedEmp(emp);
                           setIsUpdate(true);
                         }}
                       />
@@ -193,8 +194,8 @@ export default function Employee() {
       )}
 
       {isUpdate && (
-        <BusUpdateForm
-          data={selectedBus}
+        <EmployeeUpdateForm
+          data={selectedEmp}
           isOpen={isUpdate}
           onCancel={() => {
             setIsUpdate(false);

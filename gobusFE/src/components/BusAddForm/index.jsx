@@ -6,6 +6,7 @@ import MyButton from "../../components/button";
 import "./style.css";
 import {
   citiesWithDistrict,
+  onlyCities,
   sriLankanDistricts,
 } from "../../assets/district_city";
 import { Upload } from "antd";
@@ -18,7 +19,7 @@ import { busOwnerData } from "../../store/busOwnerSlice";
 import { useSelector } from "react-redux";
 
 export default function BusForm({ isOpen, onCancel, refresh }) {
-  const { id } = useSelector(busOwnerData);
+  const { id, routesId, employeesId } = useSelector(busOwnerData);
   const busTypes = ["Public transport", "Special service", "Both"];
   const [busData, setBusData] = useState({
     ownerID: id,
@@ -31,11 +32,23 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     district: "",
     city: "",
     pictures: ["", "", ""],
+    timetable: [],
+    route_id: "",
+    driverID: null,
   });
   const [imgLoading, setImgLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [isImgErr, setIsImgErr] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [timetableRounds, setTimetableRounds] = useState([
+    {
+      round: "1",
+      startPlace: "",
+      startTime: "",
+      endPlace: "",
+      endTime: "",
+    },
+  ]);
 
   const inputHandle = (field) => (e) => {
     setBusData({ ...busData, [field]: e.target.value });
@@ -62,6 +75,15 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     }
   };
 
+  const clearImg = (index) => {
+    const updatedCoverImages = [...busData.pictures];
+    updatedCoverImages[index] = "";
+    setBusData({
+      ...busData,
+      pictures: updatedCoverImages,
+    });
+  };
+
   const uploadComponents = [];
   for (let i = 0; i < 3; i++) {
     uploadComponents.push(
@@ -72,27 +94,56 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
         accept="image/*"
       >
         <section className="redClose">
-          {busData.pictures[i] != "" && (
-            <img src={closeRed} alt="close" onClick={() => clearImg(i)} />
+          {busData.pictures[i] !== "" && (
+            <img
+              src={closeRed}
+              alt="close"
+              onClick={(e) => {
+                e.stopPropagation();
+                clearImg(i);
+              }}
+            />
           )}
         </section>
         <div className="ps-cm-image-preview" key={i}>
-          {imgLoading && loadingIndex == i ? (
+          {imgLoading && loadingIndex === i ? (
             <Loading size={34} />
           ) : (
             <img
-              src={busData.pictures[i] == "" ? image : busData.pictures[i]}
-              className={busData.pictures[i] == "" ? "addIcon" : "addedImg"}
-              alt={i}
+              src={busData.pictures[i] === "" ? image : busData.pictures[i]}
+              className={busData.pictures[i] === "" ? "addIcon" : "addedImg"}
+              alt={`bus-image-${i}`}
             />
           )}
-          {busData.pictures[i] == "" && (
+          {busData.pictures[i] === "" && (
             <p>Click here to add an image {i + 1}</p>
           )}
         </div>
       </Upload>
     );
   }
+
+  const handleTimetableChange = (index, field, value) => {
+    const updatedTimetable = [...timetableRounds];
+    updatedTimetable[index] = {
+      ...updatedTimetable[index],
+      [field]: value,
+    };
+    setTimetableRounds(updatedTimetable);
+  };
+
+  const addNewRound = (round) => {
+    setTimetableRounds([
+      ...timetableRounds,
+      {
+        round: round,
+        startPlace: "",
+        startTime: "",
+        endPlace: "",
+        endTime: "",
+      },
+    ]);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -115,9 +166,44 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
         });
         return;
       }
+
+      // Process timetable data before submission
+      if (busData.busType !== "public transport") {
+        // Filter out incomplete timetable entries
+        const validTimetable = timetableRounds.filter(
+          (round) =>
+            round.round &&
+            round.startPlace &&
+            round.startTime &&
+            round.endPlace &&
+            round.endTime
+        );
+
+        if (
+          validTimetable.length === 0 &&
+          busData.busType !== "public transport"
+        ) {
+          notification.error({
+            message: "Please complete at least one timetable entry",
+          });
+          return;
+        }
+
+        setBusData({
+          ...busData,
+          timetable: validTimetable,
+        });
+      }
+
       setIsLoading(true);
 
-      const { data, code, msg } = await addBus(busData);
+      const submissionData = {
+        ...busData,
+        timetable:
+          busData.busType === "public transport" ? timetableRounds : [],
+      };
+
+      const { data, code, msg } = await addBus(submissionData);
       if (code === 0) {
         notification.success({
           message: msg,
@@ -133,9 +219,93 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       });
     }
   };
+
+  const renderTimetableFields = () => {
+    return timetableRounds.map((round, index) => (
+      <div className="timetable-round" key={index}>
+        <h4 className="round-title">Round {index + 1}</h4>
+        <div className="timetable-grid">
+          <div className="timetable-field">
+            <label>Start Place</label>
+            <DropDown
+              placeholder={"Select trip start"}
+              value={round.startPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "startPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>Start Time</label>
+            <MyInput
+              type="time"
+              value={round.startTime}
+              onChange={(e) =>
+                handleTimetableChange(index, "startTime", e.target.value)
+              }
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Place</label>
+            <DropDown
+              placeholder={"Select trip end"}
+              value={round.endPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "endPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Time</label>
+            <MyInput
+              type="time"
+              value={round.endTime}
+              onChange={(e) =>
+                handleTimetableChange(index, "endTime", e.target.value)
+              }
+            />
+          </div>
+        </div>
+        {index === timetableRounds.length - 1 && (
+          <div className="timetable-actions">
+            {index > 0 && (
+              <MyButton
+                name="Remove"
+                width={120}
+                color="#EE5252"
+                onClick={() => {
+                  const updated = [...timetableRounds];
+                  updated.pop();
+                  setTimetableRounds(updated);
+                }}
+              />
+            )}
+            <MyButton
+              name="Add Round"
+              width={120}
+              color="#2D3436"
+              onClick={() => addNewRound(index + 1)}
+            />
+          </div>
+        )}
+      </div>
+    ));
+  };
+
   return (
     <>
-      <Modal open={isOpen} onCancel={onCancel} footer={null}>
+      <Modal open={isOpen} onCancel={onCancel} footer={null} width={850}>
         <div className="bus-add">
           <div className="ab-header">
             <p>Add Bus</p>
@@ -182,12 +352,11 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                 <label>District</label>
                 <DropDown
                   placeholder={"Select District"}
-                  // value={busData.district}
                   onChange={(value) => {
                     setBusData({ ...busData, district: value });
                   }}
                   options={sriLankanDistricts
-                    .filter((dis) => dis != "All District")
+                    .filter((dis) => dis !== "All District")
                     .map((dis) => ({
                       label: dis,
                       value: dis,
@@ -198,55 +367,94 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                 <label>City</label>
                 <DropDown
                   placeholder={"Select City"}
-                  // value={busData.city}
                   onChange={(value) => {
                     setBusData({ ...busData, city: value });
                   }}
                   options={(citiesWithDistrict[busData.district] || [])
-                    .filter((cit) => cit != "All City")
+                    .filter((cit) => cit !== "All City")
                     .map((c) => ({
                       label: c,
                       value: c,
                     }))}
                 />
               </div>
+
+              <div className="bt-select">
+                <label>AC/NON-AC</label>
+                <DropDown
+                  options={["A/C", "NON-A/C"].map((e) => ({
+                    label: e,
+                    value: e === "A/C" ? true : false,
+                  }))}
+                  placeholder={"Select A/C / Non-A/C"}
+                  onChange={(value) => {
+                    setBusData({
+                      ...busData,
+                      ac: value,
+                    });
+                  }}
+                />
+              </div>
+
               <div className="bt-select">
                 <label>Bus Type</label>
                 <DropDown
                   options={busTypes.map((e) => ({
                     label: e,
-                    value: e.toLocaleLowerCase(),
+                    value: e.toLowerCase(),
                   }))}
-                  defaultValue={busTypes[0]}
                   placeholder={"Select bus type"}
                   onChange={(value) => {
                     setBusData({ ...busData, busType: value });
                   }}
                 />
               </div>
-              <div className="bt-select">
-                <label>AC/NON-AC</label>
-                <DropDown
-                  options={["A/C", "NON-A/C"].map((e) => ({
-                    label: e,
-                    value: e.toLocaleLowerCase(),
-                  }))}
-                  placeholder={"Select A/C / Non-A/C"}
-                  onChange={(value) => {
-                    setBusData({
-                      ...busData,
-                      ac: value == "A/C" ? true : false,
-                    });
-                  }}
-                />
-              </div>
+
+              {busData.busType == "public transport" && (
+                <div className="timetable-container">
+                  <h3 className="timetable-header">Bus Timetable</h3>
+                  {renderTimetableFields()}
+                </div>
+              )}
+
+              {busData.busType === "public transport" && (
+                <div className="bt-select">
+                  <label>Route</label>
+                  <DropDown
+                    options={routesId.map((e) => ({
+                      label: e.start + " - " + e.end,
+                      value: e._id,
+                    }))}
+                    placeholder={"Select route"}
+                    onChange={(value) => {
+                      setBusData({ ...busData, route_id: value });
+                    }}
+                  />
+                </div>
+              )}
+
+              {busData.busType === "public transport" && (
+                <div className="bt-select">
+                  <label>Driver</label>
+                  <DropDown
+                    options={employeesId.map((e) => ({
+                      label: e.name,
+                      value: e._id,
+                    }))}
+                    placeholder={"Select driver"}
+                    onChange={(value) => {
+                      setBusData({ ...busData, driverID: value });
+                    }}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="ab-btn">
               <MyButton
                 name="Add"
                 width={150}
-                color={" #2D3436"}
+                color={"#2D3436"}
                 onClick={handleSubmit}
                 loading={isLoading}
               />

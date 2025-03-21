@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const busOwnerSchema = new mongoose.Schema({
-  role:{
+  role: {
     type: String,
     default: "BusOwner",
   },
@@ -74,7 +74,10 @@ busOwnerSchema.pre("save", async function (next) {
 busOwnerSchema.statics.findByCredentials = async (email, password) => {
   const busOwner = await BusOwner.findOne({
     email,
-  });
+  })
+    .populate("employeesId")
+    .populate("routesId")
+    .exec();
 
   if (!busOwner) {
     const error = new Error("User not found");
