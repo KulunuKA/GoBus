@@ -47,7 +47,7 @@
   padding: 10px;
   margin-top: 30px;
   width: 70%;
-  height: 120px;
+  height: 135px;
   border-radius: 7px;
 }
 
@@ -62,23 +62,6 @@
   font-size: 18px;
 }
 
-.btn-home a {
-  background-color: #05944f;
-  color: #f5f5f5;
-  padding: 5px 15px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 20px;
-}
-
-.btn-home a:hover {
-  background-color: #047240;
-}
-
-.btn-home .arrow-icon {
-  font-size: 16px;
-}
 
 .intro-section {
   margin-bottom: 70px;
@@ -213,7 +196,7 @@
   width: 220px;
   gap: 10px;
   background-color: #2d3436;
-  padding: 5px 10px;
+  padding: 7px 10px;
   margin-bottom: 30px;
   align-items: center;
   border-radius: 5px;

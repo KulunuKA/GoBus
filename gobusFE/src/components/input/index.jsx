@@ -9,6 +9,7 @@ export default function MyInput({
   label,
   prefix,
   error = false,
+  borderRadius,
   errorMessage = "",
   id,
   name,
@@ -69,6 +70,9 @@ export default function MyInput({
         aria-invalid={error}
         aria-describedby={error ? `${inputId}-error` : undefined}
         style={{
+          backgroundColor: "#F1EFEF",
+          borderRadius: borderRadius,
+          borderColor: error ? "red" : undefined,
           backgroundColor: "transparent",
           borderRadius: "30px",
         }}

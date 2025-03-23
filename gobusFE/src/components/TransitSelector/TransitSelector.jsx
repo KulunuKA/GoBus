@@ -63,7 +63,7 @@ export default function TransitSelector() {
             onClick={() => handleSelectedOption(option)}
           >
             <div className="item-img">
-              <img src={option.icon} alt="Location Trackin image" />
+              <img src={option.icon} alt="Location Trackin image" className={option.id === selectedOption.id ? "active" : ""} />
             </div>
             <p className={option.id === selectedOption.id ? "active" : ""}>
               {option.title}

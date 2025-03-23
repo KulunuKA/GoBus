@@ -1,0 +1,86 @@
+/* BusItemCard.css */
+.bus-card {
+  max-width: 360px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  transition: transform 0.2s ease-in-out;
+}
+
+.bus-card:hover {
+  transform: translateY(-4px);
+}
+
+.bus-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.bus-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #2d3436;
+}
+
+.rating-wrapper {
+  margin-bottom: 12px;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+}
+
+.stars-container {
+  display: flex;
+  margin-right: 4px;
+}
+
+.rating-value {
+  color: #2d3436;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.half-star-container {
+  position: relative;
+}
+
+.half-star {
+  position: absolute;
+  clip-path: inset(0 50% 0 0);
+}
+
+.authority-info {
+  font-size: 0.875rem;
+  color: #4a5568;
+  margin-bottom: 16px;
+}
+
+.request-button {
+  width: 100%;
+  background-color: #05944f;
+  color: #f5f5f5;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.request-button:hover {
+  background-color: #047240;
+}
+
+.request-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(4, 114, 64, 0.5);
+}

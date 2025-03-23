@@ -1,11 +1,12 @@
 import React from "react";
 import "./style.css";
-import { ArrowRightOutlined } from "@ant-design/icons";
 import storelogo from "../../assets/images/storelogo.png";
 import busIcon from "../../assets/images/bus.png";
+import rightArrow from "../../assets/images/right-arrow.png";
 import TransitSelector from "../../components/TransitSelector/TransitSelector";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import PassengerButton from "../../components/PassengerButton/index";
 
 const colomboPosition = [6.9271, 79.8612];
 
@@ -53,9 +54,7 @@ export default function Home() {
                 Whether it’s your daily commute <br />{" "}
                 <span>Track real-time bus locations,</span>
               </p>
-              <a href="#">
-                Track Bus <ArrowRightOutlined className="arrow-icon" />
-              </a>
+              <PassengerButton icon={rightArrow} />
             </div>
           </div>
         </div>
@@ -112,9 +111,7 @@ export default function Home() {
               <input type="text" placeholder="Enter the Bus Number" />
             </div>
             <div className="track-sec-btn btn-home">
-              <a href="#">
-                Track Now <ArrowRightOutlined className="arrow-icon" />
-              </a>
+              <PassengerButton icon={rightArrow} />
             </div>
           </div>
           <div className="track-map">
@@ -132,7 +129,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
     </>
   );
 }
