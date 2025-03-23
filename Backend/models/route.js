@@ -1,46 +1,39 @@
 const mongoose = require("mongoose");
-const employeeSchema = new mongoose.Schema({
+const routeSchema = new mongoose.Schema({
   ownerID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "BusOwner",
     required: true,
   },
-  name: {
+  route_number: {
     type: String,
     required: true,
+    trim: true,
   },
-  age: {
+  start: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  end: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  distance: {
     type: Number,
     required: true,
   },
-  position: {
-    type: String,
+  main_cities: {
+    type: [String],
     required: true,
-  },
-  salary: {
-    type: Number,
-    required: true,
-  },
-  status: {
-    type: String,
-    enum: ["assign", "unassign"],
-    default: "unassign",
   },
 });
 
-employeeSchema.post("save", async function (doc, next) {
+routeSchema.post("save", async function (doc, next) {
   try {
     await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
-      $addToSet: { employeesId: doc._id },
-    });
-    next();
-  } catch (error) {}
-});
-
-employeeSchema.post("findOneAndDelete", async function (doc, next) {
-  try {
-    await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
-      $pull: { employeesId: doc._id },
+      $addToSet: { routesId: doc._id },
     });
     next();
   } catch (error) {
@@ -48,5 +41,16 @@ employeeSchema.post("findOneAndDelete", async function (doc, next) {
   }
 });
 
-const Employee = mongoose.model("Employee", employeeSchema);
-module.exports = Employee;
+routeSchema.post("findOneAndDelete", async function (doc, next) {
+  try {
+    await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
+      $pull: { routesId: doc._id },
+    });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+const Route = mongoose.model("Route", routeSchema);
+module.exports = Route;

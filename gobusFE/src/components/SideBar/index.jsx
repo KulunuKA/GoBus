@@ -11,7 +11,7 @@ import { ExclamationCircleFilled, LogoutOutlined } from "@ant-design/icons";
 
 import "./style.css";
 import MyButton from "../button";
-import { busOwnerData } from "../../store/busOwnerSlice";
+import { busOwnerData, clearStore } from "../../store/busOwnerSlice";
 
 export default function SideBar() {
   const [tab, setTab] = useState("dashboard");
@@ -53,7 +53,8 @@ export default function SideBar() {
   const { confirm } = Modal;
 
   const logout = () => {
-    window.location.href = "/";
+    window.location.href = "/login";
+    dispatch(clearStore());
   };
 
   useEffect(() => {

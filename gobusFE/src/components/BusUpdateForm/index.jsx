@@ -139,7 +139,7 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
       <Modal open={isOpen} onCancel={onCancel} footer={null}>
         <div className="bus-add">
           <div className="ab-header">
-            <p>Add Bus</p>
+            <p>Update Bus</p>
           </div>
           <div className="ab-content">
             <div>

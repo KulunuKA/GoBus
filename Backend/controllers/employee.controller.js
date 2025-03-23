@@ -38,7 +38,9 @@ const addEmployee = async (req, res, next) => {
 //delete employee
 const deleteEmployee = async (req, res, next) => {
   try {
-    const employee = await Employee.findByIdAndDelete(req.params.id);
+    const employee = await Employee.findOneAndDelete({
+      _id: req.params.id,
+    });
     if (!employee) {
       return next(new AppError(404, "No employee found with that ID"));
     }
@@ -74,7 +76,7 @@ const updateEmployee = async (req, res, next) => {
       return next(new AppError(404, "No employee found with that ID"));
     }
 
-    res.status(204).send({
+    res.status(200).send({
       msg: "updated employee successfully",
       data: {
         employee,

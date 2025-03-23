@@ -8,11 +8,15 @@ export default function Dropdown({
   onChange,
   defaultValue,
   value,
-  width,
+  width = '100%',
   borderRadius = "26px",
+  mode = "default",
 }) {
   return (
     <Select
+      mode={mode}
+      maxCount={10}
+      allowClear
       className="dropdown"
       showSearch
       placeholder={placeholder}

@@ -52,6 +52,34 @@ const busSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  route_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Route",
+  },
+  timetable: [
+    {
+      round: {
+        type: Number,
+        required: true,
+      },
+      startPlace: {
+        type: String,
+        required: true,
+      },
+      startTime: {
+        type: Date,
+        required: true,
+      },
+      endPlace: {
+        type: String,
+        required: true,
+      },
+      endTime: {
+        type: Date,
+        required: true,
+      },
+    },
+  ],
   tripID: [
     {
       id: {
@@ -70,6 +98,15 @@ busSchema.post("save", async function (doc, next) {
     next();
   } catch (error) {
     next(error);
+  }
+});
+
+busSchema.post("validate", function (next) {
+  if (
+    this.busType === "public transport" &&
+    (!this.timetable || this.timetable.length === 0)
+  ) {
+    return next(new Error("Public transport bus must have timetable"));
   }
 });
 

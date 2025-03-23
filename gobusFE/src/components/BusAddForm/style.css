@@ -1,3 +1,4 @@
+
 .bus-add {
   margin-top: 10px;
   padding: 20px;
@@ -31,7 +32,6 @@
 }
 
 .bt-select {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -56,7 +56,7 @@
 .ps-image-set {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -107,4 +107,69 @@
   top: -8px;
   width: 19px;
   cursor: pointer;
+}
+/* Add these styles to your existing style.css file */
+
+.timetable-container {
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #f9f9f9;
+}
+
+.timetable-header {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #2D3436;
+}
+
+.timetable-round {
+  margin-bottom: 24px;
+  background-color: white;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.round-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #3a3a3a;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.timetable-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.timetable-field {
+  width: 200px;
+  margin-bottom: 12px;
+}
+
+.timetable-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+.timetable-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .timetable-grid {
+    grid-template-columns: 1fr;
+  }
 }

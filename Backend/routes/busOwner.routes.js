@@ -14,7 +14,7 @@ BusOwnerRouter.post("/register", registerBusOwner);
 BusOwnerRouter.put("/update/:id", busOwnerAuth, updateBusOwner);
 BusOwnerRouter.delete("/delete/:id", busOwnerAuth, deleteBusOwner);
 BusOwnerRouter.put("/trip/:id", busOwnerAuth, handleTrip);
-BusOwnerRouter.get("/trip", busOwnerAuth, getTripRequests);
+BusOwnerRouter.get("/trip/:id", busOwnerAuth, getTripRequests);
 BusOwnerRouter.get("/getbuses/:id", busOwnerAuth, getBuses);
 
 module.exports = BusOwnerRouter;

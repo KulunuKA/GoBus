@@ -21,9 +21,12 @@ const busOwnerSlice = createSlice({
     setUserInfo: (state, action) => {
       state.info = action.payload;
     },
+    clearStore: (state) => {
+      state.info = initialState.info;
+    },
   },
 });
 
-export const { setUserInfo } = busOwnerSlice.actions;
+export const { setUserInfo ,clearStore} = busOwnerSlice.actions;
 export const busOwnerData = (state) => state.busOwner.info;
 export default busOwnerSlice.reducer;

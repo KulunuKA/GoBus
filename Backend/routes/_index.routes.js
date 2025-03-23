@@ -5,6 +5,8 @@ const FeedbackRouter = require("./feedback.routes");
 const EmployeeRouter = require("./employee.routes");
 const BusOwnerRouter = require("./busOwner.routes");
 const { login } = require("../controllers/user.controller");
+const RouteRouter = require("./route.routes");
+const TripRouter = require("./trip.routes")
 
 const router = Router();
 
@@ -14,5 +16,7 @@ router.use("/bus", BusRouter);
 router.use("/feedback", FeedbackRouter);
 router.use("/employee", EmployeeRouter);
 router.use("/busowner", BusOwnerRouter);
+router.use("/route", RouteRouter);
+router.use("/trip",TripRouter)
 
 module.exports = router;

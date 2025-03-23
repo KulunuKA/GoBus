@@ -12,6 +12,7 @@ import RequireAuth from "./route/RequireAuth";
 import PassengerLayout from "./components/Layouts/PassengerLayout";
 import Special from "./views/SpecialTripPage/Index";
 import UserAccount from "./views/UserAccount";
+import Requests from "./views/Requests";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="bus" element={<Bus />} />
           <Route path="route" element={<MyRoutes />} />
           <Route path="employee" element={<Employee />} />
+          <Route path="requests" element={<Requests />} />
         </Route>
       </Route>
     </Routes>
