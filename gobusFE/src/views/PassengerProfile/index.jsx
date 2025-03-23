@@ -13,16 +13,22 @@ const buttonsList = [
 ];
 
 export default function PassengerProfile() {
+  const user = {
+    username: "Dilshan Karunarathna",
+    email: "dilshankarunarathna@gmail.com",
+    propic: man,
+  };
+
   const navigate = useNavigate();
 
   return (
     <>
       <div className="passenger-profile-home">
         <div className="passenger-profile-home-image-name">
-          <img src={man} alt="" className="passenger-profile-home-image" />
-          <p className="passenger-profile-home-name">Dilshan</p>
+          <img src={user.propic} alt="" className="passenger-profile-home-image" />
+          <p className="passenger-profile-home-name">{user.username}</p>
           <p className="passenger-profile-home-mail">
-            dilshanwanasinghe63@gmail.com
+            {user.email}
           </p>
         </div>
         <div className="passenger-profile-home-btns">

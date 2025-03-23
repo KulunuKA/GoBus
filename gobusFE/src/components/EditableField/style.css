@@ -1,0 +1,57 @@
+.passenger-profile-account-datafield {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.passenger-profile-account-data-filed {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.passenger-profile-account-data-title {
+  font-size: 18px;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.passenger-profile-account-data {
+  font-size: 18px;
+  color: #6e6e6e;
+  font-weight: 400;
+}
+
+.passenger-profile-account-data-edit {
+  width: 20px;
+  cursor: pointer;
+}
+
+.passenger-profile-account-data-save {
+  width: 25px;
+  cursor: pointer;
+}
+
+.passenger-profile-account-data-input {
+  width: 350px;
+  font-size: 18px;
+  color: #6e6e6e;
+  font-weight: 400;
+  border: none;
+  outline: none;
+  transition: color 0.3s ease;
+  animation: pulseShadow 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseShadow {
+  0%,
+  100% {
+    color: #6e6e6e;
+  }
+  50% {
+    color: #a0a0a0;
+  }
+}
