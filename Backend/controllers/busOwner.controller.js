@@ -120,7 +120,9 @@ const getTripRequests = async (req, res, next) => {
       return next(new AppError(404, "Bus owner not found"));
     }
 
-    const trips = await Trip.find({ busID: { $in: busOwner.busesId } });
+    const trips = await Trip.find({ busID: { $in: busOwner.busesId } })
+      .populate("userID","username")
+      .lean();
 
     res.status(200).send({
       code: 0,

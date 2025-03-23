@@ -62,3 +62,7 @@ export const deleteRoute = async (id) => {
 export const updateRoute = async (id, data) => {
   return await axiosInstance.put(`auth/route/update/${id}`, data, options);
 };
+
+export const getRequests = async(id)=>{
+  return await axiosInstance.get(`auth/busowner/trip/${id}`, options);
+}

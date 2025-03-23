@@ -1,21 +1,23 @@
 const Trip = require("../models/trip");
 const Bus = require("../models/bus");
+const BusOwner = require("../models/busOwner");
 const AppError = require("../utils/appError");
+const { default: mongoose } = require("mongoose");
 
 // Request a trip
 const requestTrip = async (req, res, next) => {
-  if (
-    !req.body.userID ||
-    !req.body.busId ||
-    !req.body.date ||
-    !req.body.venue ||
-    !req.body.contact_no
-  ) {
-    return next(new AppError(400, "Please provide all the required fields"));
-  }
-
   try {
-    const bus = await Bus.findById(req.body.busId);
+    if (
+      !req.body.userID ||
+      !req.body.busID ||
+      !req.body.date ||
+      !req.body.venue ||
+      !req.body.contact_no
+    ) {
+      return next(new AppError(400, "Please provide all the required fields"));
+    }
+
+    const bus = await Bus.findById(req.body.busID);
     if (!bus) {
       return next(new AppError(404, "Bus not found"));
     }
@@ -29,6 +31,7 @@ const requestTrip = async (req, res, next) => {
       code: 0,
     });
   } catch (error) {
+    console.log(error);
     next(new AppError(500, error.message));
   }
 };
@@ -42,9 +45,41 @@ const getAllTrips = async (req, res, next) => {
     const trips = await Trip.find({ userID: req.params.userID });
     res.status(200).send({
       msg: "success",
-      data: {
-        trips,
-      },
+      data: trips,
+      code: 0,
+    });
+  } catch (error) {
+    next(new AppError(500, error.message));
+  }
+};
+
+// Get all trip requests by bus Owner ID
+const getTripRequests = async (req, res, next) => {
+  try {
+    const busOwnerID = req.params.id;
+    if (!busOwnerID) {
+      return next(new AppError(400, "Please provide the bus owner ID"));
+    }
+
+    const checkBusOwner = await BusOwner.findOne({
+      _id: busOwnerID,
+    });
+
+    if (!checkBusOwner) {
+      return next(new AppError(404, "Not found bus owner "));
+    }
+
+    const busOwnersBuses = await Bus.find({
+      ownerID: busOwnerID,
+    });
+
+    const busIDs = busOwnersBuses.map((e) => e._id);
+    const objectIds = busIDs.map((id) => mongoose.Types.ObjectId(id));
+
+    const trips = await Trip.find({ _id: { $in: objectIds } });
+    res.status(200).send({
+      data: trips,
+      msg: "",
       code: 0,
     });
   } catch (error) {
