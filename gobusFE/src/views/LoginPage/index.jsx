@@ -64,7 +64,7 @@ export default function LoginPage() {
           navigate("/busowner/dashboard");
         } else if (data.role === "Passenger") {
           dispatch(setPassengerInfo(data));
-          navigate("/home");
+          navigate("/");
         }
       }
       setIsLoading(false);

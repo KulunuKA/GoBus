@@ -16,6 +16,7 @@ import Requests from "./views/Requests";
 import SingleBusPage from "./views/SingleBusPage";
 import Help from "./views/Help/index";
 import Trips from "./views/Trips/index";
+import PublicPage from "./views/PublicPage/index";
 
 function App() {
   return (
@@ -26,9 +27,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
         <Route path="/userProfile/" element={<UserAccount />} />
-        <Route path="/bus/:busId" element={<SingleBusPage />} />
+        <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/trips" element={<Trips />} />
+        <Route path="/public" element={<PublicPage />} />
+        <Route path="/activity" element={<Trips />} />
       </Route>
 
       {/* Bus Owner routes */}

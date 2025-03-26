@@ -27,7 +27,7 @@ const addBus = async (req, res, next) => {
       msg: "Added bus",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error.name === "ValidationError") {
       return next(new AppError(400, error.message));
     }
@@ -99,4 +99,61 @@ const getBuses = async (req, res, next) => {
   }
 };
 
-module.exports = { addBus, updateBus, deleteBus, getBuses };
+//get buses by type
+const getBusesPassenger = async (req, res, next) => {
+  try {
+    let query = {};
+    if (req.query.type) query.busType = req.query.type;
+    if (req.query.district) query.district = req.query.district;
+    if (req.query.city) query.city = req.query.city;
+
+    const buses = await Bus.find(query).populate("ownerID", "authorityName");
+
+    if (!buses) {
+      return next(new AppError(404, "No buses found"));
+    }
+
+    res.status(200).send({
+      data: buses,
+      code: 0,
+      msg: "Get buses",
+    });
+  } catch (error) {
+    next(new AppError(500, "Server error"));
+  }
+};
+
+//get single bus
+const getBus = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next(new AppError(400, "Invalid bus id"));
+    }
+
+    const bus = await Bus.findById(req.params.id).populate(
+      "ownerID",
+      "authorityName email phone address logo"
+    );
+
+    if (!bus) {
+      return next(new AppError(404, "Bus not found"));
+    }
+
+    res.status(200).send({
+      data: bus,
+      code: 0,
+      msg: "Get bus",
+    });
+  } catch (error) {
+    next(new AppError(500, "Server error"));
+  }
+};
+
+module.exports = {
+  addBus,
+  updateBus,
+  deleteBus,
+  getBuses,
+  getBusesPassenger,
+  getBus,
+};

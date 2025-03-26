@@ -33,7 +33,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     city: "",
     pictures: ["", "", ""],
     timetable: [],
-    route_id: "",
+    route_id: null,
     driverID: null,
   });
   const [imgLoading, setImgLoading] = useState(false);
@@ -168,7 +168,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       }
 
       // Process timetable data before submission
-      if (busData.busType !== "public transport") {
+      if (busData.busType === "public transport") {
         // Filter out incomplete timetable entries
         const validTimetable = timetableRounds.filter(
           (round) =>

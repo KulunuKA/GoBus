@@ -1,15 +1,17 @@
 import React from "react";
 import { Star } from "lucide-react";
 import "./style.css";
-import imageBus from "../../assets/images/busOwner.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function BusItemCard({
-  /*id, name, rating, authority, image*/ id = "bus-123",
-  name = "City Express 42",
+  id,
+  name,
   rating = 4.8,
-  authority = "Metro Transit Authority",
-  image = imageBus,
+  authority,
+  image,
 }) {
+  const navigate = useNavigate();
+
   const renderStars = (rating) => {
     const stars = [];
 
@@ -51,7 +53,7 @@ export default function BusItemCard({
   };
 
   return (
-    <div className="bus-card">
+    <div className="bus-card" onClick={() => navigate(`/bus/${id}`)}>
       {/* Bus Image */}
       <img className="bus-image" src={image} alt={`${name} bus`} />
 

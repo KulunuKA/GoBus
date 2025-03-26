@@ -6,7 +6,7 @@ export default function PassengerButton({
   backgroundColor = "#05944f",
   color = "#f5f5f5",
   borderRadius = "7px",
-  fontSize = "20px",
+  fontSize = "18px",
   fontWeight = "600",
   hoverColor = "#047240",
   icon = busIcon,

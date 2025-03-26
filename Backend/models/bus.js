@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const busSchema = new mongoose.Schema({
   ownerID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "BusOwner",
     required: true,
   },
   name: {
