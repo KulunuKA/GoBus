@@ -1,0 +1,61 @@
+.passenger-profile-account {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+}
+
+.passenger-profile-account-topic {
+  font-size: 30px;
+  color: #2d3436;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.passenger-profile-account-propic {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  border-radius: 50%;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.passenger-profile-account-propic-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: 0.3s ease;
+}
+
+.propic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.propic-overlay-image {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.passenger-profile-account-propic:hover .propic-overlay {
+  opacity: 1;
+}
+
+.passenger-profile-account-dataset {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

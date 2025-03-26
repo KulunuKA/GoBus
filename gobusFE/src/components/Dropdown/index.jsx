@@ -8,6 +8,8 @@ export default function Dropdown({
   onChange,
   defaultValue,
   value,
+  width = '100%',
+  borderRadius = "26px",
   mode = "default",
 }) {
   return (
@@ -22,7 +24,10 @@ export default function Dropdown({
       onChange={onChange}
       options={options}
       defaultValue={defaultValue}
-      style={{ width: "100%" }}
+      style={{
+        width: width,
+        borderRadius: borderRadius,
+      }}
     />
   );
 }
