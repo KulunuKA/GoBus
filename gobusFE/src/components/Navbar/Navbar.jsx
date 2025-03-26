@@ -61,7 +61,7 @@ export default function Navbar() {
             </a>
           </div>
           <div className="navbar-links">
-            <a href="#" className="nav-link">
+            <a href="/public-buses" className="nav-link">
               Public
             </a>
             <a href="/special" className="nav-link">

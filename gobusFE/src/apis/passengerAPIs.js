@@ -27,6 +27,24 @@ export const getSpecialBuses = async (type, district, city) => {
 
   return await axiosInstance.get(url);
 };
+export const getPublicBuses = async (type, start, end,condition) => {
+  let url = "public/bus/get";
+  if (type) {
+    url += `?type=${type}`;
+  }
+  if (start) {
+    url += `&start=${start}`;
+  }
+  if (end) {
+    url += `&end=${end}`;
+  }
+
+  if (condition) {
+    url += `&ac=${condition}`;
+  }
+
+  return await axiosInstance.get(url);
+};
 
 export const getBus = async (id) => {
   return await axiosInstance.get(`public/bus/get/${id}`);

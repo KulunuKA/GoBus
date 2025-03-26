@@ -29,7 +29,7 @@ function App() {
         <Route path="/userProfile/" element={<UserAccount />} />
         <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/public" element={<PublicPage />} />
+        <Route path="/public-buses" element={<PublicPage />} />
         <Route path="/activity" element={<Trips />} />
       </Route>
 

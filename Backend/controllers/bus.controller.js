@@ -87,7 +87,10 @@ const getBuses = async (req, res, next) => {
     if (!req.params.id) {
       return next(new AppError(400, "Invalid owner id"));
     }
-    const buses = await Bus.find({ ownerID: req.params.id });
+    const buses = await Bus.find({ ownerID: req.params.id }).populate(
+      "route_id",
+      "route_number"
+    );
 
     res.status(200).send({
       data: buses,
@@ -106,11 +109,24 @@ const getBusesPassenger = async (req, res, next) => {
     if (req.query.type) query.busType = req.query.type;
     if (req.query.district) query.district = req.query.district;
     if (req.query.city) query.city = req.query.city;
+    if (req.query.ac) query.ac = req.query.ac;
 
-    const buses = await Bus.find(query).populate("ownerID", "authorityName");
+    let buses = await Bus.find(query)
+      .populate("ownerID", "authorityName")
+      .populate("route_id", "main_cities");
 
-    if (!buses) {
+    if (!buses || buses.length === 0) {
       return next(new AppError(404, "No buses found"));
+    }
+
+    if (req.query.start && req.query.end) {
+      buses = buses.filter((bus) => {
+        if (!bus.route_id) return false;
+        const cities = bus.route_id.main_cities;
+        const startIndex = cities.indexOf(req.query.start);
+        const endIndex = cities.indexOf(req.query.end);
+        return startIndex !== -1 && endIndex !== -1 && startIndex < endIndex;
+      });
     }
 
     res.status(200).send({
@@ -119,6 +135,7 @@ const getBusesPassenger = async (req, res, next) => {
       msg: "Get buses",
     });
   } catch (error) {
+    console.error("Error fetching buses:", error);
     next(new AppError(500, "Server error"));
   }
 };

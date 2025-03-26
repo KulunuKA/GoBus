@@ -101,7 +101,7 @@ export default function Bus() {
               <th>Bus</th>
               <th>Bus Number</th>
               <th>A/C</th>
-              <th>Route</th>
+              <th>Route Number</th>
               <th>Bus Type</th>
               <th>Actions</th>
             </tr>
@@ -135,7 +135,7 @@ export default function Bus() {
                     </td>
                     <td>{bus.busNumber}</td>
                     <td>{bus.ac ? "A/C" : "Non A/C"}</td>
-                    <td>{bus.route}</td>
+                    <td>{bus.route_id.route_number}</td>
                     <td style={{ textTransform: "capitalize" }}>
                       {bus.busType}
                     </td>

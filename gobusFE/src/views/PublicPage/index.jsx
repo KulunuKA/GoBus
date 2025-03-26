@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import MyInput from "../../components/input";
 import Dropdown from "../../components/Dropdown";
@@ -9,6 +9,10 @@ import typing from "../../assets/images/publictype.png";
 import selectIcon from "../../assets/images/publicselect.png";
 import trackIcon from "../../assets/images/publictrack.png";
 import PublicBusRouteCard from "../../components/PublicBusRouteCard/index.jsx";
+import { getPublicBuses } from "../../apis/passengerAPIs.js";
+import EmptyDataMessage from "../../components/EmptyDataMessage.jsx";
+import Loading from "../../components/Loading";
+import ErrorMessage from "../../components/ErrorMessage.jsx";
 
 const steps = [
   {
@@ -162,8 +166,42 @@ const routeSchedule = [
 
 export default function PublicPage() {
   const [searchText, setSearchText] = useState("");
-  const [district, setDistrict] = useState("");
-  const [city, setCity] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const [condition, setCondition] = useState("");
+  const [buses, setBuses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState("");
+
+  const fetchBuses = async (
+    type = "public transport",
+    start,
+    end,
+    condition
+  ) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getPublicBuses(
+        type,
+        start,
+        end,
+        condition
+      );
+      if (code === 0) {
+        setBuses(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBuses();
+  }, []);
   return (
     <>
       <div className="main-passenger-container">
@@ -194,7 +232,7 @@ export default function PublicPage() {
                     <Dropdown
                       placeholder={"Select Your Location"}
                       onChange={(value) => {
-                        setDistrict(value);
+                        setStart(value);
                       }}
                       options={onlyCities.map((e) => ({
                         label: e,
@@ -209,7 +247,7 @@ export default function PublicPage() {
                     <Dropdown
                       placeholder={"Select Your Destination"}
                       onChange={(value) => {
-                        setCity(value);
+                        setEnd(value);
                       }}
                       options={onlyCities.map((e) => ({
                         label: e,
@@ -224,14 +262,12 @@ export default function PublicPage() {
                     <Dropdown
                       placeholder={"AC / Non AC"}
                       onChange={(value) => {
-                        setCity(value);
+                        setCondition(value === "A/C" ? "true" : "false");
                       }}
-                      // options={(citiesWithDistrict[district] || [])
-                      //   .filter((cit) => cit != "All City")
-                      //   .map((c) => ({
-                      //     label: c,
-                      //     value: c,
-                      //   }))}
+                      options={["A/C", "Non A/C"].map((c) => ({
+                        label: c,
+                        value: c,
+                      }))}
                       width="200px"
                       borderRadius="0"
                       label="Condition:"
@@ -245,9 +281,9 @@ export default function PublicPage() {
                     borderRadius="5px"
                     fontSize="18px"
                     fontWeight="500"
-                    // onClick={() => {
-                    //   fetchBuses("special service", district, city);
-                    // }}
+                    onClick={() => {
+                      fetchBuses("public transport", start, end, condition);
+                    }}
                   />
                 </div>
               </div>
@@ -257,8 +293,8 @@ export default function PublicPage() {
         <div className="public-steps-result-section">
           <div className="public-main-container">
             <div className="public-steps-section">
-              {steps.map((step) => (
-                <div className="feature-box">
+              {steps.map((step, index) => (
+                <div className="feature-box" key={index}>
                   <div className="feature-icon-box">
                     <img src={step.icon} alt="" />
                   </div>
@@ -274,13 +310,21 @@ export default function PublicPage() {
                 <h2>Active Buses on Route Today</h2>
               </div>
               <div className="public-result-container">
-                <div className="public-results-boxes">
-                  {routeSchedule.map((route) => (
-                    <>
-                      <PublicBusRouteCard route={route} />
-                    </>
-                  ))}
-                </div>
+                {loading ? (
+                  <Loading size={70} />
+                ) : buses.length === 0 ? (
+                  <EmptyDataMessage message="No buses available matching the route" />
+                ) : isError ? (
+                  <ErrorMessage message={isError} />
+                ) : (
+                  <div className="public-results-boxes">
+                    {buses
+                      ?.filter((e) => e.name.includes(searchText))
+                      .map((bus) => (
+                        <PublicBusRouteCard bus={bus} key={bus._id} />
+                      ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
