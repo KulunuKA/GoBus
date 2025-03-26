@@ -71,7 +71,7 @@ export default function Passenger() {
 
       if (code === 0) {
         dispatch(setPassengerInfo(data));
-        navigate("/home");
+        navigate("/");
       }
       setIsLoading(false);
     } catch (error) {

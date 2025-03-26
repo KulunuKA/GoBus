@@ -107,7 +107,7 @@ const getBusesPassenger = async (req, res, next) => {
     if (req.query.district) query.district = req.query.district;
     if (req.query.city) query.city = req.query.city;
 
-    const buses = await Bus.find(query).populate("ownerID","authorityName");
+    const buses = await Bus.find(query).populate("ownerID", "authorityName");
 
     if (!buses) {
       return next(new AppError(404, "No buses found"));
@@ -123,4 +123,37 @@ const getBusesPassenger = async (req, res, next) => {
   }
 };
 
-module.exports = { addBus, updateBus, deleteBus, getBuses, getBusesPassenger };
+//get single bus
+const getBus = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next(new AppError(400, "Invalid bus id"));
+    }
+
+    const bus = await Bus.findById(req.params.id).populate(
+      "ownerID",
+      "authorityName email phone address logo"
+    );
+
+    if (!bus) {
+      return next(new AppError(404, "Bus not found"));
+    }
+
+    res.status(200).send({
+      data: bus,
+      code: 0,
+      msg: "Get bus",
+    });
+  } catch (error) {
+    next(new AppError(500, "Server error"));
+  }
+};
+
+module.exports = {
+  addBus,
+  updateBus,
+  deleteBus,
+  getBuses,
+  getBusesPassenger,
+  getBus,
+};

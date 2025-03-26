@@ -154,7 +154,7 @@ export default function Navbar() {
                     </a>
                   </div>
                   <div className="user-data-btn">
-                    <a href="#">
+                    <a href="/activity">
                       <img src={activity} alt="" />
                       <p>Activity</p>
                     </a>

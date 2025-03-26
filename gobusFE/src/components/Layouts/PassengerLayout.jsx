@@ -5,18 +5,16 @@ import { Outlet, useLocation } from "react-router-dom";
 
 export default function PassengerLayout() {
   const location = useLocation();
+  const pathName = location.pathname;
+  const hidePages = ["/userProfile", "/activity"];
 
-  const isUserProfile = location.pathname.startsWith("/userProfile");
-
-  const hideNavBar =
-    location.pathname.startsWith("/userProfile") ||
-    location.pathname.startsWith("/trips");
+  const hideNavBar = hidePages.includes(pathName);
 
   return (
     <main className="main">
       {!hideNavBar && <Navbar />}
       <Outlet />
-      {!isUserProfile && <Footer />}
+      {!pathName.includes("/userProfile") && <Footer />}
     </main>
   );
 }

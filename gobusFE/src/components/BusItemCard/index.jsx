@@ -1,6 +1,7 @@
 import React from "react";
 import { Star } from "lucide-react";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 
 export default function BusItemCard({
   id,
@@ -9,6 +10,8 @@ export default function BusItemCard({
   authority,
   image,
 }) {
+  const navigate = useNavigate();
+
   const renderStars = (rating) => {
     const stars = [];
 
@@ -50,7 +53,7 @@ export default function BusItemCard({
   };
 
   return (
-    <div className="bus-card">
+    <div className="bus-card" onClick={() => navigate(`/bus/${id}`)}>
       {/* Bus Image */}
       <img className="bus-image" src={image} alt={`${name} bus`} />
 

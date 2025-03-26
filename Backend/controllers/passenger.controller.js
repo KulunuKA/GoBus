@@ -11,12 +11,13 @@ const registerPassenger = async (req, res, next) => {
     const passenger = new Passenger(req.body);
     await passenger.save();
 
-    const { _id: id, username, mobile, email } = passenger;
+    const { _id: id, username, mobile, email,role } = passenger;
     const token = await passenger.generateAuthToken();
 
     return res.status(200).send({
       data: {
         id,
+        role,
         username,
         mobile,
         email,
