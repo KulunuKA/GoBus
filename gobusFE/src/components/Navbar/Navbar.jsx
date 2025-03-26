@@ -8,7 +8,7 @@ import user from "../../assets/images/user.png";
 import support from "../../assets/images/support.png";
 import chatting from "../../assets/images/chatting.png";
 import "./style.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { passengerData } from "../../store/passengerSlice";
 import { busOwnerData } from "../../store/busOwnerSlice";
@@ -18,6 +18,8 @@ export default function Navbar() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const passengerRedux = useSelector(passengerData);
   const busOwnerRedux = useSelector(busOwnerData);
+  const [lastScroll, setLastScroll] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   const role = passengerRedux?.role || busOwnerRedux?.role || "passenger";
 
@@ -28,10 +30,29 @@ export default function Navbar() {
     return username;
   }
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > lastScroll) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+      }
+
+      setLastScroll(currentScroll);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScroll]);
+
   const truncatedUsername = truncateUsernmae("Dilshan Karunarathna");
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${visible ? "visible" : "hidden"}`}>
       <div className="navbar-container">
         <div className="navbar-left">
           <div className="navbar-logo">

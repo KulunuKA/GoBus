@@ -1,0 +1,152 @@
+.trips-section-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  padding-top: 100px;
+  justify-content: space-between;
+}
+
+.trip-section-main {
+  width: 75%;
+  margin-bottom: 40px;
+  min-height: 70vh;
+}
+
+.trips-section-header {
+  width: 100%;
+  margin: auto;
+}
+
+.trips-section-header h2 {
+  font-size: 30px;
+  color: #2d3436;
+  font-weight: 550;
+}
+
+.trips-section-contents-sidebar {
+  position: fixed;
+  right: 65px;
+  top: 90px;
+  width: 20%;
+}
+
+.trips-section-contents-sidebar-content img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.trips-sidebar-topic {
+  font-size: 20px;
+  color: #2d3436;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.trips-sidebar-para {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.trips-sidebar-btn {
+  width: 60%;
+  padding: 10px 20px;
+  background-color: rgba(45, 52, 54, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.trips-sidebar-btn p {
+  color: #f5f5f5;
+  font-size: 18px;
+}
+
+.trips-sidebar-btn:hover {
+  background-color: rgba(45, 52, 54, 0.8);
+}
+
+.upcoming-trips-section-image {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.upcoming-trips-section-image img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.trip-cards-section {
+  width: 100%;
+  border: 2px solid #f5f5f5;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+
+.trips-cards-no-data-message-box {
+  padding: 20px;
+}
+
+.trips-cards-no-data-message-box p {
+  font-size: 20px;
+  color: rgba(102, 102, 102, 0.6);
+  font-weight: 500;
+}
+
+.trips-cards-no-data-message-box-btn {
+  width: 150px;
+  background-color: #05944f;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.trips-cards-no-data-message-box-btn p {
+  color: #f5f5f5;
+  font-size: 18px;
+}
+
+.trips-cards-no-data-message-box-btn:hover {
+  background-color: #047240;
+}
+
+.trip-data-section-past {
+  margin-top: 70px;
+}
+
+.trip-data-section-past-header {
+  margin-bottom: 20px;
+}
+
+.trip-data-section-past-header h2 {
+  font-size: 28px;
+  color: #2d3436;
+  font-weight: 550;
+}
+
+.trips-cards-past-trips-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.trip-data-section-pending-declined {
+  margin-top: 30px;
+}
+
+.trips-cards-pending-declined-trips-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
