@@ -1,0 +1,104 @@
+.route-slider {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  padding: 5px;
+}
+
+.route-slide {
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 5px;
+}
+
+.route-arrival-departure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.arrival-departure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrival-departure img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.9;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.route-arrival h3 {
+  color: #05944f;
+}
+
+.route-departure h3 {
+  color: #ef4444;
+}
+
+.route-arrival-departure > h3 {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.special-trip-container {
+  width: 100%;
+  padding: 15px 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.special-trip-slide {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+.special-trip-text {
+  font-size: 1.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.special-text-1 {
+  color: #05944f;
+}
+
+.special-text-2 {
+  color: #ef4444;
+}
+
+.special-text-3 {
+  color: #6b7280;
+}
+
+.special-text-4 {
+  color: #05944f;
+  font-style: italic;
+  font-weight: 500;
+}

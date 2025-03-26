@@ -78,105 +78,107 @@ export default function Special() {
   const [city, setCity] = useState("");
   return (
     <>
-      <div className="special-topic-section">
-        <h1>Search for the Best Special Trip Bus Deals</h1>
-      </div>
-      <div className="special-image-section"></div>
+      <div className="main-passenger-container">
+        <div className="special-topic-section">
+          <h1>Search for the Best Special Trip Bus Deals</h1>
+        </div>
+        <div className="special-image-section"></div>
 
-      <div className="special-menu-bar-section">
-        <div className="special-main-container">
-          <div className="special-menu-bar">
-            <div className="special-menu-bar-title">
-              <p>Find Your Perfect Ride: Discover Special Trip Buses!</p>
-            </div>
-
-            <div className="special-menu-bar-content">
-              <div className="special-search-bar">
-                <MyInput
-                  placeholder="Enter Bus Name"
-                  prefix={<SearchOutlined />}
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  borderRadius="0"
-                />
+        <div className="special-menu-bar-section">
+          <div className="special-main-container">
+            <div className="special-menu-bar">
+              <div className="special-menu-bar-title">
+                <p>Find Your Perfect Ride: Discover Special Trip Buses!</p>
               </div>
-              <div className="special-filters-section">
-                <div className="special-filter">
-                  <Dropdown
-                    placeholder={"Select District"}
-                    onChange={(value) => {
-                      setDistrict(value);
-                    }}
-                    options={(sriLankanDistricts || [])
-                      .filter((cit) => cit != "All City")
-                      .map((c) => ({
-                        label: c,
-                        value: c,
-                      }))}
-                    width="200px"
+
+              <div className="special-menu-bar-content">
+                <div className="special-search-bar">
+                  <MyInput
+                    placeholder="Enter Bus Name"
+                    prefix={<SearchOutlined />}
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
                     borderRadius="0"
                   />
                 </div>
-                <div className="special-filter">
-                  <Dropdown
-                    placeholder={"Select City"}
-                    onChange={(value) => {
-                      setCity(value);
-                    }}
-                    options={(citiesWithDistrict[district] || [])
-                      .filter((cit) => cit != "All City")
-                      .map((c) => ({
-                        label: c,
-                        value: c,
-                      }))}
-                    width="200px"
-                    borderRadius="0"
+                <div className="special-filters-section">
+                  <div className="special-filter">
+                    <Dropdown
+                      placeholder={"Select District"}
+                      onChange={(value) => {
+                        setDistrict(value);
+                      }}
+                      options={(sriLankanDistricts || [])
+                        .filter((cit) => cit != "All City")
+                        .map((c) => ({
+                          label: c,
+                          value: c,
+                        }))}
+                      width="200px"
+                      borderRadius="0"
+                    />
+                  </div>
+                  <div className="special-filter">
+                    <Dropdown
+                      placeholder={"Select City"}
+                      onChange={(value) => {
+                        setCity(value);
+                      }}
+                      options={(citiesWithDistrict[district] || [])
+                        .filter((cit) => cit != "All City")
+                        .map((c) => ({
+                          label: c,
+                          value: c,
+                        }))}
+                      width="200px"
+                      borderRadius="0"
+                    />
+                  </div>
+                </div>
+
+                <div className="special-btn-section">
+                  <PassengerButton
+                    name="Search Bus"
+                    borderRadius="5px"
+                    fontSize="18px"
+                    fontWeight="500"
                   />
                 </div>
-              </div>
-
-              <div className="special-btn-section">
-                <PassengerButton
-                  name="Search Bus"
-                  borderRadius="5px"
-                  fontSize="18px"
-                  fontWeight="500"
-                />
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="special-result-section">
-        <div className="special-main-container">
-          <div className="special-features-section">
-            {features.map((feature) => (
-              <div className="feature-box">
-                <div className="feature-icon-box">
-                  <img src={feature.icon} alt="" />
-                </div>
-                <div className="features-text-box">
-                  <p className="feature-title">{feature.title}</p>
-                  <p className="feature-description">{feature.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="special-result-section">
-            <div className="special-result-topic">
-              <h2>Top Rated Buses for Your Trip</h2>
-            </div>
-            <div className="special-results">
-              {busData.map((bus) => (
-                <div key={bus.id} className="special-result">
-                  <BusItemCard
-                    name={bus.name}
-                    rating={bus.rating}
-                    id={bus.id}
-                    authority={bus.authority}
-                  />
+        <div className="special-result-section">
+          <div className="special-main-container">
+            <div className="special-features-section">
+              {features.map((feature) => (
+                <div className="feature-box">
+                  <div className="feature-icon-box">
+                    <img src={feature.icon} alt="" />
+                  </div>
+                  <div className="features-text-box">
+                    <p className="feature-title">{feature.title}</p>
+                    <p className="feature-description">{feature.description}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+            <div className="special-result-section">
+              <div className="special-result-topic">
+                <h2>Top Rated Buses for Your Trip</h2>
+              </div>
+              <div className="special-results">
+                {busData.map((bus) => (
+                  <div key={bus.id} className="special-result">
+                    <BusItemCard
+                      name={bus.name}
+                      rating={bus.rating}
+                      id={bus.id}
+                      authority={bus.authority}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

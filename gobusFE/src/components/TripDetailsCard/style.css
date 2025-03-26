@@ -1,0 +1,189 @@
+.trip-card-container {
+  padding: 10px 10px;
+  position: relative;
+}
+
+.trip-card-content {
+  padding: 10px;
+  position: relative;
+  background-color: rgba(245, 245, 245, 1);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.trip-card-content:hover {
+  background-color: rgba(245, 245, 245, 0.6);
+}
+
+.trip-card-title-section {
+  margin-bottom: 10px;
+}
+
+.trip-card-title {
+  font-size: 18px;
+  color: #2d3436;
+  font-weight: 550;
+}
+
+.trip-details p {
+  font-size: 15px;
+  color: #666;
+}
+
+.trip-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background-color: rgba(5, 148, 79, 1);
+}
+
+.flashing {
+  animation: flashing-light 1.5s infinite ease-in-out;
+}
+
+@keyframes flashing-light {
+  0% {
+    background-color: rgba(5, 148, 79, 0.3);
+    box-shadow: 0 0 0px rgba(5, 148, 79, 0.1);
+  }
+  50% {
+    background-color: rgba(5, 148, 79, 1);
+    box-shadow: 0 0 12px rgba(5, 148, 79, 1), 0 0 24px rgba(5, 148, 79, 0.6);
+  }
+  100% {
+    background-color: rgba(5, 148, 79, 0.3);
+    box-shadow: 0 0 0px rgba(5, 148, 79, 0.1);
+  }
+}
+
+.trips-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.trips-popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.trips-popup-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+}
+
+.trips-popup-close-btn:hover {
+  color: rgba(200, 30, 50, 1);
+}
+
+.trips-popup-title h2 {
+  color: #2d3436;
+}
+
+.trips-popup-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trips-popup-detail-field {
+  width: 100%;
+  display: flex;
+}
+
+.trips-popup-detail-label {
+  font-size: 16px;
+  width: 30%;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.trips-popup-detail-data {
+  width: 70%;
+  font-size: 16px;
+  color: #666;
+}
+
+.long-data-field {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+.trips-popup-btn-section {
+  width: 100%;
+  display: flex;
+  gap: 50px;
+  margin-top: 20px;
+}
+
+.trips-popup-btn-edit {
+  background-color: rgba(245, 245, 245, 0.5);
+  border: 1px solid rgba(5, 148, 79, 1);
+  padding: 3px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.trips-popup-btn-edit p {
+  color: rgba(5, 148, 79, 1);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.trips-popup-btn-cancle {
+  background-color: rgba(245, 245, 245, 0.5);
+  border: 1px solid rgba(200, 30, 50, 1);
+  padding: 3px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.trips-popup-btn-cancle p {
+  color: rgba(200, 30, 50, 1);
+  font-size: 15px;
+  font-weight: 500;
+}
+@keyframes blink {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(200, 200, 200, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.editing-mode {
+  border: none;
+  font-size: 16px;
+  outline: none;
+  animation: blink 1s infinite;
+  border-bottom: 1px dashed rgba(200, 200, 200, 1);
+  padding: 2px;
+}
