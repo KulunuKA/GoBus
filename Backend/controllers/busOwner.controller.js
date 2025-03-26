@@ -121,13 +121,13 @@ const getTripRequests = async (req, res, next) => {
     }
 
     const trips = await Trip.find({ busID: { $in: busOwner.busesId } })
-      .populate("userID","username")
+      .populate("userID", "username").populate("busID", "busNumber")
       .lean();
 
     res.status(200).send({
       code: 0,
       msg: "Trips found successfully",
-      data: { trips },
+      data: trips,
     });
   } catch (error) {
     next(new AppError(400, error.message));

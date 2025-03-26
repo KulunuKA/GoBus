@@ -14,6 +14,14 @@ const tripSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  days: {
+    type: Number,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
   venue: {
     type: String,
     required: true,
@@ -24,8 +32,8 @@ const tripSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["requested", "approved", "rejected"],
-    default: "requested",
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
   },
   contact_no: {
     type: Number,
