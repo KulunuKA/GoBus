@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import { SearchOutlined } from "@ant-design/icons";
 import MyInput from "../../components/input";
@@ -12,6 +12,9 @@ import island from "../../assets/images/map.png";
 import wallet from "../../assets/images/wallet.png";
 import review from "../../assets/images/review.png";
 import BusItemCard from "../../components/BusItemCard/index.jsx";
+import { getSpecialBuses } from "../../apis/passengerAPIs.js";
+import Loading from "../../components/Loading.jsx";
+import EmptyDataMessage from "../../components/EmptyDataMessage.jsx";
 
 const features = [
   {
@@ -34,48 +37,33 @@ const features = [
   },
 ];
 
-const busData = [
-  {
-    id: "bus-123",
-    name: "City Express 42",
-    rating: 4.5,
-    authority: "Metro Transit Authority",
-    imageUrl: "/api/placeholder/300/200",
-  },
-  {
-    id: "bus-456",
-    name: "Downtown Connector 12",
-    rating: 4.2,
-    authority: "Urban Transport Co.",
-    imageUrl: "/api/placeholder/300/200",
-  },
-  {
-    id: "bus-789",
-    name: "Green Line Shuttle",
-    rating: 4.8,
-    authority: "City Green Transit",
-    imageUrl: "/api/placeholder/300/200",
-  },
-  {
-    id: "bus-101",
-    name: "Rapid Line 7A",
-    rating: 4.0,
-    authority: "Express Bus Corp.",
-    imageUrl: "/api/placeholder/300/200",
-  },
-  {
-    id: "bus-202",
-    name: "Sunrise Commuter 3",
-    rating: 3.9,
-    authority: "Regional Bus Network",
-    imageUrl: "/api/placeholder/300/200",
-  },
-];
-
 export default function Special() {
+  const [buses, setBuses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isError, setIsError] = useState("");
   const [searchText, setSearchText] = useState("");
   const [district, setDistrict] = useState("");
   const [city, setCity] = useState("");
+
+  const fetchBuses = async (type = "special service", dis, cit) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getSpecialBuses(type, dis, cit);
+      if (code === 0) {
+        setBuses(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBuses();
+  }, []);
   return (
     <>
       <div className="main-passenger-container">
@@ -142,6 +130,9 @@ export default function Special() {
                     borderRadius="5px"
                     fontSize="18px"
                     fontWeight="500"
+                    onClick={() => {
+                      fetchBuses("special service", district, city);
+                    }}
                   />
                 </div>
               </div>
@@ -167,17 +158,28 @@ export default function Special() {
               <div className="special-result-topic">
                 <h2>Top Rated Buses for Your Trip</h2>
               </div>
-              <div className="special-results">
-                {busData.map((bus) => (
-                  <div key={bus.id} className="special-result">
-                    <BusItemCard
-                      name={bus.name}
-                      rating={bus.rating}
-                      id={bus.id}
-                      authority={bus.authority}
-                    />
+              <div className="special-result-container">
+                {loading ? (
+                  <Loading size={70} />
+                ) : buses.length === 0 ? (
+                  <EmptyDataMessage message="Not found buses!" />
+                ) : (
+                  <div className="special-results">
+                    {buses
+                      ?.filter((e) => e.name.includes(searchText))
+                      .map((bus) => (
+                        <div key={bus.id} className="special-result">
+                          <BusItemCard
+                            name={bus.name}
+                            rating={bus.rating}
+                            id={bus.id}
+                            authority={bus.ownerID.authorityName}
+                            image={bus.pictures[0]}
+                          />
+                        </div>
+                      ))}
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

@@ -1,14 +1,13 @@
 import React from "react";
 import { Star } from "lucide-react";
 import "./style.css";
-import imageBus from "../../assets/images/busOwner.jpg";
 
 export default function BusItemCard({
-  /*id, name, rating, authority, image*/ id = "bus-123",
-  name = "City Express 42",
+  id,
+  name,
   rating = 4.8,
-  authority = "Metro Transit Authority",
-  image = imageBus,
+  authority,
+  image,
 }) {
   const renderStars = (rating) => {
     const stars = [];

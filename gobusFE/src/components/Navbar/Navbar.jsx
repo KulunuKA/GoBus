@@ -21,7 +21,7 @@ export default function Navbar() {
   const [lastScroll, setLastScroll] = useState(0);
   const [visible, setVisible] = useState(true);
 
-  const role = passengerRedux?.role || busOwnerRedux?.role || "passenger";
+  const role = passengerRedux?.role || busOwnerRedux?.role;
 
   function truncateUsernmae(username) {
     if (username.length > 14) {
@@ -64,7 +64,7 @@ export default function Navbar() {
             <a href="#" className="nav-link">
               Public
             </a>
-            <a href="#" className="nav-link">
+            <a href="/special" className="nav-link">
               Special
             </a>
             <a href="#" className="nav-link">
