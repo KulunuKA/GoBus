@@ -1,4 +1,3 @@
-import { data } from "react-router-dom";
 import axiosInstance from "../services/axios instance";
 
 const headers = {
@@ -65,4 +64,8 @@ export const updateRoute = async (id, data) => {
 
 export const getRequests = async(id)=>{
   return await axiosInstance.get(`auth/busowner/trip/${id}`, options);
+}
+
+export const handleTrips = async (id, status) => {
+  return await axiosInstance.put(`auth/busowner/trip/${id}`, { status }, options);
 }
