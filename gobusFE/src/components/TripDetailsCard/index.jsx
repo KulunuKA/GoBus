@@ -6,7 +6,7 @@ export default function TripDetailsCard({ trip }) {
   const [tripDetails, setTripDetails] = useState(trip);
   const [isEditing, setIsEditing] = useState(false);
   const [tempDetails, setTempDetails] = useState({
-    to: tripDetails.to,
+    to: tripDetails.venue,
     days: tripDetails.days,
     date: tripDetails.date,
   });
@@ -17,8 +17,8 @@ export default function TripDetailsCard({ trip }) {
 
   const getStatusColor = (status) => {
     if (status === "approved") return "green";
-    if (status === "pendings") return "orange";
-    if (status === "declined") return "red";
+    if (status === "pending") return "orange";
+    if (status === "rejected") return "red";
     return "gray";
   };
 
@@ -59,13 +59,13 @@ export default function TripDetailsCard({ trip }) {
 
           <div className="trip-card-title-section">
             <p className="trip-card-title">
-              A {tripDetails.days} days {tripDetails.type} to {tripDetails.to}.
+              A {tripDetails.days} days {tripDetails.type} to {tripDetails.venue}.
             </p>
           </div>
           <div className="trip-card-details">
             <div className="trip-details">
-              <p>Bus: {tripDetails.bus.number}</p>
-              <p>Date: {tripDetails.date}</p>
+              <p>Bus: {tripDetails?.busID.busNumber}</p>
+              <p>Date: {tripDetails?.date.split("T")[0]}</p>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function TripDetailsCard({ trip }) {
                 </p>
               </div>
 
-              {tripDetails.status !== "pendings" && (
+              {tripDetails.status !== "pending" && (
                 <div className="trips-popup-detail-field">
                   <p className="trips-popup-detail-label ">Req. Reply:</p>
                   <p className="trips-popup-detail-data long-data-field">
@@ -160,7 +160,7 @@ export default function TripDetailsCard({ trip }) {
                 </div>
               )}
 
-              {tripDetails.status === "pendings" && (
+              {tripDetails.status === "pending" && (
                 <div className="trips-popup-btn-section">
                   {!isEditing ? (
                     <>

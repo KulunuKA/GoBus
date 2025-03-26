@@ -26,9 +26,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
         <Route path="/userProfile/" element={<UserAccount />} />
-        <Route path="/bus/:busId" element={<SingleBusPage />} />
+        <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/trips" element={<Trips />} />
+        <Route path="/activity" element={<Trips />} />
       </Route>
 
       {/* Bus Owner routes */}

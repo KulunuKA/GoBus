@@ -15,43 +15,15 @@
   font-weight: 500;
 }
 
-.bookingForm-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
 .bookingForm-popup-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 500px;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding: 10px;
   text-align: start;
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.bookingForm-popup-close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-  color: black;
-}
-
-.bookingForm-popup-close-btn:hover {
-  color: rgba(200, 30, 50, 1);
 }
 
 .bookingForm-popup-title h2 {
@@ -61,6 +33,8 @@
 .bookingForm-popup-details {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .bookingForm-popup-detail-field {

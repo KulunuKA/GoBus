@@ -24,7 +24,7 @@ const requestTrip = async (req, res, next) => {
     const trip = await Trip.create(req.body);
 
     res.status(201).send({
-      msg: "success",
+      msg: "Success",
       data: {
         trip,
       },
@@ -42,7 +42,10 @@ const getAllTrips = async (req, res, next) => {
     if (!req.params.userID) {
       return next(new AppError(400, "Please provide the user ID"));
     }
-    const trips = await Trip.find({ userID: req.params.userID });
+    const trips = await Trip.find({ userID: req.params.userID }).populate(
+      "busID",
+      "busNumber"
+    );
     res.status(200).send({
       msg: "success",
       data: trips,

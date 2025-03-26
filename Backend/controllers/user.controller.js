@@ -16,6 +16,20 @@ const login = async (req, res, next) => {
         req.body.email,
         req.body.password
       );
+
+      let token = await user.generateAuthToken();
+      return res.status(200).send({
+        code: 0,
+        msg: "Login successful",
+        data: {
+          id: user._id,
+          role: user.role,
+          username: user.username,
+          email: user.email,
+          mobile: user.mobile,
+          token,
+        },
+      });
     } catch (error) {
       if (error.statusCode !== 404) {
         return next(new AppError(error.statusCode || 400, error.message));

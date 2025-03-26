@@ -168,11 +168,11 @@ export default function Special() {
                     {buses
                       ?.filter((e) => e.name.includes(searchText))
                       .map((bus) => (
-                        <div key={bus.id} className="special-result">
+                        <div key={bus._id} className="special-result">
                           <BusItemCard
+                            id={bus._id}
                             name={bus.name}
                             rating={bus.rating}
-                            id={bus.id}
                             authority={bus.ownerID.authorityName}
                             image={bus.pictures[0]}
                           />
