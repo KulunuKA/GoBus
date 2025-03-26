@@ -1,0 +1,82 @@
+.dual-service-btn-section {
+  display: flex;
+  gap: 20px;
+}
+
+.information-with-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.information-with-btn-para {
+  font-size: 15px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.bookingForm-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.bookingForm-popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: start;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bookingForm-popup-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  color: black;
+}
+
+.bookingForm-popup-close-btn:hover {
+  color: rgba(200, 30, 50, 1);
+}
+
+.bookingForm-popup-title h2 {
+  color: #2d3436;
+}
+
+.bookingForm-popup-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.bookingForm-popup-detail-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.bookingForm-popup-detail-label {
+  font-size: 16px;
+  width: 30%;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.bookingForm-popup-detail-input-box {
+  width: 100%;
+}

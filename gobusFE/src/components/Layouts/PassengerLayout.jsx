@@ -8,9 +8,13 @@ export default function PassengerLayout() {
 
   const isUserProfile = location.pathname.startsWith("/userProfile");
 
+  const hideNavBar =
+    location.pathname.startsWith("/userProfile") ||
+    location.pathname.startsWith("/trips");
+
   return (
     <main className="main">
-      {!isUserProfile && <Navbar />}
+      {!hideNavBar && <Navbar />}
       <Outlet />
       {!isUserProfile && <Footer />}
     </main>
