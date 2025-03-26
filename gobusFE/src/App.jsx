@@ -16,6 +16,7 @@ import Requests from "./views/Requests";
 import SingleBusPage from "./views/SingleBusPage";
 import Help from "./views/Help/index";
 import Trips from "./views/Trips/index";
+import PublicPage from "./views/PublicPage/index";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/userProfile/" element={<UserAccount />} />
         <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/public" element={<PublicPage />} />
         <Route path="/activity" element={<Trips />} />
       </Route>
 
