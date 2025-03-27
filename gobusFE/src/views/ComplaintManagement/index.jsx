@@ -161,6 +161,7 @@ export default function ComplaintManagement() {
           isOpen={view}
           onClose={() => {
             setView(!view);
+            fetchComplaints();
           }}
           complaint={selectedComplaint}
         />

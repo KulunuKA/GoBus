@@ -146,7 +146,7 @@ export default function PassengerAccount({ selectedTab }) {
                 />
 
                 <div style={{ marginTop: 20 }}>
-                  <MyButton width={200} name="Update" loading={loading} onClick={handleUpdate}/>
+                  <MyButton width={200} color="rgba(5, 148, 79, 1)" name="Update" loading={loading} onClick={handleUpdate}/>
                 </div>
               </div>
             </>
