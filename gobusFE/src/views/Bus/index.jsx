@@ -145,7 +145,7 @@ export default function Bus() {
                     <td>
                       <MyButton
                         name="Edit"
-                        color={"#3498db"}
+                        color={"rgba(5, 148, 79, 1)"}
                         icon={<EditOutlined />}
                         mt={10}
                         onClick={(e) => {

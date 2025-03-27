@@ -143,7 +143,7 @@ export default function Requests() {
                     {request.status === "pending" && (
                       <MyButton
                         name="Approve"
-                        color={"#4caf50"}
+                        color={"rgba(5, 148, 79, 1)"}
                         width={"100px"}
                         onClick={() => handleConfirmTrip(request, "approved")}
                         loading={btnLoadingId === request._id}
@@ -165,7 +165,9 @@ export default function Requests() {
                         name={request.status}
                         disabled={true}
                         color={
-                          request.status === "approved" ? "#4caf50" : "#f44336"
+                          request.status === "approved"
+                            ? "rgba(5, 148, 79, 1)"
+                            : "#e74c3c"
                         }
                       />
                     )}
