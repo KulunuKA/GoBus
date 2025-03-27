@@ -1,0 +1,43 @@
+.complaintForm-popup-content {
+  height: 350px;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding: 10px;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.complaintForm-popup-title h2 {
+  color: #2d3436;
+}
+
+.complaintForm-popup-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.complaintForm-popup-detail-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.complaintForm-popup-detail-label {
+  font-size: 16px;
+  width: 30%;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.complaintForm-popup-detail-input-box {
+  width: 100%;
+}
+
+.cf-btn {
+  margin-top: 30px;
+}

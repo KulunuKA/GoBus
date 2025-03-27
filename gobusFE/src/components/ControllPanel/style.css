@@ -1,0 +1,127 @@
+.controll-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+  width: 250px;
+  background-color: #fff;
+  color: white;
+  z-index: 100;
+  transition: 0.5s;
+  padding: 20px 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.panel-logo {
+  width: 100px;
+}
+
+.panel-logout {
+  cursor: pointer;
+  font-size: 20px;
+  rotate: 180deg;
+}
+
+.panel-tabs {
+  width: 100%;
+  color: #2d3436;
+  text-transform: capitalize;
+}
+
+.panel-tabs ul {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.panel-tabs ul li {
+  width: 200px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.panel-tabs ul li.active {
+  background-color: #05944f;
+  color: #fff;
+}
+
+.panel-tab:hover {
+  background-color: #f1f2f6;
+}
+
+.panel-seperator {
+  width: 90%;
+  height: 2px;
+  background-color: #e0e0e0;
+}
+
+.panel-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-top: 60px;
+}
+
+.panel-admin-profil {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-admin-profil img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.panel-admin-profil p {
+  color: #2d3436;
+  font-size: 16px;
+  font-weight: 550;
+}
+
+.admin-more-btn {
+  position: relative;
+}
+
+.showmore-section {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 40px;
+  bottom: 60px;
+  width: 180px;
+  background-color: rgba(224, 224, 224, 0.5);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 5px 10px;
+  border-radius: 7px 7px 0 7px;
+  z-index: 10000;
+}
+
+.showmore-section ul {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  list-style: none;
+}
+.showmore-section ul p {
+  color: #666;
+  font-size: 15px;
+}

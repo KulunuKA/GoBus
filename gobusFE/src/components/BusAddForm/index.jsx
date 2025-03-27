@@ -271,9 +271,10 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
             <MyInput
               type="time"
               value={round.endTime}
-              onChange={(e) =>
-                handleTimetableChange(index, "endTime", e.target.value)
-              }
+              onChange={(e) => {
+                console.log(e.target.value);
+                handleTimetableChange(index, "endTime", e.target.value);
+              }}
             />
           </div>
         </div>

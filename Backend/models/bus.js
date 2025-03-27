@@ -68,7 +68,7 @@ const busSchema = new mongoose.Schema({
         required: true,
       },
       startTime: {
-        type: Date,
+        type: String,
         required: true,
       },
       endPlace: {
@@ -76,7 +76,7 @@ const busSchema = new mongoose.Schema({
         required: true,
       },
       endTime: {
-        type: Date,
+        type: String,
         required: true,
       },
     },
