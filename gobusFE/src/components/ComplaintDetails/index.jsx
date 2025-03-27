@@ -26,6 +26,7 @@ export default function ComplaintDetails({ isOpen, onClose, complaint }) {
         notification.success({
           message: msg,
         });
+        onClose();
         setValues((prev) => {
           return prev.map((item) => {
             if (item.key === "Status") {

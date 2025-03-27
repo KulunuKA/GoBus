@@ -5,7 +5,7 @@ import admin from "../../assets/images/admin.jfif";
 import { GoSignOut } from "react-icons/go";
 import MyInput from "../input";
 import { SearchOutlined } from "@ant-design/icons";
-import { FaBusAlt, FaUsersCog } from "react-icons/fa";
+import { FaBusAlt, FaUsers, FaUsersCog } from "react-icons/fa";
 import { MdContactSupport, MdDashboard, MdOutlineRoute } from "react-icons/md";
 import { LuBadgeAlert } from "react-icons/lu";
 import { IoIosMore, IoIosNotifications, IoMdSettings } from "react-icons/io";
@@ -34,9 +34,15 @@ export default function ControllPanel() {
       icon: <MdDashboard />,
     },
     {
-      name: "users",
-      title: "User Management",
-      query: "users",
+      name: "passengers",
+      title: "Passenger Management",
+      query: "passengers",
+      icon: <FaUsers />,
+    },
+    {
+      name: "authorities",
+      title: "Authority Management",
+      query: "authorities",
       icon: <FaUsersCog />,
     },
     {
