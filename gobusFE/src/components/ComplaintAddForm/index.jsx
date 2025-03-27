@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { Modal, notification, Space } from "antd";
-import submit from "../../assets/images/click.png";
 import "./style.css";
-import PassengerButton from "../PassengerButton";
 import Dropdown from "../../components/Dropdown";
 import TextArea from "antd/es/input/TextArea";
 import { useSelector } from "react-redux";
 import { passengerData } from "../../store/passengerSlice";
+import MyButton from "../button";
+import { addComplaint } from "../../apis/passengerAPIs";
 
 export default function ComplaintAddForm({ isOpen, onCancel }) {
   const { id: u_id } = useSelector(passengerData);
-
+  const errorTextStyles = {
+    color: "#F5222D",
+    fontSize: "14px",
+    marginTop: "1px",
+  };
   const [complaint, setComplaint] = useState({
     userID: u_id,
     date: new Date().toISOString().split("T")[0],
-    about: "",
+    complaintType: "",
     complaint: "",
-    status: "In Progress",
   });
 
   const [errors, setErrors] = useState({});
@@ -31,28 +34,36 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
   const validateForm = (values) => {
     const newErrors = {};
 
-    if (!values.about) {
-      newErrors.about = "Complaint category is required";
+    if (!values.complaintType) {
+      newErrors.complaintType = "Complaint category is required";
     }
 
     if (!values.complaint) {
       newErrors.complaint = "Description is required";
     }
 
-    console.log(newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     try {
-      const isValid = validateForm(trip);
+      const isValid = validateForm(complaint);
 
       if (!isValid) {
         return;
       }
       setLoading(true);
+
+      const { data, code, msg } = await addComplaint(complaint);
+      if (code === 0) {
+        notification.success({
+          message: msg,
+        });
+        onCancel();
+      }
     } catch (error) {
+      console.log(error);
       setLoading(false);
       notification.error({
         message: "Something went wrong",
@@ -82,10 +93,13 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
                 )}
                 width="100%"
                 borderRadius="7px"
-                value={complaint.about}
-                onChange={(value) =>
-                  setComplaint({ ...complaint, about: value })
-                }
+                value={complaint.complaintType}
+                onChange={(value) => {
+                  setComplaint({ ...complaint, complaintType: value });
+                  setErrors({ ...errors, complaintType: "" });
+                }}
+                error={errors.complaintType}
+                errorMessage={errors.complaintType}
               />
             </div>
 
@@ -96,19 +110,27 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
                   <TextArea
                     rows={4}
                     placeholder="maxLength is 6"
-                    maxLength={100}
+                    maxLength={300}
                     onChange={handleChange("complaint")}
+                    value={complaint.complaint}
+                    style={errors.complaint ? { borderColor: "#F5222D" } : {}}
                   />
+                  {
+                    <div style={errorTextStyles} role="alert">
+                      {errors.complaint}
+                    </div>
+                  }
                 </Space>
               </div>
             </div>
 
             <div className="cf-btn">
-              <PassengerButton
+              <MyButton
                 name="Submit"
                 onClick={handleSubmit}
-                icon={submit}
-                fontWeight="500"
+                color={"#05944f"}
+                loading={loading}
+                width={200}
               />
             </div>
           </div>

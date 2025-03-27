@@ -112,7 +112,7 @@ export default function Navbar() {
           </div>
         </div>
         <div className="navbar-right">
-          <a href="#" className="nav-link">
+          <a href="/help" className="nav-link">
             Help
           </a>
           <div className="dropdown">
