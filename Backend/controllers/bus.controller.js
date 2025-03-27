@@ -22,7 +22,7 @@ const addBus = async (req, res, next) => {
     await bus.save();
 
     res.status(200).send({
-      data: { bus },
+      data: bus,
       code: 0,
       msg: "Added bus",
     });
@@ -87,10 +87,9 @@ const getBuses = async (req, res, next) => {
     if (!req.params.id) {
       return next(new AppError(400, "Invalid owner id"));
     }
-    const buses = await Bus.find({ ownerID: req.params.id }).populate(
-      "route_id",
-      "route_number"
-    ).populate("driverID", "name phone");
+    const buses = await Bus.find({ ownerID: req.params.id })
+      .populate("route_id", "route_number")
+      .populate("driverID", "name phone");
 
     res.status(200).send({
       data: buses,
@@ -114,10 +113,6 @@ const getBusesPassenger = async (req, res, next) => {
     let buses = await Bus.find(query)
       .populate("ownerID", "authorityName")
       .populate("route_id", "main_cities");
-
-    if (!buses || buses.length === 0) {
-      return next(new AppError(404, "No buses found"));
-    }
 
     if (req.query.start && req.query.end) {
       buses = buses.filter((bus) => {
@@ -147,10 +142,10 @@ const getBus = async (req, res, next) => {
       return next(new AppError(400, "Invalid bus id"));
     }
 
-    const bus = await Bus.findById(req.params.id).populate(
-      "ownerID",
-      "authorityName email phone address logo"
-    ).populate("route_id", "").populate("driverID", "name phone");
+    const bus = await Bus.findById(req.params.id)
+      .populate("ownerID", "authorityName email phone address logo")
+      .populate("route_id", "")
+      .populate("driverID", "name phone");
 
     if (!bus) {
       return next(new AppError(404, "Bus not found"));

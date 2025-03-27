@@ -4,8 +4,8 @@ import MyInput from "../../components/input";
 import DropDown from "../../components/Dropdown";
 import MyButton from "../../components/button";
 import { addEmployee } from "../../apis/busOwner";
-import { busOwnerData } from "../../store/busOwnerSlice";
-import { useSelector } from "react-redux";
+import { busOwnerData, updateEmployeeId } from "../../store/busOwnerSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function EmployeeForm({ isOpen, onCancel, refresh }) {
   const { id } = useSelector(busOwnerData);
@@ -19,6 +19,7 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
 
   const inputHandle = (field) => (e) => {
     setEmpData({ ...empData, [field]: e.target.value });
@@ -62,6 +63,7 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
       const { data, code, msg } = await addEmployee(empData);
 
       if (code === 0) {
+        dispatch(updateEmployeeId(data._id));
         notification.success({
           message: msg,
         });

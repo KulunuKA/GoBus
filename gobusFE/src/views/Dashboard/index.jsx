@@ -3,16 +3,33 @@ import "./style.css";
 import EditableField from "../../components/EditableField";
 import MyButton from "../../components/button";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
+import { useSelector } from "react-redux";
+import { busOwnerData } from "../../store/busOwnerSlice";
+import { busOwnerUpdate } from "../../apis/busOwner";
 
 export default function Dashboard() {
   const [isEditing, setIsEditing] = useState({});
+  const {
+    _id: id,
+    busesId,
+    routesId,
+    employeesId,
+    authorityName,
+    email,
+    phone,
+    address,
+    logo,
+  } = useSelector(busOwnerData);
   const [userData, setUserData] = useState({
-    authorityName: "Ashan Bus Authority",
-    email: "ashan@gmail.com",
-    phone: "072548662656",
-    address: "Piumgalla, Wariyapola",
+    authorityName:authorityName,
+    email: email,
+    phone: phone,
+    address: address,
+    logo: logo,
+    busesId: busesId,
+    routesId: routesId,
+    employeesId: employeesId,
   });
-
   const [showPopup, setShowPopup] = useState(false);
   const [unSavedField, setUnSavedField] = useState(null);
   const [nextField, setNextField] = useState(null);
@@ -86,6 +103,42 @@ export default function Dashboard() {
     activeBusesPublicServiceInStand +
     activeBusesSpecialService;
 
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      if (
+        !userData.address ||
+        !userData.email ||
+        !userData.phone ||
+        !userData.authorityName
+      ) {
+        notification.error({
+          message: "Please fill all the fields",
+        });
+        return;
+      }
+
+      const { data, msg, code } = await busOwnerUpdate(id, userData);
+      if (code === 0) {
+        dispatch(updatePassengerInfo(data));
+        notification.success({
+          message: msg,
+        });
+      } else {
+        notification.error({
+          message: "Something went wrong",
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+      notification.error({
+        message: "Something went wrong",
+      });
+    }
+  };
+
   return (
     <div className="dashboard">
       <div className="owner-dashboard-header">
@@ -98,20 +151,20 @@ export default function Dashboard() {
             style={{ backgroundColor: "rgba(5, 148, 79, 1)" }}
           ></div>
           <p className="owner-dashboard-count">
-            {totalActiveBuses}/{buses.length}
+            {totalActiveBuses}/{busesId?.length}
           </p>
           <p>Active / Total Buses</p>
         </div>
         <div className="owner-dashboard-summary-box">
-          <p className="owner-dashboard-count">50</p>
+          <p className="owner-dashboard-count">{routesId?.length}</p>
           <p>Total Routes</p>
         </div>
         <div className="owner-dashboard-summary-box">
-          <p className="owner-dashboard-count">50</p>
+          <p className="owner-dashboard-count">{employeesId?.length}</p>
           <p>Total Employees</p>
         </div>
         <div className="owner-dashboard-summary-box">
-          <p className="owner-dashboard-count">50</p>
+          <p className="owner-dashboard-count">LKR:89290</p>
           <p>Today Revenue</p>
         </div>
       </div>
@@ -157,6 +210,7 @@ export default function Dashboard() {
             name="Update"
             loading={loading}
             color="#05944F"
+            onClick={handleUpdate}
           />
         </div>
       </div>

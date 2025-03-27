@@ -5,12 +5,12 @@ import { io } from "socket.io-client";
 
 const socket = io("https://f290-123-231-127-98.ngrok-free.app");
 
-export default function App() {
+const Home = () => {
   const [location, setLocation] = useState(null);
   const [start, setStart] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
   const busId = "1";
-  
+
   const startTrip = useCallback(async () => {
     try {
       console.log("called startTrip");
@@ -83,15 +83,13 @@ export default function App() {
             Longitude: {location.longitude.toFixed(6)}
           </Text>
           {lastUpdate && (
-            <Text style={styles.updateText}>
-              Last Update: {lastUpdate}
-            </Text>
+            <Text style={styles.updateText}>Last Update: {lastUpdate}</Text>
           )}
         </View>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -103,9 +101,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     borderRadius: 10,
-    width: '100%',
+    width: "100%",
   },
   locationText: {
     fontSize: 16,
@@ -113,7 +111,9 @@ const styles = StyleSheet.create({
   },
   updateText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 10,
-  }
+  },
 });
+
+export default Home;

@@ -62,7 +62,7 @@ const login = async (req, res, next) => {
         authorityName: user.authorityName || null,
         email: user.email,
         name: user.name,
-        mobile: user.mobile,
+        phone: user.phone,
         address: user.address,
         logo: user.logo || null,
         busesId: user.busesId || null,

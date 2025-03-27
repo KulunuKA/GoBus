@@ -36,12 +36,16 @@ function App() {
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
-        <Route path="/userprofile" element={<UserAccount />} />
         <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/complaints" element={<PassengerComplaints />} />
         <Route path="/public-buses" element={<PublicPage />} />
-        <Route path="/activity" element={<Trips />} />
+
+        {/* Passenger routes */}
+        <Route element={<RequireAuth allowedRole={"Passenger"} />}>
+          <Route path="/userprofile" element={<UserAccount />} />
+          <Route path="/activity" element={<Trips />} />
+          <Route path="/complaints" element={<PassengerComplaints />} />
+        </Route>
       </Route>
 
       {/* Bus Owner routes */}
@@ -55,7 +59,7 @@ function App() {
         </Route>
       </Route>
 
-      {/* Adnibistrator routes */}
+      {/* Administrator routes */}
       <Route path="/administrator" element={<AdministratorLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="users" element={<UserManagement />} />

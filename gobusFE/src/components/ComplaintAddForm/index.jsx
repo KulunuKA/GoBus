@@ -17,7 +17,6 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
   };
   const [complaint, setComplaint] = useState({
     userID: u_id,
-    date: new Date().toISOString().split("T")[0],
     complaintType: "",
     complaint: "",
   });
@@ -60,8 +59,14 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
         notification.success({
           message: msg,
         });
+        setComplaint({
+          userID: u_id,
+          complaintType: "",
+          complaint: "",
+        });
         onCancel();
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -109,7 +114,8 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
                 <Space direction="vertical" style={{ width: "100%" }}>
                   <TextArea
                     rows={4}
-                    placeholder="maxLength is 6"
+                    placeholder="Enter your complaint here"
+                    minLength={10}
                     maxLength={300}
                     onChange={handleChange("complaint")}
                     value={complaint.complaint}

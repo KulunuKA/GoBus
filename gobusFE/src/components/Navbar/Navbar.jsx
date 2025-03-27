@@ -152,7 +152,7 @@ export default function Navbar() {
                 </div>
                 <div className="user-data-btn-dropdown">
                   <div className="user-data-btn">
-                    <a href="#">
+                    <a href="/help">
                       <img src={question} alt="" />
                       <p>Help</p>
                     </a>

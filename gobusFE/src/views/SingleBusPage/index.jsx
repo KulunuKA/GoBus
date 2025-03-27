@@ -54,7 +54,6 @@ const busDetails = {
   },
 };
 
-
 const calOverallReviewsCount = (numReviewBus, numReviewDriver) => {
   return numReviewBus + numReviewDriver;
 };
@@ -519,9 +518,9 @@ const BusInfo = ({ data }) => {
     return (
       <>
         {data.busType === "public transport" &&
-          data.currentStatus === "In Route" &&
-          !data.currentDetails.delay &&
-          !data.currentDetails.breakDown && (
+          data.start_trip &&
+          !data.is_delay &&
+          !data.is_breakdown && (
             <PassengerButton
               name="Track Location"
               borderRadius="5px"
@@ -531,7 +530,7 @@ const BusInfo = ({ data }) => {
             />
           )}
         {data.busType === "public transport" &&
-          data.currentStatus === "In Route" &&
+          data.start_trip &&
           data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -550,7 +549,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "public transport" &&
-          data.currentStatus === "In Route" &&
+          data.start_trip &&
           data.currentDetails.breakDown && (
             <div className="information-with-btn">
               <p className="information-with-btn-para">
@@ -559,7 +558,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "public transport" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip &&
           !data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -569,7 +568,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "public transport" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip &&
           data.currentDetails.breakDown && (
             <div className="information-with-btn">
               <p className="information-with-btn-para">
@@ -578,7 +577,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "public transport" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip &&
           data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -587,14 +586,13 @@ const BusInfo = ({ data }) => {
               </p>
             </div>
           )}
-        {data.busType === "public transport" &&
-          data.currentStatus === "Not Working" && (
-            <div className="information-with-btn">
-              <p className="information-with-btn-para">
-                Bus Notice: The bus will not be operating today.
-              </p>
-            </div>
-          )}
+        {data.busType === "public transport" && !data.today_work && (
+          <div className="information-with-btn">
+            <p className="information-with-btn-para">
+              Bus Notice: The bus will not be operating today.
+            </p>
+          </div>
+        )}
         {data.busType === "special service" && (
           <PassengerButton
             name="Book For Special Trip"
@@ -609,17 +607,9 @@ const BusInfo = ({ data }) => {
             }}
           />
         )}
-        {data.busType === "special service" &&
-          data.currentStatus === "Not Working" && (
-            <div className="information-with-btn">
-              <p className="information-with-btn-para">
-                Service Update: special service booking is temporarily
-                unavailable.
-              </p>
-            </div>
-          )}
+        
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Route" &&
+          data.start_trip  &&
           !data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="dual-service-btn-section">
@@ -640,7 +630,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Route" &&
+          data.start_trip &&
           data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -666,7 +656,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Route" &&
+          data.start_trip &&
           data.currentDetails.delay &&
           data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -676,7 +666,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip  &&
           data.currentDetails.delay &&
           data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -686,7 +676,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip &&
           !data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -705,7 +695,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "In Stand" &&
+          data.start_trip  &&
           data.currentDetails.delay &&
           !data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -724,7 +714,7 @@ const BusInfo = ({ data }) => {
             </div>
           )}
         {data.busType === "Dual-Service" &&
-          data.currentStatus === "Not Working" && (
+          !data.today_work  && (
             <div className="information-with-btn">
               <p className="information-with-btn-para">
                 Bus Notice: The bus will not be operating today and special

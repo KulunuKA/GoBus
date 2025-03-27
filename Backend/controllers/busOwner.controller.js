@@ -52,7 +52,15 @@ const updateBusOwner = async (req, res, next) => {
     res.status(200).send({
       code: 0,
       message: "Bus owner updated successfully",
-      data: { busOwner },
+      data: {
+        authorityName: busOwner.authorityName,
+        email: busOwner.email,
+        phone: busOwner.phone,
+        address: busOwner.address,
+        busesId: busOwner.busesId,
+        employeesId: busOwner.employeesId,
+        routesId: busOwner.routesId,
+      },
     });
   } catch (error) {
     next(new AppError(400, error.message));

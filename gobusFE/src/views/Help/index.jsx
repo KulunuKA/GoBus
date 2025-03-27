@@ -31,11 +31,11 @@ export default function Help() {
               <img src={faqs} alt="" />
               <p className="help-btn-name">FAQs</p>
             </div>
-            <div className="help-section-btn" onClick={() => navigate("/complaints")}>
+            <div className="help-section-btn">
               <img src={support} alt="" />
               <p className="help-btn-name">Customer Support</p>
             </div>
-            <div className="help-section-btn">
+            <div className="help-section-btn" onClick={() => navigate("/complaints")}>
               <img src={complain} alt="" />
               <p className="help-btn-name">Complains</p>
             </div>
