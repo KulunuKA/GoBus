@@ -11,7 +11,7 @@ const registerPassenger = async (req, res, next) => {
     const passenger = new Passenger(req.body);
     await passenger.save();
 
-    const { _id: id, username, mobile, email,role } = passenger;
+    const { _id: id, username, mobile, email, role } = passenger;
     const token = await passenger.generateAuthToken();
 
     return res.status(200).send({
@@ -46,16 +46,23 @@ const registerPassenger = async (req, res, next) => {
 const updatePassenger = async (req, res, next) => {
   try {
     const updates = Object.keys(req.body);
-    const allowedUpdates = ["username", "email",  "mobile"];
-    const isValidOperation = allowedUpdates.every(() => {
-      allowedUpdates.includes(updates);
-    });
+    const allowedUpdates = ["username", "email", "mobile"];
+    const isValidOperation = updates.every((update) =>
+      allowedUpdates.includes(update)
+    );
 
     if (!isValidOperation) {
       return next(new AppError(400, "Invalid updates"));
     }
 
-    const passenger = await Passenger.findByIdAndUpdate(req.body.id, req.body);
+    const passenger = await Passenger.findByIdAndUpdate(
+      req.passenger._id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     if (!passenger) {
       return next(new AppError(404, "No passenger found"));
     }

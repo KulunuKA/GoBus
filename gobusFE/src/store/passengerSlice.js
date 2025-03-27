@@ -18,9 +18,15 @@ const passengerSlice = createSlice({
     setPassengerInfo: (state, action) => {
       state.info = action.payload;
     },
+    updatePassengerInfo: (state, action) => {
+      state.info = { ...state.info, ...action.payload };
+    },
+    clearStorePassenger: (state) => {
+      state.info = initialState.info;
+    },
   },
 });
 
-export const { setPassengerInfo } = passengerSlice.actions;
+export const { setPassengerInfo, updatePassengerInfo,clearStorePassenger } = passengerSlice.actions;
 export const passengerData = (state) => state.passenger.info;
 export default passengerSlice.reducer;

@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).send({
     data: {},
     msg: message,
-    code: 0,
+    code: 1,
   });
 };
 

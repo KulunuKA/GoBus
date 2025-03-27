@@ -128,7 +128,10 @@ export default function Trips() {
                       {pendingTrips.length > 0 ? (
                         <div className="trips-cards-pending-declined-trips-section">
                           {pendingTrips.map((trip) => (
-                            <TripDetailsCard trip={trip} />
+                            <TripDetailsCard
+                              trip={trip}
+                              refresh={() => fetchTrips()}
+                            />
                           ))}
                         </div>
                       ) : (

@@ -27,6 +27,24 @@ export const getSpecialBuses = async (type, district, city) => {
 
   return await axiosInstance.get(url);
 };
+export const getPublicBuses = async (type, start, end, condition) => {
+  let url = "public/bus/get";
+  if (type) {
+    url += `?type=${type}`;
+  }
+  if (start) {
+    url += `&start=${start}`;
+  }
+  if (end) {
+    url += `&end=${end}`;
+  }
+
+  if (condition) {
+    url += `&ac=${condition}`;
+  }
+
+  return await axiosInstance.get(url);
+};
 
 export const getBus = async (id) => {
   return await axiosInstance.get(`public/bus/get/${id}`);
@@ -36,6 +54,16 @@ export const requestTrip = async (data) => {
   return await axiosInstance.post(`auth/trip/request/`, data, options);
 };
 
+export const updateTrip = async (id,data) => {
+  return await axiosInstance.put(`auth/trip/update/${id}`, data, options);
+}
+
 export const getTrips = async (id) => {
   return await axiosInstance.get(`auth/trip/get/${id}`);
+};
+
+
+
+export const passengerUpdate = async (data) => {
+  return await axiosInstance.put(`auth/passenger/update`, data, options);
 };
