@@ -1,15 +1,21 @@
 import React, { useState } from "react";
 import "./style.css";
+import { Modal, notification } from "antd";
+import { updateTrip } from "../../apis/passengerAPIs";
 
-export default function TripDetailsCard({ trip }) {
+export default function TripDetailsCard({ trip, refresh }) {
   const [showPopup, setShowPopup] = useState(false);
-  const [tripDetails, setTripDetails] = useState(trip);
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempDetails, setTempDetails] = useState({
-    to: tripDetails.venue,
-    days: tripDetails.days,
-    date: tripDetails.date,
+  const [tripDetails, setTripDetails] = useState({
+    userID: trip.userID,
+    busId: trip.busID._id,
+    venue: trip.venue,
+    days: trip.days,
+    date: trip.date,
+    type: trip.type,
+    contact_no: trip.contact_no,
+    description: trip.description,
   });
+  const [isEditing, setIsEditing] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
   const isUpcoming =
@@ -22,184 +28,208 @@ export default function TripDetailsCard({ trip }) {
     return "gray";
   };
 
-  const handleClose = () => {
-    setShowPopup(false);
-    setIsEditing(false);
-  };
+  const handleSaveClick = async () => {
+    try {
+      if (
+        !tripDetails.venue ||
+        !tripDetails.days ||
+        !tripDetails.date ||
+        !tripDetails.contact_no
+      ) {
+        notification.error({
+          message: "All fields are required!",
+        });
+      }
 
-  const handleCancle = () => {
-    setIsEditing(false);
-    setTempDetails({
-      to: tripDetails.to,
-      days: tripDetails.days,
-      date: tripDetails.date,
-    });
-  };
-
-  const handleSaveClick = () => {
-    if (window.confirm("Are you sure you want to save the changes?")) {
-      setTripDetails((prev) => ({ ...prev, ...tempDetails }));
-      setShowPopup(false);
-      setIsEditing(false);
+      const { data, code, msg } = await updateTrip(trip._id, tripDetails);
+      if (code === 0) {
+        notification.success({
+          message: "Trip updated successfully!",
+        });
+        refresh();
+        setShowPopup(false);
+      }
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "Something went wrong!",
+      });
     }
   };
 
   return (
     <>
       <div
-        key={tripDetails.id}
+        key={trip.id}
         className="trip-card-container"
         onClick={() => setShowPopup(true)}
       >
         <div className="trip-card-content">
           <div
             className={`trip-status-indicator ${isUpcoming ? "flashing" : ""}`}
-            style={{ backgroundColor: getStatusColor(tripDetails.status) }}
+            style={{ backgroundColor: getStatusColor(trip.status) }}
           ></div>
 
           <div className="trip-card-title-section">
             <p className="trip-card-title">
-              A {tripDetails.days} days {tripDetails.type} to {tripDetails.venue}.
+              A {tripDetails.days} days {tripDetails.type} to{" "}
+              {tripDetails.venue}.
             </p>
           </div>
           <div className="trip-card-details">
             <div className="trip-details">
-              <p>Bus: {tripDetails?.busID.busNumber}</p>
+              <p>Bus: {trip.busID.busNumber}</p>
               <p>Date: {tripDetails?.date.split("T")[0]}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {showPopup && (
-        <div className="trips-popup-overlay" onClick={handleClose}>
-          <div
-            className="trips-popup-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="trips-popup-close-btn" onClick={handleClose}>
-              &times;
-            </span>
-            <div className="trips-popup-title">
-              <h2>Trip Details</h2>
-            </div>
-            <div className="trips-popup-details">
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label">Destination:</p>
-                {isEditing ? (
-                  <input
-                    className="editing-mode"
-                    type="text"
-                    value={tempDetails.to}
-                    onChange={(e) =>
-                      setTempDetails({ ...tempDetails, to: e.target.value })
-                    }
-                  />
-                ) : (
-                  <p className="trips-popup-detail-data">{tripDetails.to}</p>
-                )}
-              </div>
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label">Duration:</p>
-
-                {isEditing ? (
-                  <input
-                    className="editing-mode"
-                    type="number"
-                    min="1"
-                    value={tempDetails.days}
-                    onChange={(e) =>
-                      setTempDetails({ ...tempDetails, days: e.target.value })
-                    }
-                  />
-                ) : (
-                  <p className="trips-popup-detail-data">
-                    {tripDetails.days} {tripDetails.days !== 1 ? "days" : "day"}
-                  </p>
-                )}
-              </div>
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label">Type:</p>
-                <p className="trips-popup-detail-data">{tripDetails.type}</p>
-              </div>
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label">Bus Number:</p>
-                <p className="trips-popup-detail-data">
-                  {tripDetails.bus.number}
-                </p>
-              </div>
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label">Date:</p>
-                {isEditing ? (
-                  <input
-                    className="editing-mode"
-                    type="date"
-                    value={tempDetails.date}
-                    min={today}
-                    onChange={(e) =>
-                      setTempDetails({ ...tempDetails, date: e.target.value })
-                    }
-                  />
-                ) : (
-                  <p className="trips-popup-detail-data">{tripDetails.date}</p>
-                )}
-              </div>
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label ">Req. Note:</p>
-                <p className="trips-popup-detail-data long-data-field">
-                  {tripDetails.note}
-                </p>
-              </div>
-
-              {tripDetails.status !== "pending" && (
-                <div className="trips-popup-detail-field">
-                  <p className="trips-popup-detail-label ">Req. Reply:</p>
-                  <p className="trips-popup-detail-data long-data-field">
-                    {tripDetails.reply}
-                  </p>
-                </div>
-              )}
-
-              {tripDetails.status === "pending" && (
-                <div className="trips-popup-btn-section">
-                  {!isEditing ? (
-                    <>
-                      <div
-                        className="trips-popup-btn-edit"
-                        onClick={() => {
-                          setIsEditing(true);
-                        }}
-                      >
-                        <p>Edit</p>
-                      </div>
-                      <div className="trips-popup-btn-cancle">
-                        <p>Cancel Request</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        className="trips-popup-btn-edit"
-                        onClick={() => {
-                          handleSaveClick();
-                        }}
-                      >
-                        <p>Save</p>
-                      </div>
-                      <div
-                        className="trips-popup-btn-cancle"
-                        onClick={handleCancle}
-                      >
-                        <p>Cancel</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+      {
+        <Modal
+          open={showPopup}
+          footer={null}
+          onCancel={() => setShowPopup(false)}
+        >
+          <div className="trips-popup-title">
+            <h2>Trip Details</h2>
           </div>
-        </div>
-      )}
+          <div className="trips-popup-details">
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Destination:</p>
+              {isEditing ? (
+                <input
+                  className="editing-mode"
+                  type="text"
+                  value={tripDetails.venue}
+                  onChange={(e) =>
+                    setTripDetails({ ...tripDetails, venue: e.target.value })
+                  }
+                />
+              ) : (
+                <p className="trips-popup-detail-data">{tripDetails.venue}</p>
+              )}
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Duration:</p>
+              {isEditing ? (
+                <input
+                  className="editing-mode"
+                  type="number"
+                  min="1"
+                  value={tripDetails.days}
+                  onChange={(e) =>
+                    setTripDetails({ ...tripDetails, days: e.target.value })
+                  }
+                />
+              ) : (
+                <p className="trips-popup-detail-data">
+                  {tripDetails.days} {tripDetails.days !== 1 ? "days" : "day"}
+                </p>
+              )}
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Contact No:</p>
+              {isEditing ? (
+                <input
+                  className="editing-mode"
+                  type="number"
+                  min="1"
+                  value={tripDetails.contact_no}
+                  onChange={(e) =>
+                    setTripDetails({
+                      ...tripDetails,
+                      contact_no: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <p className="trips-popup-detail-data">
+                  {tripDetails.contact_no}
+                </p>
+              )}
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Type:</p>
+              <p className="trips-popup-detail-data">{tripDetails.type}</p>
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Bus Number:</p>
+              <p className="trips-popup-detail-data">{trip.busID.busNumber}</p>
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label">Date:</p>
+              {isEditing ? (
+                <input
+                  className="editing-mode"
+                  type="date"
+                  value={tripDetails.date?.split("T")[0]}
+                  min={today}
+                  onChange={(e) =>
+                    setTripDetails({ ...tripDetails, date: e.target.value })
+                  }
+                />
+              ) : (
+                <p className="trips-popup-detail-data">
+                  {tripDetails.date?.split("T")[0]}
+                </p>
+              )}
+            </div>
+            <div className="trips-popup-detail-field">
+              <p className="trips-popup-detail-label ">Req. Note:</p>
+              <p className="trips-popup-detail-data long-data-field">
+                {tripDetails.note}
+              </p>
+            </div>
+
+            {trip.status !== "pending" && (
+              <div className="trips-popup-detail-field">
+                <p className="trips-popup-detail-label ">Req. Reply:</p>
+                <p className="trips-popup-detail-data long-data-field">
+                  {tripDetails.reply}
+                </p>
+              </div>
+            )}
+
+            {trip.status === "pending" && (
+              <div className="trips-popup-btn-section">
+                {!isEditing ? (
+                  <>
+                    <div
+                      className="trips-popup-btn-edit"
+                      onClick={() => {
+                        setIsEditing(true);
+                      }}
+                    >
+                      <p>Edit</p>
+                    </div>
+                    <div className="trips-popup-btn-cancle">
+                      <p>Cancel Request</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="trips-popup-btn-edit"
+                      onClick={() => {
+                        handleSaveClick();
+                      }}
+                    >
+                      <p>Save</p>
+                    </div>
+                    <div
+                      className="trips-popup-btn-cancle"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      <p>Cancel</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </Modal>
+      }
     </>
   );
 }

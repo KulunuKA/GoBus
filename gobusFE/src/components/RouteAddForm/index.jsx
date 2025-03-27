@@ -31,6 +31,13 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
 
     if (!values.route_number) {
       newErrors.route_number = "Route number is required";
+    } else if (
+      !/^(EX\d{1,3}|AC\d{1,3}|\d{1,3})(\/(EX\d{1,3}|AC\d{1,3}|\d{1,3}))?$/.test(
+        values.route_number
+      )
+    ) {
+      newErrors.route_number =
+        "Please enter a valid Sri Lankan route number (e.g., 120, EX1, AC5)";
     }
 
     if (!values.start) {
@@ -49,6 +56,10 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
 
     if (values.start === values.end && values.start) {
       newErrors.end = "Start and end locations cannot be the same";
+    }
+
+    if (values.main_cities.length < 5) {
+      newErrors.main_cities = "Please select at least five main cities";
     }
 
     setErrors(newErrors);
@@ -93,7 +104,7 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
             <div>
               <MyInput
                 label={"Route Number"}
-                placeholder="ex : Saman"
+                placeholder={"e.g., 120, EX1, AC5"}
                 onChange={inputHandle("route_number")}
                 value={routeData.route_number}
                 error={errors.route_number}
@@ -105,12 +116,12 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
                 type="number"
                 onChange={inputHandle("distance")}
                 value={routeData.distance}
-                placeholder=" km"
+                placeholder={"Distance in km"}
                 error={errors.distance}
                 errorMessage={errors.distance}
               />
               <div className="bt-select">
-                <label>Start</label>
+                <label>Starting Point</label>
                 <DropDown
                   placeholder={"Select trip start"}
                   onChange={(value) => {
@@ -120,11 +131,13 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
                     label: e,
                     value: e,
                   }))}
+                  error={errors.start}
+                  errorMessage={errors.start}
                 />
               </div>
 
               <div className="bt-select">
-                <label>End</label>
+                <label>Ending Point</label>
                 <DropDown
                   placeholder={"Select trip end"}
                   onChange={(value) => {
@@ -134,6 +147,8 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
                     label: e,
                     value: e,
                   }))}
+                  error={errors.end}
+                  errorMessage={errors.end}
                 />
               </div>
               <div className="bt-select">
@@ -148,6 +163,8 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
                     value: e,
                   }))}
                   mode="multiple"
+                  error={errors.main_cities}
+                  errorMessage={errors.main_cities}
                 />
               </div>
             </div>

@@ -19,6 +19,9 @@ export default function MyInput({
   className = "",
   onBlur,
   onFocus,
+  backgroundColor = "#F1EFEF",
+  borderColor = undefined,
+  width = "100%",
 }) {
   const inputContainerStyles = {
     width: "100%",
@@ -70,10 +73,11 @@ export default function MyInput({
         aria-invalid={error}
         aria-describedby={error ? `${inputId}-error` : undefined}
         style={{
-          backgroundColor: "#F1EFEF",
-          borderColor: error ? "red" : undefined,
+          backgroundColor: backgroundColor,
+          borderColor: error ? "red" : borderColor,
           // backgroundColor: "transparent",
           borderRadius: borderRadius,
+          width: width,
         }}
       />
       {error && errorMessage && (

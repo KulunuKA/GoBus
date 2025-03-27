@@ -5,17 +5,20 @@ import notification from "../../assets/images/notification.png";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
+import { useSelector } from "react-redux";
+import { passengerData } from "../../store/passengerSlice";
 
 const buttonsList = [
-  { name: "Activities", image: activity, path: "/activities" },
+  { name: "Activities", image: activity, path: "/activity" },
   { name: "Favourites", image: favourite, path: "/favourites" },
   { name: "Notifications", image: notification, path: "/notifications" },
 ];
 
 export default function PassengerProfile() {
+  const reduxUser = useSelector(passengerData);
   const user = {
-    username: "Dilshan Karunarathna",
-    email: "dilshankarunarathna@gmail.com",
+    username: reduxUser.username,
+    email: reduxUser.email,
     propic: man,
   };
 
@@ -25,11 +28,13 @@ export default function PassengerProfile() {
     <>
       <div className="passenger-profile-home">
         <div className="passenger-profile-home-image-name">
-          <img src={user.propic} alt="" className="passenger-profile-home-image" />
+          <img
+            src={user.propic}
+            alt=""
+            className="passenger-profile-home-image"
+          />
           <p className="passenger-profile-home-name">{user.username}</p>
-          <p className="passenger-profile-home-mail">
-            {user.email}
-          </p>
+          <p className="passenger-profile-home-mail">{user.email}</p>
         </div>
         <div className="passenger-profile-home-btns">
           {buttonsList.map((b) => (

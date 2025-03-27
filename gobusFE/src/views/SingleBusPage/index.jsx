@@ -16,6 +16,7 @@ import BookForm from "../../components/BookForm";
 import SignInModal from "../../components/SignInModal";
 import { passengerData } from "../../store/passengerSlice";
 import { useSelector } from "react-redux";
+import { convertTo12HourFormat } from "../../util/time_format";
 
 const busDetails = {
   busNumber: "NB-1234",
@@ -53,11 +54,6 @@ const busDetails = {
   },
 };
 
-const busRoute = {
-  routeNumber: 142,
-  startPoint: "Central Station",
-  endPoint: "Westside Terminal",
-};
 
 const calOverallReviewsCount = (numReviewBus, numReviewDriver) => {
   return numReviewBus + numReviewDriver;
@@ -82,30 +78,30 @@ const busRoutes = [
     time: "6:30 AM",
     arrivalTime: "9.30 AM",
   },
-  {
-    route: {
-      from: "Kurunegala",
-      to: "Colombo",
-    },
-    time: "11:30 AM",
-    arrivalTime: "14.30 AM",
-  },
-  {
-    route: {
-      from: "Colombo",
-      to: "Kurunegala",
-    },
-    time: "16:30 PM",
-    arrivalTime: "19.30 AM",
-  },
-  {
-    route: {
-      from: "Kurunegala",
-      to: "Colombo",
-    },
-    time: "20:30 PM",
-    arrivalTime: "23.30 AM",
-  },
+  // {
+  //   route: {
+  //     from: "Kurunegala",
+  //     to: "Colombo",
+  //   },
+  //   time: "11:30 AM",
+  //   arrivalTime: "14.30 AM",
+  // },
+  // {
+  //   route: {
+  //     from: "Colombo",
+  //     to: "Kurunegala",
+  //   },
+  //   time: "16:30 PM",
+  //   arrivalTime: "19.30 AM",
+  // },
+  // {
+  //   route: {
+  //     from: "Kurunegala",
+  //     to: "Colombo",
+  //   },
+  //   time: "20:30 PM",
+  //   arrivalTime: "23.30 AM",
+  // },
 ];
 
 export default function SingleBusPage() {
@@ -124,6 +120,7 @@ export default function SingleBusPage() {
     busType: "",
     district: "",
     city: "",
+    timetable: [],
   });
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
@@ -216,7 +213,7 @@ export default function SingleBusPage() {
           </div>
         </div>
         <RouteQueueSlider
-          busRoutes={busRoutes}
+          busRoutes={bus.timetable}
           busType={bus.busType}
           busName={bus.name}
           busNumber={bus.busNumber}
@@ -243,25 +240,25 @@ export default function SingleBusPage() {
                       <div className="info-box-field">
                         <p className="info-box-field-label">Route Number:</p>
                         <p className="info-box-field-data">
-                          {busRoute.routeNumber}
+                          {bus.route_id?.route_number}
                         </p>
                       </div>
                       <div className="info-box-field">
                         <p className="info-box-field-label">Start Point:</p>
                         <p className="info-box-field-data">
-                          {busRoute.startPoint}
+                          {bus?.timetable[0]?.startPlace}
                         </p>
                       </div>
                       <div className="info-box-field">
                         <p className="info-box-field-label">End Point:</p>
                         <p className="info-box-field-data">
-                          {busRoute.endPoint}
+                          {bus?.timetable[0]?.endPlace}
                         </p>
                       </div>
                       <div className="info-box-field">
                         <p className="info-box-field-label">Driver:</p>
                         <p className="info-box-field-data">
-                          {busDetails.driver.name}
+                          {bus?.driverID?.name}
                         </p>
                       </div>
                       <div className="info-box-route-info-bus-driver-image">
@@ -296,15 +293,15 @@ export default function SingleBusPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {busRoutes.map((bus, index) => (
+                      {bus.timetable.map((bus, index) => (
                         <tr
                           key={index}
                           className={index % 2 === 0 ? "row-even" : "row-odd"}
                         >
-                          <td>{bus.time}</td>
-                          <td>{bus.route.from}</td>
-                          <td>{bus.arrivalTime}</td>
-                          <td>{bus.route.to}</td>
+                          <td>{convertTo12HourFormat(bus.startTime)}</td>
+                          <td>{bus.startPlace}</td>
+                          <td>{convertTo12HourFormat(bus.endTime)}</td>
+                          <td>{bus.endPlace}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -571,7 +568,7 @@ const BusInfo = ({ data }) => {
               </p>
             </div>
           )}
-        {data.busType === "Public Transport" &&
+        {data.busType === "public transport" &&
           data.currentStatus === "In Stand" &&
           data.currentDetails.breakDown && (
             <div className="information-with-btn">
@@ -590,7 +587,7 @@ const BusInfo = ({ data }) => {
               </p>
             </div>
           )}
-        {data.busType === "Public Transport" &&
+        {data.busType === "public transport" &&
           data.currentStatus === "Not Working" && (
             <div className="information-with-btn">
               <p className="information-with-btn-para">

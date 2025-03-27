@@ -68,7 +68,7 @@ const busSchema = new mongoose.Schema({
         required: true,
       },
       startTime: {
-        type: Date,
+        type: String,
         required: true,
       },
       endPlace: {
@@ -76,7 +76,7 @@ const busSchema = new mongoose.Schema({
         required: true,
       },
       endTime: {
-        type: Date,
+        type: String,
         required: true,
       },
     },
@@ -96,6 +96,24 @@ busSchema.post("save", async function (doc, next) {
     await mongoose.model("BusOwner").findByIdAndUpdate(doc.ownerID, {
       $addToSet: { busesId: doc._id },
     });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+busSchema.post("save", async function (doc, next) {
+  try {
+    if (doc.busType === "public transport" && doc.driverID) {
+      await mongoose.model("Employee").findByIdAndUpdate(
+        doc.driverID,
+        {
+          status: "assign",
+          $push: { assignedBuses: doc._id },
+        },
+        { new: true, runValidators: true }
+      );
+    }
     next();
   } catch (error) {
     next(error);

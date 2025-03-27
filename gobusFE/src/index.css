@@ -6,7 +6,9 @@
   box-sizing: border-box;
   font-family: outfit;
 }
-
+:where(.css-dev-only-do-not-override-dkbvqv).ant-notification {
+  z-index: 200000;
+}
 .req-body-content {
   min-height: 30vh;
   background-color: #fff;

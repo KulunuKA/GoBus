@@ -14,7 +14,7 @@ export default function NavTabs({ pageName, pageIcon, tabList }) {
     <>
       <div className="navTabs">
         <div className="navTabs-container">
-          <div className="navTabs-logo">
+          <div className="navTabs-logo" onClick={() => (window.location.href = "/")}>
             <img src={logo} alt="" />
           </div>
           <div className="navTabs-tabs">

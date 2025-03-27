@@ -6,7 +6,7 @@ import { Outlet, useLocation } from "react-router-dom";
 export default function PassengerLayout() {
   const location = useLocation();
   const pathName = location.pathname;
-  const hidePages = ["/userProfile", "/activity"];
+  const hidePages = ["/userprofile", "/activity"];
 
   const hideNavBar = hidePages.includes(pathName);
 
@@ -14,7 +14,7 @@ export default function PassengerLayout() {
     <main className="main">
       {!hideNavBar && <Navbar />}
       <Outlet />
-      {!pathName.includes("/userProfile") && <Footer />}
+      {!pathName.includes("/userprofile") && <Footer />}
     </main>
   );
 }

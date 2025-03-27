@@ -1,0 +1,94 @@
+.passenger-complains-container {
+  width: 90%;
+  margin: auto;
+  padding-top: 30px;
+  min-height: 70vh;
+  margin-bottom: 40px;
+}
+
+.pc-header {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  height: 250px;
+  background-image: url(../../assets/images/complaintheroimg.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: overlay;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding-top: 70px;
+  border-bottom: 2px solid #05944f;
+}
+
+.pc-header h3 {
+  font-size: 40px;
+  font-weight: 650;
+  color: #2d3436;
+}
+
+.pc-header p {
+  font-size: 20px;
+  font-weight: 600;
+  color: #666;
+  margin-top: 10px;
+}
+
+.prev-complaints {
+  width: 90%;
+  margin: auto;
+  margin-top: 40px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.prev-complaits-title {
+  margin-bottom: 30px;
+}
+
+.prev-complaits-title p {
+  color: #2d3436;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.prev-complaint {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+.prev-complaint-data {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.prev-complaint-data p {
+  color: #666;
+  font-size: 16px;
+}
+
+.prev-complaint-data p span {
+  color: #666;
+  font-weight: 650;
+}
+
+.prev-comp-status p {
+  font-size: 14px;
+  font-weight: 550;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.resolved {
+  color: rgba(5, 148, 79, 1);
+  background-color: rgba(5, 148, 79, 0.2);
+}
+
+.inprogress {
+  color: rgba(230, 126, 34, 1);
+  background-color: rgba(230, 126, 34, 0.2);
+}

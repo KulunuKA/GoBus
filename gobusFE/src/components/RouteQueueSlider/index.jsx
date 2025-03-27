@@ -15,15 +15,16 @@ export default function RouteQueueSlider({
 }) {
   const regularSettings = {
     dots: false,
-    infinite: true,
+    infinite: busRoutes.length > 1,
     speed: 10000,
-    slidesToShow: 3,
+    slidesToShow: Math.min(3, busRoutes.length),
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 1,
     cssEase: "linear",
     arrows: false,
   };
+
 
   const specialTripSettings = {
     dots: false,
@@ -50,20 +51,22 @@ export default function RouteQueueSlider({
     <div className="route-slider">
       {busType !== "special service" ? (
         <Slider {...regularSettings}>
-          {busRoutes.map((route, index) => (
+          {busRoutes.map((round, index) => (
             <div key={index} className="route-slide">
               <div className="route-arrival-departure">
                 <div className="route-arrival arrival-departure">
                   <img src={arrival} alt="" />
-                  <h3>{route.route.from}</h3>
+                  <h3>{round.startPlace}</h3>
                 </div>
                 <h3> to </h3>
                 <div className="route-departure arrival-departure">
                   <img src={departure} alt="" />
-                  <h3>{route.route.to}</h3>
+                  <h3>{round.endPlace}</h3>
                 </div>
               </div>
-              <p>Time: {route.time}</p>
+              <p>
+                Time:{round.startTime} - {round.endTime}
+              </p>
             </div>
           ))}
         </Slider>

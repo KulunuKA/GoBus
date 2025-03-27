@@ -114,6 +114,7 @@ const deleteTrip = async (req, res, next) => {
 
 //if the trip is not approved can update
 const updateTrip = async (req, res, next) => {
+  console.log(req.body);
   if (!req.params.tripID) {
     return next(new AppError(400, "Please provide the trip ID"));
   }
@@ -123,7 +124,8 @@ const updateTrip = async (req, res, next) => {
       !req.body.busId ||
       !req.body.date ||
       !req.body.venue ||
-      !req.body.contact_no
+      !req.body.contact_no ||
+      !req.body.days
     ) {
       return next(new AppError(400, "Please provide all the required fields"));
     }
@@ -161,4 +163,5 @@ module.exports = {
   getAllTrips,
   deleteTrip,
   updateTrip,
+  getTripRequests,
 };

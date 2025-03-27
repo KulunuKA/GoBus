@@ -1,0 +1,121 @@
+.complaint-header {
+  text-align: left;
+  padding: 15px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  margin: 0 15px;
+  color: #2d3436;
+}
+
+.complaint-summary {
+  padding: 15px 20px;
+  margin: 0 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.complaint-summary-box {
+  width: 300px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.complaint-summary-box:hover {
+  background-color: #f9f9f9;
+}
+
+.complaint-summary-box p {
+  font-weight: 550;
+  color: #2d3436;
+  font-size: 18px;
+}
+
+p.complaint-count {
+  font-size: 30px;
+  font-weight: 650;
+  color: #2d3436;
+}
+
+.complaint-body {
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.complaint-body-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.complaint-body-header div {
+  width: 300px;
+}
+
+/* Table Styling */
+.center-content {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Headers */
+th {
+  background-color: #05944f;
+  color: #fff;
+  padding: 12px;
+  text-align: left;
+  font-weight: 500;
+}
+
+/* Table Rows */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  color: #2d3436;
+}
+
+td.description-cell {
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+tr {
+  cursor: pointer;
+}
+
+tr:hover {
+  background-color: #f0f0f0;
+}
+
+tr.unchecked {
+  background-color: rgba(200, 230, 201, 0.2);
+}
