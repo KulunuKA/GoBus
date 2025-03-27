@@ -92,7 +92,7 @@ export default function SideBar() {
 
       <MyButton
         name="Logout"
-        color={"#ff0000d1"}
+        color={"#e74c3c"}
         width={"200px"}
         onClick={() => {
           confirm({
@@ -107,6 +107,9 @@ export default function SideBar() {
         }}
         icon={<LogoutOutlined />}
       />
+      <div className="dashboard-copyright">
+        <p>© 2025 - GoBus Digital Mobility Solutions Limited.</p>
+      </div>
     </div>
   );
 }

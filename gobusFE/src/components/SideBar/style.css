@@ -44,6 +44,7 @@
   width: 100%;
   color: #2d3436;
   text-transform: capitalize;
+  margin-bottom: 15px;
 }
 
 .tabs ul {
@@ -59,7 +60,7 @@
 
 .tabs ul li {
   width: 200px;
-  height: 50px;
+  height: 40px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -70,10 +71,23 @@
 }
 
 .tabs ul li.active {
-  background-color: #047240;
+  background-color: rgba(5, 148, 79, 1);
   color: #fff;
 }
 
 .tab:hover {
   background-color: #f1f2f6;
+}
+
+.dashboard-copyright {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  bottom: 5px;
+}
+
+.dashboard-copyright p {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
 }

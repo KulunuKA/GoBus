@@ -22,9 +22,9 @@ export default function TripDetailsCard({ trip, refresh }) {
     tripDetails.status === "approved" && tripDetails.date >= today;
 
   const getStatusColor = (status) => {
-    if (status === "approved") return "green";
-    if (status === "pending") return "orange";
-    if (status === "rejected") return "red";
+    if (status === "approved") return "rgba(5, 148, 79, 1)";
+    if (status === "pending") return "rgba(255, 140, 0, 1)";
+    if (status === "rejected") return "rgba(200, 30, 50, 1)";
     return "gray";
   };
 

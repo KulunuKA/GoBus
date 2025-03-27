@@ -1,8 +1,72 @@
-.dashboard{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+.owner-dashboard-header {
+  text-align: left;
+  padding: 15px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  margin: 0 15px;
+  color: #2d3436;
+}
+
+.owner-dashboard-summary {
+  padding: 15px 0;
+  margin: 0 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.owner-dashboard-summary-box {
+  width: 180px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.active-buses-box {
+  width: 350px;
+  position: relative;
+}
+
+.owner-dashboard-summary-box:hover {
+  background-color: #f9f9f9;
+}
+
+.owner-dashboard-summary-box p {
+  font-weight: 550;
+  color: #2d3436;
+  font-size: 18px;
+}
+
+p.owner-dashboard-count {
+  font-size: 30px;
+  font-weight: 650;
+  color: #2d3436;
+}
+
+.owner-dashboard-profile {
+  padding: 15px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  margin: 0 15px;
+  color: #2d3436;
+}
+
+.active-buses-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  background-color: rgba(5, 148, 79, 1);
 }
