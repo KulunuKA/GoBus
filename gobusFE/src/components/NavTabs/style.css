@@ -19,6 +19,7 @@
 .navTabs-logo {
   padding: 10px 0;
   width: 200px;
+  cursor: pointer;
 }
 
 .navTabs-logo img {

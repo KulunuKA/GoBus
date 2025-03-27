@@ -102,6 +102,24 @@ busSchema.post("save", async function (doc, next) {
   }
 });
 
+busSchema.post("save", async function (doc, next) {
+  try {
+    if (doc.busType === "public transport" && doc.driverID) {
+      await mongoose.model("Employee").findByIdAndUpdate(
+        doc.driverID,
+        {
+          status: "assign",
+          $push: { assignedBuses: doc._id },
+        },
+        { new: true, runValidators: true }
+      );
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 busSchema.post("validate", function (next) {
   if (
     this.busType === "public transport" &&

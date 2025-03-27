@@ -35,8 +35,6 @@ export default function Employee() {
   const [searchText, setSearchText] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
   const [selectedEmp, setSelectedEmp] = useState(null);
-  const [view, setView] = useState(false);
-  const [selectedBusDetails, setSelectedBusDetails] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -111,7 +109,7 @@ export default function Employee() {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody onClick={() => setView(!view)}>
+          <tbody>
             {loading ? (
               <tr>
                 <td colSpan="6" className="center-content">
@@ -206,13 +204,7 @@ export default function Employee() {
         />
       )}
 
-      {view && (
-        <BusDetails
-          isOpen={view}
-          onClose={() => setView(!view)}
-          bus={selectedBusDetails}
-        />
-      )}
+
     </div>
   );
 }

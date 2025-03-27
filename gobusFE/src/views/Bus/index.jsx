@@ -100,7 +100,7 @@ export default function Bus() {
             <tr>
               <th>Bus</th>
               <th>Bus Number</th>
-              <th>A/C</th>
+              <th>Driver</th>
               <th>Route Number</th>
               <th>Bus Type</th>
               <th>Actions</th>
@@ -134,8 +134,11 @@ export default function Bus() {
                       <img src={bus?.pictures[0]} className="bus-pic" />
                     </td>
                     <td>{bus.busNumber}</td>
-                    <td>{bus.ac ? "A/C" : "Non A/C"}</td>
-                    <td>{bus.route_id.route_number}</td>
+                    <td>
+                      {bus.busType === "public transport" &&
+                        `${bus.driverID.name}`}{" "}
+                    </td>
+                    <td>{bus?.route_id?.route_number}</td>
                     <td style={{ textTransform: "capitalize" }}>
                       {bus.busType}
                     </td>

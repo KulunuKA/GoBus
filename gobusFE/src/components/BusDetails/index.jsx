@@ -12,8 +12,8 @@ export default function BusDetails({ isOpen, onClose, bus }) {
     { key: "District", value: bus.district },
     { key: "AC", value: bus.ac ? "Yes" : "No" },
     {
-      key: "Driver ID",
-      value: bus.driverID == null ? "Not Assign" : bus.driverID,
+      key: "Driver Name",
+      value: bus.driverID == null ? "Not Assign" : bus.driverID.name,
     },
     { key: "Password", value: bus.password },
   ];

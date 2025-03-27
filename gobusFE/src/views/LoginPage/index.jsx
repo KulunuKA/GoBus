@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyInput from "../../components/input";
 import MyButton from "../../components/button";
 import googleLogo from "../../assets/images/google-logo.png";
@@ -8,12 +8,15 @@ import "./style.css";
 import { notification } from "antd";
 import { login } from "../../apis/userAPIs";
 import SignUp_Popup from "../../components/LoginSignUpModal/LoginSignUpModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUserInfo } from "../../store/busOwnerSlice";
-import { setPassengerInfo } from "../../store/passengerSlice";
+import { busOwnerData, setUserInfo } from "../../store/busOwnerSlice";
+import { passengerData, setPassengerInfo } from "../../store/passengerSlice";
 
 export default function LoginPage() {
+  const passengerRedux = useSelector(passengerData);
+  const busOwnerRedux = useSelector(busOwnerData);
+  const role = passengerRedux?.role || busOwnerRedux?.role;
   const [isLoading, setIsLoading] = useState(false);
   const [inputErr, setInputErr] = useState({
     email: false,
@@ -26,6 +29,18 @@ export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleLoggedUserRoute = () => {
+    if (role === "Passenger") {
+      navigate("/");
+    } else if (role === "BusOwner") {
+      navigate("/busowner/dashboard");
+    }
+  };
+
+  useEffect(() => {
+    handleLoggedUserRoute();
+  }, []);
 
   const handleInput = (field) => (e) => {
     setInputErr({ ...inputErr, [field]: false });
@@ -57,7 +72,6 @@ export default function LoginPage() {
       setIsLoading(true);
 
       const { data, code, msg } = await login(credentials);
-      console.log(data, code, msg);
       if (code === 0) {
         if (data.role === "BusOwner") {
           dispatch(setUserInfo(data));

@@ -26,7 +26,7 @@ function App() {
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
-        <Route path="/userProfile/" element={<UserAccount />} />
+        <Route path="/userprofile" element={<UserAccount />} />
         <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
         <Route path="/public-buses" element={<PublicPage />} />

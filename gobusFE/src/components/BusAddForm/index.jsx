@@ -36,6 +36,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     route_id: null,
     driverID: null,
   });
+  const [errors, setErrors] = useState({});
   const [imgLoading, setImgLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [isImgErr, setIsImgErr] = useState(null);
@@ -145,54 +146,93 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     ]);
   };
 
+  const validateForm = (values) => {
+    const newErrors = {};
+
+    // Name validation
+    if (!values.name) {
+      newErrors.name = "Name is required";
+    }
+
+    // Password validation
+    if (!values.password) {
+      newErrors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+    // Bus Number validation
+    if (!values.busNumber) {
+      newErrors.busNumber = "Bus Number is required";
+    } else if (!/^[A-Z]{2,3}-\d{4}$/.test(values.busNumber)) {
+      newErrors.busNumber =
+        "Bus Number must be in format like NC-1227 or ACC-1276";
+    }
+
+    // District validation
+    if (!values.district) {
+      newErrors.district = "District is required";
+    } else if (values.district.length < 2) {
+      newErrors.district = "District name must be at least 2 characters long";
+    }
+
+    // City validation
+    if (!values.city) {
+      newErrors.city = "City is required";
+    } else if (values.city.length < 2) {
+      newErrors.city = "City name must be at least 2 characters long";
+    }
+
+    // Bus Type validation
+    console.log(values.busType);
+    if (!values.busType) {
+      newErrors.busType = "Bus Type is required";
+    } else if (
+      !["public transport", "special service"].includes(values.busType)
+    ) {
+      newErrors.busType = "Invalid bus type selected";
+    }
+
+    // Seat Number validation
+    if (!values.seatNumber) {
+      newErrors.seatNumber = "Seat Number is required";
+    } else if (isNaN(values.seatNumber)) {
+      newErrors.seatNumber = "Seat Number must be a number";
+    } else if (values.seatNumber < 1 || values.seatNumber > 60) {
+      newErrors.seatNumber = "Seat Number must be between 1 and 60";
+    }
+
+    // Timetable validation for public transport
+    if (values.busType === "public transport") {
+      const validTimetable = timetableRounds.filter(
+        (round) =>
+          round.round &&
+          round.startPlace &&
+          round.startTime &&
+          round.endPlace &&
+          round.endTime
+      );
+
+      if (validTimetable.length === 0) {
+        newErrors.timetable =
+          "At least one complete timetable entry is required for public transport";
+      }
+    }
+
+    if (values.pictures.some((pic) => pic === "")) {
+      setIsImgErr("All images must be uploaded");
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
     try {
-      if (
-        !busData.name ||
-        !busData.password ||
-        !busData.busNumber ||
-        !busData.district ||
-        !busData.city ||
-        !busData.busType ||
-        !busData.seatNumber
-      ) {
-        notification.error({
-          message: "Fill all fields",
-        });
+      // Use the comprehensive validation function
+      const isValid = validateForm(busData);
+
+      if (!isValid) {
         return;
-      } else if (busData.seatNumber > 60) {
-        notification.error({
-          message: "Invalid seat numbers",
-        });
-        return;
-      }
-
-      // Process timetable data before submission
-      if (busData.busType === "public transport") {
-        // Filter out incomplete timetable entries
-        const validTimetable = timetableRounds.filter(
-          (round) =>
-            round.round &&
-            round.startPlace &&
-            round.startTime &&
-            round.endPlace &&
-            round.endTime
-        );
-
-        if (
-          validTimetable.length === 0 &&
-          busData.busType !== "public transport"
-        ) {
-          notification.error({
-            message: "Please complete at least one timetable entry",
-          });
-          return;
-        }
-
-        setBusData({
-          ...busData,
-          timetable: validTimetable,
-        });
       }
 
       setIsLoading(true);
@@ -204,19 +244,25 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       };
 
       const { data, code, msg } = await addBus(submissionData);
+
       if (code === 0) {
         notification.success({
-          message: msg,
+          message: "Bus Added Successfully",
         });
         onCancel();
         refresh();
+      } else {
+        notification.error({
+          message: "Submission Failed",
+        });
       }
-      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
+      console.error("Submission error:", error);
       notification.error({
-        message: "Something went wrong!",
+        message: "Submission Error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -317,6 +363,8 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                 placeholder="ex : DSD"
                 onChange={inputHandle("name")}
                 value={busData.name}
+                error={errors.name}
+                errorMessage={errors.name}
               />
               <MyInput
                 label={"Password"}
@@ -324,29 +372,34 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                 placeholder="min length 6"
                 onChange={inputHandle("password")}
                 value={busData.password}
+                error={errors.password}
+                errorMessage={errors.password}
               />
               <div className="bt-select">
                 <label>
                   <p>Bus Photos</p>
                   <span>(1072px × 369px)</span>
                 </label>
-                {isImgErr ? (
+                {isImgErr && (
                   <p style={{ color: "rgba(238, 82, 82, 1)" }}>{isImgErr}</p>
-                ) : (
-                  <div className="ps-image-set">{uploadComponents}</div>
                 )}
+                <div className="ps-image-set">{uploadComponents}</div>
               </div>
               <MyInput
                 label={"Bus Number"}
                 placeholder="ex : province code - number"
                 onChange={inputHandle("busNumber")}
                 value={busData.busNumber}
+                error={errors.busNumber}
+                errorMessage={errors.busNumber}
               />
               <MyInput
                 label={"Seat Number"}
                 type="number"
                 onChange={inputHandle("seatNumber")}
                 value={busData.seatNumber}
+                error={errors.seatNumber}
+                errorMessage={errors.seatNumber}
               />
               <div className="bt-select">
                 <label>District</label>
@@ -361,6 +414,8 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                       label: dis,
                       value: dis,
                     }))}
+                  errorMessage={errors.district}
+                  error={errors.district}
                 />
               </div>
               <div className="bt-select">
@@ -376,6 +431,8 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                       label: c,
                       value: c,
                     }))}
+                  errorMessage={errors.city}
+                  error={errors.city}
                 />
               </div>
 
@@ -386,7 +443,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                     label: e,
                     value: e === "A/C" ? true : false,
                   }))}
-                  placeholder={"Select A/C / Non-A/C"}
+                  value={"NON-A/C"}
                   onChange={(value) => {
                     setBusData({
                       ...busData,
@@ -405,8 +462,10 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                   }))}
                   placeholder={"Select bus type"}
                   onChange={(value) => {
-                    setBusData({ ...busData, busType: value });
+                    setBusData({ ...busData, busType: value.toLowerCase() });
                   }}
+                  error={errors.busType}
+                  errorMessage={errors.busType}
                 />
               </div>
 

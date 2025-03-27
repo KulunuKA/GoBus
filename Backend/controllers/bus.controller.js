@@ -90,7 +90,7 @@ const getBuses = async (req, res, next) => {
     const buses = await Bus.find({ ownerID: req.params.id }).populate(
       "route_id",
       "route_number"
-    );
+    ).populate("driverID", "name phone");
 
     res.status(200).send({
       data: buses,
@@ -150,7 +150,7 @@ const getBus = async (req, res, next) => {
     const bus = await Bus.findById(req.params.id).populate(
       "ownerID",
       "authorityName email phone address logo"
-    );
+    ).populate("route_id", "").populate("driverID", "name phone");
 
     if (!bus) {
       return next(new AppError(404, "Bus not found"));

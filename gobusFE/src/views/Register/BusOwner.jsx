@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyInput from "../../components/input";
 import logo from "../../assets/images/white-logo.png";
 import { notification } from "antd";
@@ -13,11 +13,15 @@ import googleLogo from "../../assets/images/google-logo.png";
 import "./style.css";
 import MyButton from "../../components/button";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setUserInfo } from "../../store/busOwnerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { busOwnerData, setUserInfo } from "../../store/busOwnerSlice";
 import { busOwnerRegister } from "../../apis/busOwner";
+import { passengerData } from "../../store/passengerSlice";
 
 export default function BusOwner() {
+  const passengerRedux = useSelector(passengerData);
+  const busOwnerRedux = useSelector(busOwnerData);
+  const role = passengerRedux?.role || busOwnerRedux?.role;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +43,18 @@ export default function BusOwner() {
     employeesId: [],
     routesId: [],
   });
+
+  const handleLoggedUserRoute = () => {
+    if (role === "Passenger") {
+      navigate("/");
+    } else if (role === "BusOwner") {
+      navigate("/busowner/dashboard");
+    }
+  };
+
+  useEffect(() => {
+    handleLoggedUserRoute();
+  }, []);
 
   const handleInput = (field) => (e) => {
     setInputErr({ ...inputErr, [field]: false });

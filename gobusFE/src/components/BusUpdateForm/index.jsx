@@ -36,6 +36,7 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [isImgErr, setIsImgErr] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const inputHandle = (field) => (e) => {
     setBusData({ ...busData, [field]: e.target.value });
@@ -60,6 +61,86 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     } finally {
       setImgLoading(false);
     }
+  };
+
+  const validateForm = (values) => {
+    const newErrors = {};
+
+    // Name validation
+    if (!values.name) {
+      newErrors.name = "Name is required";
+    }
+
+    // Password validation
+    if (!values.password) {
+      newErrors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    }
+    // Bus Number validation
+    if (!values.busNumber) {
+      newErrors.busNumber = "Bus Number is required";
+    } else if (!/^[A-Z]{2,3}-\d{4}$/.test(values.busNumber)) {
+      newErrors.busNumber =
+        "Bus Number must be in format like NC-1227 or ACC-1276";
+    }
+
+    // District validation
+    if (!values.district) {
+      newErrors.district = "District is required";
+    } else if (values.district.length < 2) {
+      newErrors.district = "District name must be at least 2 characters long";
+    }
+
+    // City validation
+    if (!values.city) {
+      newErrors.city = "City is required";
+    } else if (values.city.length < 2) {
+      newErrors.city = "City name must be at least 2 characters long";
+    }
+
+    // Bus Type validation
+    console.log(values.busType);
+    if (!values.busType) {
+      newErrors.busType = "Bus Type is required";
+    } else if (
+      !["public transport", "special service"].includes(values.busType)
+    ) {
+      newErrors.busType = "Invalid bus type selected";
+    }
+
+    // Seat Number validation
+    if (!values.seatNumber) {
+      newErrors.seatNumber = "Seat Number is required";
+    } else if (isNaN(values.seatNumber)) {
+      newErrors.seatNumber = "Seat Number must be a number";
+    } else if (values.seatNumber < 1 || values.seatNumber > 60) {
+      newErrors.seatNumber = "Seat Number must be between 1 and 60";
+    }
+
+    // Timetable validation for public transport
+    if (values.busType === "public transport") {
+      const validTimetable = timetableRounds.filter(
+        (round) =>
+          round.round &&
+          round.startPlace &&
+          round.startTime &&
+          round.endPlace &&
+          round.endTime
+      );
+
+      if (validTimetable.length === 0) {
+        newErrors.timetable =
+          "At least one complete timetable entry is required for public transport";
+      }
+    }
+
+    if (values.pictures.some((pic) => pic === "")) {
+      setIsImgErr("All images must be uploaded");
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const uploadComponents = [];
@@ -96,28 +177,21 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
 
   const handleSubmit = async (id) => {
     try {
-      if (
-        !busData.name ||
-        !busData.password ||
-        !busData.busNumber ||
-        !busData.district ||
-        !busData.city ||
-        !busData.busType ||
-        !busData.seatNumber
-      ) {
-        notification.error({
-          message: "Fill all fields",
-        });
-        return;
-      } else if (busData.seatNumber > 60) {
-        notification.error({
-          message: "Invalid seat numbers",
-        });
+      const isValid = validateForm(busData);
+
+      if (!isValid) {
         return;
       }
+
       setIsLoading(true);
 
-      const { data, code, msg } = await updateBusAPI(id, busData);
+      const submissionData = {
+        ...busData,
+        timetable:
+          busData.busType === "public transport" ? timetableRounds : [],
+      };
+
+      const { data, code, msg } = await updateBusAPI(id, submissionData);
       if (code === 0) {
         notification.success({
           message: msg,
@@ -136,7 +210,7 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
   };
   return (
     <>
-      <Modal open={isOpen} onCancel={onCancel} footer={null}>
+      <Modal open={isOpen} onCancel={onCancel} footer={null} width={850}>
         <div className="bus-add">
           <div className="ab-header">
             <p>Update Bus</p>

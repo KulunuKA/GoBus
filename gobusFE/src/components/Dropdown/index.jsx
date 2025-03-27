@@ -59,6 +59,7 @@ export default function Dropdown({
         style={{
           width: width,
           borderRadius: borderRadius,
+          border: error ?"1px solid #F5222D" :"rgba(179, 171, 188, 1) solid 1px ",
         }}
       />
 

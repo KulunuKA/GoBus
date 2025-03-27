@@ -9,9 +9,9 @@ import support from "../../assets/images/support.png";
 import chatting from "../../assets/images/chatting.png";
 import "./style.css";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { passengerData } from "../../store/passengerSlice";
-import { busOwnerData } from "../../store/busOwnerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearStorePassenger, passengerData } from "../../store/passengerSlice";
+import { busOwnerData, clearStore } from "../../store/busOwnerSlice";
 
 export default function Navbar() {
   const [isBusinessOpen, setIsBusinessOpen] = useState(false);
@@ -20,8 +20,15 @@ export default function Navbar() {
   const busOwnerRedux = useSelector(busOwnerData);
   const [lastScroll, setLastScroll] = useState(0);
   const [visible, setVisible] = useState(true);
+  const dispatch = useDispatch();
 
   const role = passengerRedux?.role || busOwnerRedux?.role;
+
+  const logout = () => {
+    window.location.href = "/login";
+    dispatch(clearStore());
+    dispatch(clearStorePassenger());
+  };
 
   function truncateUsernmae(username) {
     if (username.length > 14) {
@@ -61,6 +68,9 @@ export default function Navbar() {
             </a>
           </div>
           <div className="navbar-links">
+          <a href="/" className="nav-link">
+              Home
+            </a>
             <a href="/public-buses" className="nav-link">
               Public
             </a>
@@ -163,7 +173,7 @@ export default function Navbar() {
               </div>
               <div className="hr-line"></div>
               <div className="user-dropdown-links">
-                <a href="#" className="dropdown-link">
+                <a href="/userprofile" className="dropdown-link">
                   <img src={user} alt="" />
                   <p>Manage Account</p>
                 </a>
@@ -176,7 +186,7 @@ export default function Navbar() {
                   <p>Support Inbox</p>
                 </a>
               </div>
-              <div className="user-dropdown-btn">
+              <div className="user-dropdown-btn" onClick={logout}>
                 <button>Sign out</button>
               </div>
             </div>

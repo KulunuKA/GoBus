@@ -18,22 +18,43 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
     status: "unassign",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const inputHandle = (field) => (e) => {
     setEmpData({ ...empData, [field]: e.target.value });
+    setErrors({ ...errors, [field]: "" });
+  };
+
+  const validateForm = (values) => {
+    const newErrors = {};
+
+    if (!values.name) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!values.age) {
+      newErrors.age = "Age is required";
+    }
+
+    if (!values.salary) {
+      newErrors.salary = "Salary is required";
+    }
+
+    if (values.salary <= 0) {
+      newErrors.salary = "Salary must be greater than 0";
+    }
+
+    if (!values.position) {
+      newErrors.position = "Position is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     try {
-      if (
-        !empData.name ||
-        !empData.age ||
-        !empData.position ||
-        !empData.salary
-      ) {
-        notification.error({
-          message: "Fill all fields",
-        });
+      if (!validateForm(empData)) {
         return;
       }
       setIsLoading(true);
@@ -66,9 +87,11 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
             <div>
               <MyInput
                 label={"Name"}
-                placeholder="ex : Saman"
+                placeholder="Enter Name"
                 onChange={inputHandle("name")}
                 value={empData.name}
+                error={errors.name}
+                errorMessage={errors.name}
               />
               <MyInput
                 label={"Age"}
@@ -76,6 +99,8 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
                 placeholder="ex : 25"
                 onChange={inputHandle("age")}
                 value={empData.age}
+                error={errors.age}
+                errorMessage={errors.age}
               />
               <MyInput
                 label={"Salary"}
@@ -83,6 +108,8 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
                 onChange={inputHandle("salary")}
                 value={empData.salary}
                 placeholder="ex : 25000"
+                error={errors.salary}
+                errorMessage={errors.salary}
               />
               <div className="bt-select">
                 <label>Position</label>

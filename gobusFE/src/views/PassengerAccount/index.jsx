@@ -4,21 +4,26 @@ import editW from "../../assets/images/editWhite.png";
 import "./style.css";
 import EditableField from "../../components/EditableField/index";
 import ConfirmationPopup from "../../components/ConfirmationPopup/index";
+import { passengerData, updatePassengerInfo } from "../../store/passengerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import MyButton from "../../components/button";
+import { notification } from "antd";
+import { passengerUpdate } from "../../apis/passengerAPIs";
 
 export default function PassengerAccount({ selectedTab }) {
-  const user = {
-    username: "Dilshan Karunarathna",
-    phone: "0725478963",
-    email: "dilshankarunarathna@gmail.com",
-    propic: man,
-  };
-
+  const dispatch = useDispatch();
+  const reduxUser = useSelector(passengerData);
   const [isEditing, setIsEditing] = useState({});
-  const [userData, setUserData] = useState(user);
+  const [userData, setUserData] = useState({
+    mobile: reduxUser.mobile,
+    username: reduxUser.username,
+    email: reduxUser.email,
+  });
   const [showPopup, setShowPopup] = useState(false);
   const [unSavedField, setUnSavedField] = useState(null);
   const [nextField, setNextField] = useState(null);
-  const [orginalData, setOrginalData] = useState(user);
+  const [orginalData, setOrginalData] = useState(userData);
+  const [loading, setLoading] = useState(false);
 
   const closePrevEdit = () => {
     const editingField = Object.keys(isEditing).find((key) => isEditing[key]);
@@ -63,6 +68,37 @@ export default function PassengerAccount({ selectedTab }) {
     setShowPopup(false);
   };
 
+  const handleUpdate = async() => {
+    try {
+      setLoading(true);
+      if (!userData.username || !userData.email || !userData.mobile) {
+        notification.error({
+          message: "Please fill all the fields",
+        });
+        return;
+      }
+
+      const { data, msg, code } =await passengerUpdate(userData);
+      if (code === 0) {
+        dispatch(updatePassengerInfo(data));
+        notification.success({
+          message: msg,
+        });
+      } else {
+        notification.error({
+          message: "Something went wrong",
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+      notification.error({
+        message: "Something went wrong",
+      });
+    }
+  };
+
   return (
     <>
       <div className="passenger-profile-account">
@@ -75,7 +111,7 @@ export default function PassengerAccount({ selectedTab }) {
             <>
               <div className="passenger-profile-account-propic">
                 <img
-                  src={user.propic}
+                  src={man}
                   alt=""
                   className="passenger-profile-account-propic-image"
                 />
@@ -93,12 +129,12 @@ export default function PassengerAccount({ selectedTab }) {
                   onChange={(e) => handleOnChange("username", e.target.value)}
                 />
                 <EditableField
-                  label="Phone number"
-                  data={userData.phone}
-                  isEditing={isEditing.phone}
-                  onEdit={() => handleEditClick("phone")}
-                  onSave={() => handleSaveClick("phone")}
-                  onChange={(e) => handleOnChange("phone", e.target.value)}
+                  label="Mobile number"
+                  data={userData.mobile}
+                  isEditing={isEditing.mobile}
+                  onEdit={() => handleEditClick("mobile")}
+                  onSave={() => handleSaveClick("mobile")}
+                  onChange={(e) => handleOnChange("mobile", e.target.value)}
                 />
                 <EditableField
                   label="Email"
@@ -108,6 +144,10 @@ export default function PassengerAccount({ selectedTab }) {
                   onSave={() => handleSaveClick("email")}
                   onChange={(e) => handleOnChange("email", e.target.value)}
                 />
+
+                <div style={{ marginTop: 20 }}>
+                  <MyButton width={200} name="Update" loading={loading} onClick={handleUpdate}/>
+                </div>
               </div>
             </>
           )}

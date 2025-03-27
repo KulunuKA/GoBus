@@ -2,8 +2,11 @@ import React from "react";
 import "./style.css";
 import start from "../../assets/images/departures.png";
 import end from "../../assets/images/arrivals.png";
+import { convertTo12HourFormat } from "../../util/time_format";
+import { useNavigate } from "react-router-dom";
 
 export default function PublicBusRouteCard({ bus }) {
+  const navigate = useNavigate();
   const getStatusColor = (status) => {
     if (status === "In Route") return "#05944F";
     if (status === "In Stand") return "#F28C28";
@@ -13,7 +16,11 @@ export default function PublicBusRouteCard({ bus }) {
 
   return (
     <>
-      <div key={`${bus._id}`} className="public-bus-card-box">
+      <div
+        key={`${bus._id}`}
+        className="public-bus-card-box"
+        onClick={() => navigate(`/bus/${bus._id}`)}
+      >
         <div className="public-bus-card-content">
           <div
             className={`public-bus-card-status-indicator ${
@@ -31,7 +38,7 @@ export default function PublicBusRouteCard({ bus }) {
               </p>
               <span className="public-bus-card-route-details-times">
                 <p className="public-bus-card-route-details-time">
-                  {bus.timetable[0].startTime}
+                  {convertTo12HourFormat(bus.timetable[0].startTime)}
                 </p>
                 <img src={start} alt="" />
               </span>
@@ -42,7 +49,7 @@ export default function PublicBusRouteCard({ bus }) {
               </p>
               <span className="public-bus-card-route-details-times">
                 <p className="public-bus-card-route-details-time">
-                  {bus.timetable[0].endTime}
+                  {convertTo12HourFormat(bus.timetable[0].endTime)}
                 </p>
                 <img src={end} alt="" />
               </span>

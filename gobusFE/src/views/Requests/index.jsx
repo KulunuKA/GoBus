@@ -63,7 +63,7 @@ export default function Requests() {
 
   //TODO: auto rejected due date
   const filteredRequests = requests
-    .filter((e) => e.busID.busNumber.includes(searchText))
+    .filter((e) => e?.busID?.busNumber.includes(searchText))
     .sort((a, b) => {
       const statusPriority = {
         pending: 3,
@@ -105,8 +105,10 @@ export default function Requests() {
         <div className="req-body-content">
           {loading ? (
             <Loading size={70} />
-          ) : requests.length === 0 && <EmptyDataMessage /> ? (
-            isError && <ErrorMessage message={isError} />
+          ) : requests.length === 0 ? (
+            <EmptyDataMessage message={"Not received trips"} />
+          ) : isError ? (
+            <ErrorMessage message={isError} />
           ) : (
             filteredRequests.map((request) => (
               <div className="request-card" key={request._id}>
