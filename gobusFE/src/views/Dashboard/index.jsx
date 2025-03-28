@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./style.css";
-import EditableField from "../../components/EditableField";
 import MyButton from "../../components/button";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
 import { useSelector } from "react-redux";
@@ -8,7 +7,7 @@ import { busOwnerData } from "../../store/busOwnerSlice";
 import { busOwnerUpdate } from "../../apis/busOwner";
 
 export default function Dashboard() {
-  const [isEditing, setIsEditing] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
   const {
     _id: id,
     busesId,
@@ -20,65 +19,73 @@ export default function Dashboard() {
     address,
     logo,
   } = useSelector(busOwnerData);
-  const [userData, setUserData] = useState({
-    authorityName:authorityName,
-    email: email,
-    phone: phone,
-    address: address,
-    logo: logo,
-    busesId: busesId,
-    routesId: routesId,
-    employeesId: employeesId,
-  });
+
   const [showPopup, setShowPopup] = useState(false);
-  const [unSavedField, setUnSavedField] = useState(null);
-  const [nextField, setNextField] = useState(null);
-  const [orginalData, setOrginalData] = useState(userData);
+
+  const [originalData, setOriginalData] = useState({
+    authorityName,
+    email,
+    phone,
+    address,
+    logo,
+    busesId,
+    routesId,
+    employeesId,
+  });
+
+  const [userData, setUserData] = useState(originalData);
   const [loading, setLoading] = useState(false);
 
-  const closePrevEdit = () => {
-    const editingField = Object.keys(isEditing).find((key) => isEditing[key]);
-
-    setIsEditing((prev) => ({ ...prev, [editingField]: false }));
-  };
-
-  const handleEditClick = (field) => {
-    if (unSavedField && unSavedField !== field) {
-      setNextField(field);
-      setShowPopup(true);
-      return;
-    }
-    closePrevEdit();
-
-    setOrginalData(userData);
-    setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
-    setUnSavedField(null);
-  };
-
-  const handleSaveClick = (field) => {
-    setIsEditing((prev) => ({ ...prev, [field]: false }));
-    setUnSavedField(null);
-  };
-
-  const handleOnChange = (field, value) => {
+  const handleInputChange = (field, value) => {
     setUserData((prev) => ({ ...prev, [field]: value }));
-    setUnSavedField(field);
   };
 
-  const handleConfirm = () => {
-    handleSaveClick(unSavedField);
-    handleEditClick(nextField);
-    setShowPopup(false);
+  const handleUpdateClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+      if (
+        !userData.address ||
+        !userData.email ||
+        !userData.phone ||
+        !userData.authorityName
+      ) {
+        notification.error({ message: "Please fill all fields" });
+        setLoading(false);
+        return;
+      }
+
+      const { data, msg, code } = await busOwnerUpdate(id, userData);
+      if (code === 0) {
+        dispatch(updatePassengerInfo(data));
+        notification.success({ message: msg });
+
+        setOriginalData(userData);
+      } else {
+        notification.error({ message: "Something went wrong" });
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      notification.error({ message: "Something went wrong" });
+    } finally {
+      setLoading(false);
+      setIsEditing(false);
+      setShowPopup(false);
+    }
   };
 
   const handleCancel = () => {
-    setUserData(orginalData);
-    setIsEditing((prev) => ({ ...prev, [unSavedField]: false }));
-    setUnSavedField(null);
-    handleEditClick(nextField);
+    setUserData(originalData);
+    setIsEditing(false);
     setShowPopup(false);
   };
-
   const buses = [
     { id: 1, status: "In Route" },
     { id: 2, status: "In Service" },
@@ -164,61 +171,63 @@ export default function Dashboard() {
           <p>Total Employees</p>
         </div>
         <div className="owner-dashboard-summary-box">
-          <p className="owner-dashboard-count">LKR:89290</p>
+          <span>LKR:</span>
+          <p className="owner-dashboard-count">89290</p>
           <p>Today Revenue</p>
         </div>
       </div>
       <div className="owner-dashboard-profile">
         <p>Account Information</p>
         <div className="owner-dashboard-profile-data-field">
-          <EditableField
-            label="Name"
-            data={userData.authorityName}
-            isEditing={isEditing.username}
-            onEdit={() => handleEditClick("username")}
-            onSave={() => handleSaveClick("username")}
-            onChange={(e) => handleOnChange("username", e.target.value)}
-          />
-          <EditableField
-            label="Mobile number"
-            data={userData.phone}
-            isEditing={isEditing.mobile}
-            onEdit={() => handleEditClick("mobile")}
-            onSave={() => handleSaveClick("mobile")}
-            onChange={(e) => handleOnChange("mobile", e.target.value)}
-          />
-          <EditableField
-            label="Email"
-            data={userData.email}
-            isEditing={isEditing.email}
-            onEdit={() => handleEditClick("email")}
-            onSave={() => handleSaveClick("email")}
-            onChange={(e) => handleOnChange("email", e.target.value)}
-          />
-          <EditableField
-            label="Address"
-            data={userData.address}
-            isEditing={isEditing.address}
-            onEdit={() => handleEditClick("address")}
-            onSave={() => handleSaveClick("address")}
-            onChange={(e) => handleOnChange("address", e.target.value)}
-          />
+          {["authorityName", "email", "phone", "address"].map((field) => (
+            <div key={field} className="authority-dashboard-account-datafield">
+              <div className="authority-dashboard-account-data-filed">
+                <p className="authority-dashboard-account-data-title">
+                  {field}:
+                </p>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={userData[field]}
+                    onChange={(e) => handleInputChange(field, e.target.value)}
+                    className="authority-dashboard-account-data-input"
+                  />
+                ) : (
+                  <p className="authority-dashboard-account-data">
+                    {userData[field]}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
         <div style={{ marginTop: 20 }}>
-          <MyButton
-            width={200}
-            name="Update"
-            loading={loading}
-            color="#05944F"
-            onClick={handleUpdate}
-          />
+          {isEditing ? (
+            <MyButton
+              width={200}
+              name="Save"
+              loading={loading}
+              color="#05944F"
+              onClick={handleSaveClick}
+            />
+          ) : (
+            <MyButton
+              width={200}
+              name="Update"
+              loading={loading}
+              color="#05944F"
+              onClick={handleUpdateClick}
+            />
+          )}
         </div>
       </div>
       {showPopup && (
         <ConfirmationPopup
-          message="You have unsaved changes. Do you want to save them?"
+          message="Are you sure?"
           onConfirm={handleConfirm}
           onCancel={handleCancel}
+          yesText="Yes"
+          noText="No"
         />
       )}
     </div>
