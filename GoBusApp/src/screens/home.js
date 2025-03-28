@@ -1,15 +1,20 @@
+import { useRoute } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useEffect, useState, useCallback } from "react";
 import { View, Button, Text, StyleSheet } from "react-native";
 import { io } from "socket.io-client";
+import { getUserData } from "../store";
 
-const socket = io("https://f290-123-231-127-98.ngrok-free.app");
+const socket = io(
+  "https://fd0e-2402-4000-2300-573-254a-3857-b51-1f50.ngrok-free.app"
+);
 
 const Home = () => {
+  const [busData, setBusData] = useState(null);
   const [location, setLocation] = useState(null);
   const [start, setStart] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
-  const busId = "1";
+  const [busId, setBusId] = useState(null);
 
   const startTrip = useCallback(async () => {
     try {
@@ -68,6 +73,20 @@ const Home = () => {
     };
   }, [start, startTrip, stopTrip]);
 
+  const getBusData = async () => {
+    const userData = await getUserData();
+    if (userData) {
+      setBusData(userData);
+      setBusId(userData[0]._id);
+      console.log("busId", userData[0]._id);
+    } else {
+      console.log("No bus data found.");
+    }
+  };
+  useEffect(() => {
+    getBusData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Button
@@ -87,6 +106,8 @@ const Home = () => {
           )}
         </View>
       )}
+
+      <Text>{busData ? busData.name : "Loading..."}</Text>
     </View>
   );
 };

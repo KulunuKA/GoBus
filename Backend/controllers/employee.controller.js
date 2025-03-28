@@ -1,5 +1,6 @@
 const Employee = require("../models/employee");
 const BusOwner = require("../models/busOwner");
+const Bus = require("../models/bus");
 const AppError = require("../utils/appError");
 
 const addEmployee = async (req, res, next) => {
@@ -106,9 +107,38 @@ const getAllEmployeeByOwner = async (req, res, next) => {
   }
 };
 
+const employeeLogin = async (req, res, next) => {
+  try {
+    console.log("employee login", req.body);
+    const { busNumber, password } = req.body;
+    if (!busNumber || !password) {
+      return next(new AppError(400, "Invalid required fields"));
+    }
+
+    const bus = await Bus.find({
+      busType: "public transport",
+      busNumber: busNumber,
+      password: password,
+    }).populate("driverID");
+
+    if (!bus) {
+      return next(new AppError(404, "No bus found with that ID"));
+    }
+
+    res.status(200).send({
+      data: bus,
+      code: 0,
+      msg: "Login successfully",
+    });
+  } catch (error) {
+    next(new AppError(400, error.message));
+  }
+};
+
 module.exports = {
   addEmployee,
   deleteEmployee,
   updateEmployee,
   getAllEmployeeByOwner,
+  employeeLogin,
 };
