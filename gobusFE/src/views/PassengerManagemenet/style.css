@@ -1,21 +1,21 @@
-/* General Page Styling */
-.bus-header {
+.pm-header {
   text-align: left;
-  padding: 20px;
+  padding: 15px 20px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-weight: bold;
   margin: 0 15px;
+  color: #2d3436;
 }
 
 /* Body Styling */
-.bus-body {
+.pm-body {
   padding: 20px;
   background-color: #f5f5f5;
 }
 
-.bus-body-header {
+.pm-body-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,10 +25,6 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
-.bus-body-header div {
+.pm-body-header div {
   width: 300px;
-}
-
-.bnd {
-  margin-right: 10px;
 }
