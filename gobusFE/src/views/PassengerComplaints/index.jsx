@@ -3,7 +3,7 @@ import "./style.css";
 import PassengerButton from "../../components/PassengerButton/index";
 import submit from "../../assets/images/click.png";
 import ComplaintAddForm from "../../components/ComplaintAddForm";
-import { getComplaints } from "../../apis/passengerAPIs";
+import { deleteComplaint, getComplaints } from "../../apis/passengerAPIs";
 import { passengerData } from "../../store/passengerSlice";
 import Loading from "../../components/Loading";
 import EmptyDataMessage from "../../components/EmptyDataMessage";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import ErrorMessage from "../../components/ErrorMessage";
 import MyButton from "../../components/button";
 import { DeleteFilled } from "@ant-design/icons";
+import { Modal, notification } from "antd";
 
 export default function PassengerComplaints() {
   const [isAdd, setIsAdd] = useState(false);
@@ -18,6 +19,7 @@ export default function PassengerComplaints() {
   const [userComplaints, setUserComplaints] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
+  const { confirm } = Modal;
 
   const fetchComplaints = async () => {
     try {
@@ -31,6 +33,31 @@ export default function PassengerComplaints() {
     } catch (error) {
       setLoading(false);
       setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await deleteComplaint(id);
+      const newComplaints = userComplaints.filter(
+        (complaint) => complaint._id !== id
+      );
+      setUserComplaints(newComplaints);
+
+      if (code === 0) {
+        notification.success({
+          message: msg,
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      notification.error({
+        message: "Something went wrong!",
+      });
       console.log(error);
     }
   };
@@ -103,8 +130,23 @@ export default function PassengerComplaints() {
                     {complaint.status === "Resolved" && (
                       <MyButton
                         name=""
-                        icon={<DeleteFilled style={{color:"red"}}/>}
-                        color={"transparent"}
+                        size="small"
+                        icon={<DeleteFilled style={{ color: "red" }} />}
+                        color={loading ? "gray" : "transparent"}
+                        onClick={() => {
+                          confirm({
+                            title:
+                              "Are you sure you want to delete this complaint?",
+                            content: "This action cannot be undone.",
+                            onOk() {
+                              handleDelete(complaint._id);
+                            },
+                            onCancel() {
+                              console.log("Cancel");
+                            },
+                          });
+                        }}
+                        loading={loading}
                       />
                     )}
                   </div>

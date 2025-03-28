@@ -141,6 +141,19 @@ busSchema.post("validate", function (next) {
   }
 });
 
+//when bus is deleted, remove trips
+busSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const busID = this.getQuery()._id;
+
+    await mongoose.model("Trip").deleteMany({ busID });
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 const Bus = mongoose.model("Bus", busSchema);
 
 module.exports = Bus;

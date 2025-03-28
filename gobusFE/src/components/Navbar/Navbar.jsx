@@ -56,7 +56,7 @@ export default function Navbar() {
     };
   }, [lastScroll]);
 
-  const truncatedUsername = truncateUsernmae("Dilshan Karunarathna");
+  const username = passengerRedux?.username || busOwnerRedux?.authorityName || "User";
 
   return (
     <nav className={`navbar ${visible ? "visible" : "hidden"}`}>
@@ -144,7 +144,7 @@ export default function Navbar() {
               <div className="user-data-dropdown">
                 <div className="user-name-image-dropdown">
                   <div className="user-name-dropdown">
-                    <h2>{truncatedUsername}</h2>
+                    <h2>{username}</h2>
                   </div>
                   <div className="user-image-dropdown">
                     <img src={man} alt="" />

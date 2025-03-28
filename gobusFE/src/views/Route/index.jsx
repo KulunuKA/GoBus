@@ -85,6 +85,7 @@ export default function Route() {
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              height=""
             />
           </div>
           <MyButton

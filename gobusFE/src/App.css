@@ -1,5 +1,5 @@
 :where(.css-dev-only-do-not-override-dkbvqv).ant-notification {
-  z-index: 200000;
+  z-index: 10000;
 }
 
 body {
