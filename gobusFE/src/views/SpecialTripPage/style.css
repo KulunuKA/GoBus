@@ -23,7 +23,7 @@
 
 .special-menu-bar-section {
   width: 100%;
-  margin-top: -70px;
+  margin-top: -110px;
   margin-bottom: -20px;
 }
 
@@ -148,7 +148,7 @@
 .special-results {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 40px;
   padding: 20px;
 }

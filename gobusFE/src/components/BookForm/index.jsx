@@ -111,6 +111,7 @@ export default function BookForm({ isOpen, onClose }) {
               errorMessage={errors.date}
             />
           </div>
+
           <div className="bookingForm-popup-detail-field">
             <p className="bookingForm-popup-detail-label">Trip Type:</p>
             <Dropdown
