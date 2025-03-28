@@ -1,7 +1,13 @@
 import React from "react";
 import "./style.css";
 
-export default function ConfirmationPopup({message, onConfirm, onCancel}) {
+export default function ConfirmationPopup({
+  message,
+  onConfirm,
+  onCancel,
+  yesText = "Save",
+  noText = "Discard",
+}) {
   return (
     <>
       <div className="popup-overlay">
@@ -9,10 +15,10 @@ export default function ConfirmationPopup({message, onConfirm, onCancel}) {
           <p className="popup-message">{message}</p>
           <div className="popup-actions">
             <button className="popup-btn confirm" onClick={onConfirm}>
-              Save
+              {yesText}
             </button>
             <button className="popup-btn cancel" onClick={onCancel}>
-              Discard
+              {noText}
             </button>
           </div>
         </div>
