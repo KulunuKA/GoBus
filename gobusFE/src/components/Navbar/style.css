@@ -6,7 +6,7 @@
   left: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
-  z-index: 10000;
+  z-index: 1000;
 }
 
 .navbar.hidden {
@@ -47,6 +47,10 @@
   text-decoration: none;
   font-weight: 500;
   padding: 3px 10px;
+}
+
+a.activeLink{
+  color: #05944f;
 }
 
 a.nav-link:hover {

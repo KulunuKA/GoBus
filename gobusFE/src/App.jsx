@@ -28,6 +28,7 @@ import AdminSupportCenter from "./views/AdminSupportCenter";
 import PassengerComplaints from "./views/PassengerComplaints";
 import PassengerManagement from "./views/PassengerManagemenet/Index";
 import AuthorityManagement from "./views/AuthorityManagement";
+import PassengerMap from "./views/Map/LiveLocationTracker";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/userprofile" element={<UserAccount />} />
           <Route path="/activity" element={<Trips />} />
           <Route path="/complaints" element={<PassengerComplaints />} />
+          <Route path="/map/:busId" element={<PassengerMap />} />
         </Route>
       </Route>
 

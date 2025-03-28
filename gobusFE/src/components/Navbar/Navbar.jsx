@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearStorePassenger, passengerData } from "../../store/passengerSlice";
 import { busOwnerData, clearStore } from "../../store/busOwnerSlice";
+import { useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [isBusinessOpen, setIsBusinessOpen] = useState(false);
@@ -21,6 +22,10 @@ export default function Navbar() {
   const [lastScroll, setLastScroll] = useState(0);
   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
+
+  const location = useLocation();
+
+  const isActive = (path) => (location.pathname === path ? "activeLink" : "");
 
   const role = passengerRedux?.role || busOwnerRedux?.role;
 
@@ -56,28 +61,32 @@ export default function Navbar() {
     };
   }, [lastScroll]);
 
-  const truncatedUsername = truncateUsernmae("Dilshan Karunarathna");
+
+  const username = passengerRedux?.username || busOwnerRedux?.authorityName || "User";
 
   return (
     <nav className={`navbar ${visible ? "visible" : "hidden"}`}>
       <div className="navbar-container">
         <div className="navbar-left">
           <div className="navbar-logo">
-            <a href="#">
+            <a href="/">
               <img src={logo} alt="logo image" />
             </a>
           </div>
           <div className="navbar-links">
-          <a href="/" className="nav-link">
+            <a href="/" className={`nav-link  ${isActive("/")}`}>
               Home
             </a>
-            <a href="/public-buses" className="nav-link">
+            <a
+              href="/public-buses"
+              className={`nav-link  ${isActive("/public-buses")}`}
+            >
               Public
             </a>
-            <a href="/special" className="nav-link">
+            <a href="/special" className={`nav-link  ${isActive("/special")}`}>
               Special
             </a>
-            <a href="#" className="nav-link">
+            <a href="#" className={`nav-link  ${isActive("/#")}`}>
               Shuttles
             </a>
             <div className="dropdown">
@@ -112,7 +121,7 @@ export default function Navbar() {
           </div>
         </div>
         <div className="navbar-right">
-          <a href="/help" className="nav-link">
+          <a href="/help" className={`nav-link  ${isActive("/help")}`}>
             Help
           </a>
           <div className="dropdown">
@@ -144,7 +153,7 @@ export default function Navbar() {
               <div className="user-data-dropdown">
                 <div className="user-name-image-dropdown">
                   <div className="user-name-dropdown">
-                    <h2>{truncatedUsername}</h2>
+                    <h2>{username}</h2>
                   </div>
                   <div className="user-image-dropdown">
                     <img src={man} alt="" />

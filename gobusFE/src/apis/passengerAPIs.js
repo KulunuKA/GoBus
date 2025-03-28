@@ -62,6 +62,10 @@ export const getTrips = async (id) => {
   return await axiosInstance.get(`auth/trip/get/${id}`);
 };
 
+export const cancelTrip = async (id) => {
+  return await axiosInstance.delete(`auth/trip/delete/${id}`, options);
+};
+
 export const passengerUpdate = async (data) => {
   return await axiosInstance.put(`auth/passenger/update`, data, options);
 };
@@ -72,4 +76,8 @@ export const getComplaints = async (id) => {
 
 export const addComplaint = async (data) => {
   return await axiosInstance.post(`auth/complaint/create`, data, options);
+};
+
+export const deleteComplaint = async (id) => {
+  return await axiosInstance.delete(`auth/complaint/delete/${id}`, options);
 };

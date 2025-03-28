@@ -7,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function PublicBusRouteCard({ bus }) {
   const navigate = useNavigate();
-  const getStatusColor = (status) => {
-    if (status === "In Route") return "#05944F";
-    if (status === "In Stand") return "#F28C28";
-    if (status === "Not Working") return "#D12C2C";
+  const getStatusColor = (bus) => {
+    if (bus.start_trip) return "#05944F";
+    if (bus.today_work) return "#F28C28";
+    if (bus.is_breakdown) return "#D12C2C";
     return "gray";
   };
 
@@ -26,7 +26,7 @@ export default function PublicBusRouteCard({ bus }) {
             className={`public-bus-card-status-indicator ${
               bus.start_trip === "In Route" ? "flashing" : ""
             }`}
-            style={{ backgroundColor: getStatusColor(bus.start_trip) }}
+            style={{ backgroundColor: getStatusColor(bus) }}
           ></div>
           <div className="public-bus-card-bus-name">
             <h2>{bus.name}</h2>

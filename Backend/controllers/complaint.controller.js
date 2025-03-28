@@ -39,8 +39,28 @@ const getComplaintsByUser = async (req, res, next) => {
   }
 };
 
+//if complaint resolved ,delete complaint by id
+const deleteComplaint = async (req, res, next) => {
+  try {
+    if (!req.params.complaintId) {
+      throw new AppError(400, "Please provide complaint id");
+    }
+    const complaint = await Complaint.findByIdAndDelete(req.params.complaintId);
+    if (!complaint) {
+      throw new AppError(404, "Complaint not found");
+    }
+    res.status(200).send({
+      data: complaint,
+      code: 0,
+      msg: "Complaint deleted successfully",
+    });
+  } catch (error) {
+    next(new AppError(400, error.message));
+  }
+};
 
 module.exports = {
   createComplaint,
   getComplaintsByUser,
+  deleteComplaint,
 };

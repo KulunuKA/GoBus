@@ -35,6 +35,8 @@ export default function BookForm({ isOpen, onClose }) {
 
     if (!values.date) {
       newErrors.date = "Date is required";
+    } else if (new Date(values.date) < new Date()) {
+      newErrors.date = "Date should be greater than today";
     }
 
     if (!values.type) {
@@ -47,6 +49,8 @@ export default function BookForm({ isOpen, onClose }) {
 
     if (!values.days) {
       newErrors.days = "Days is required";
+    } else if (values.days <= 0) {
+      newErrors.days = "Days should be greater than 0";
     }
 
     if (!values.contact_no) {
@@ -82,6 +86,17 @@ export default function BookForm({ isOpen, onClose }) {
         notification.success({
           message: msg,
         });
+        setTrip({
+          userID: u_id,
+          busID: id,
+          date: "",
+          type: "",
+          venue: "",
+          days: "",
+          description: "",
+          contact_no: "",
+        });
+        setErrors({});
         onClose();
       }
       setLoading(false);
@@ -111,6 +126,7 @@ export default function BookForm({ isOpen, onClose }) {
               errorMessage={errors.date}
             />
           </div>
+
           <div className="bookingForm-popup-detail-field">
             <p className="bookingForm-popup-detail-label">Trip Type:</p>
             <Dropdown

@@ -63,7 +63,9 @@ export default function Requests() {
 
   //TODO: auto rejected due date
   const filteredRequests = requests
-    .filter((e) => e?.busID?.busNumber.includes(searchText))
+    .filter((e) =>
+      e?.busID?.busNumber.toLowerCase().includes(searchText.toLowerCase())
+    )
     .sort((a, b) => {
       const statusPriority = {
         pending: 3,
@@ -99,6 +101,7 @@ export default function Requests() {
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              height=""
             />
           </div>
         </div>

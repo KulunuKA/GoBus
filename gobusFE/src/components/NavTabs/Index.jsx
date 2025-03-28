@@ -32,9 +32,7 @@ export default function NavTabs({ pageName, pageIcon, tabList }) {
               </div>
             ))}
           </div>
-          <div className="navTabs-page-signout">
-            <p>Sign Out</p>
-          </div>
+         
           <div className="navTabs-page-title">
             <img src={pageIcon} alt="" />
             <p>{pageName}</p>

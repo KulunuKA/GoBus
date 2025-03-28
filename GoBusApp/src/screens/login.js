@@ -1,31 +1,53 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { View, TextInput, Button, Text, StyleSheet, Alert } from "react-native";
+import { loginUser } from "../apis/api"; // API Call
+import { storeUserData } from "../store"; // AsyncStorage functions
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState({
+    busNumber: "",
+    password: "",
+  });
 
-  const handleLogin = () => {
-    navigation.navigate("Home");
+  const handleLogin = async () => {
+    try {
+      if (!credentials.busNumber || !credentials.password) {
+        Alert.alert("Error", "Please fill in all fields.");
+        return;
+      }
+
+      const response = await loginUser(credentials);
+      const { data, msg, code } = response;
+
+      if (code === 0) {
+        await storeUserData(data); // Save user data
+        navigation.navigate("Home", { busData: data });
+      } else {
+        Alert.alert("Login Failed", msg);
+      }
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      Alert.alert("Login failed", "Please try again.");
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Username:</Text>
+      <Text style={styles.label}>Bus Number:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Enter Bus Number"
+        value={credentials.busNumber}
+        onChangeText={(text) => setCredentials({ ...credentials, busNumber: text })}
       />
 
       <Text style={styles.label}>Password:</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter password"
-        value={password}
+        value={credentials.password}
         secureTextEntry
-        onChangeText={setPassword}
+        onChangeText={(text) => setCredentials({ ...credentials, password: text })}
       />
 
       <Button title="Login" onPress={handleLogin} />

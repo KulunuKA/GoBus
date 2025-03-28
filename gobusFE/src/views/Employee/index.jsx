@@ -57,7 +57,7 @@ export default function Employee() {
       setIsError("");
       setLoading(true);
       const { data, code, msg } = await deleteEmployee(id);
-      console.log(data, code, msg);
+
       if (code === 0) {
         notification.success({
           message: msg,
@@ -89,6 +89,7 @@ export default function Employee() {
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              height=""
             />
           </div>
           <MyButton
