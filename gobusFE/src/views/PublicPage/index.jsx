@@ -225,6 +225,7 @@ export default function PublicPage() {
                     onChange={(e) => setSearchText(e.target.value)}
                     borderRadius="0"
                     label="Enter Bus Name:"
+                    height=""
                   />
                 </div>
                 <div className="public-filters-section">

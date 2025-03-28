@@ -87,6 +87,7 @@ export default function Special() {
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     borderRadius="0"
+                    height=""
                   />
                 </div>
                 <div className="special-filters-section">
