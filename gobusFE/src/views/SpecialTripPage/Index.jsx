@@ -96,12 +96,10 @@ export default function Special() {
                       onChange={(value) => {
                         setDistrict(value);
                       }}
-                      options={(sriLankanDistricts || [])
-                        .filter((cit) => cit != "All City")
-                        .map((c) => ({
-                          label: c,
-                          value: c,
-                        }))}
+                      options={(sriLankanDistricts || []).map((c) => ({
+                        label: c,
+                        value: c,
+                      }))}
                       width="200px"
                       borderRadius="0"
                     />
@@ -112,12 +110,12 @@ export default function Special() {
                       onChange={(value) => {
                         setCity(value);
                       }}
-                      options={(citiesWithDistrict[district] || [])
-                        .filter((cit) => cit != "All City")
-                        .map((c) => ({
+                      options={(citiesWithDistrict[district] || []).map(
+                        (c) => ({
                           label: c,
                           value: c,
-                        }))}
+                        })
+                      )}
                       width="200px"
                       borderRadius="0"
                     />
@@ -131,7 +129,9 @@ export default function Special() {
                     fontSize="18px"
                     fontWeight="500"
                     onClick={() => {
-                      fetchBuses("special service", district, city);
+                      let dis = district === "All District" ? "" : district;
+                      let cit = city === "All City" ? "" : city;
+                      fetchBuses("special service", dis, cit);
                     }}
                   />
                 </div>

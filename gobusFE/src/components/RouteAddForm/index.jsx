@@ -4,8 +4,8 @@ import MyInput from "../../components/input";
 import DropDown from "../../components/Dropdown";
 import MyButton from "../../components/button";
 import { addRoute } from "../../apis/busOwner";
-import { busOwnerData } from "../../store/busOwnerSlice";
-import { useSelector } from "react-redux";
+import { busOwnerData, updateRouteId } from "../../store/busOwnerSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { onlyCities } from "../../assets/district_city";
 
 export default function RouteForm({ isOpen, onCancel, refresh }) {
@@ -20,6 +20,7 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
 
   const inputHandle = (field) => (e) => {
     setRouteData({ ...routeData, [field]: e.target.value });
@@ -78,6 +79,7 @@ export default function RouteForm({ isOpen, onCancel, refresh }) {
       const { data, code, msg } = await addRoute(routeData);
 
       if (code === 0) {
+        dispatch(updateRouteId(data._id));
         notification.success({
           message: msg,
         });

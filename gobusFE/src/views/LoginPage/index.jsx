@@ -18,10 +18,7 @@ export default function LoginPage() {
   const busOwnerRedux = useSelector(busOwnerData);
   const role = passengerRedux?.role || busOwnerRedux?.role;
   const [isLoading, setIsLoading] = useState(false);
-  const [inputErr, setInputErr] = useState({
-    email: false,
-    password: false,
-  });
+  const [inputErr, setInputErr] = useState({});
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -47,25 +44,29 @@ export default function LoginPage() {
     setCredentials({ ...credentials, [field]: e.target.value });
   };
 
+  const validateForm = (values) => {
+    const newErrors = {};
+    if (!values.email) {
+      newErrors.email = "Email is required";
+    }
+    if (!values.password) {
+      newErrors.password = "Password is required";
+    }
+
+    if (values.email && !values.email.includes("@")) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (values.password && values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    setInputErr(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
     try {
-      if (!credentials.email && !credentials.password) {
-        setInputErr({ ...inputErr, email: true, password: true });
-        notification.error({
-          message: "Required email and password",
-        });
-        return;
-      } else if (!credentials.email) {
-        setInputErr({ ...inputErr, email: true });
-        notification.error({
-          message: "Required email",
-        });
-        return;
-      } else if (!credentials.password) {
-        setInputErr({ ...inputErr, password: true });
-        notification.error({
-          message: "Required password",
-        });
+      if (!validateForm(credentials)) {
         return;
       }
 
@@ -116,6 +117,7 @@ export default function LoginPage() {
                 value={credentials.email}
                 onChange={handleInput("email")}
                 error={inputErr.email}
+                errorMessage={inputErr.email}
               />
               <MyInput
                 label="Password"
@@ -125,6 +127,7 @@ export default function LoginPage() {
                 value={credentials.password}
                 onChange={handleInput("password")}
                 error={inputErr.password}
+                errorMessage={inputErr.password}
               />
               <section className="remember-me">
                 <section>

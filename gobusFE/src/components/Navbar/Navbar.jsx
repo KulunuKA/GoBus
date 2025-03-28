@@ -112,7 +112,7 @@ export default function Navbar() {
           </div>
         </div>
         <div className="navbar-right">
-          <a href="#" className="nav-link">
+          <a href="/help" className="nav-link">
             Help
           </a>
           <div className="dropdown">
@@ -152,7 +152,7 @@ export default function Navbar() {
                 </div>
                 <div className="user-data-btn-dropdown">
                   <div className="user-data-btn">
-                    <a href="#">
+                    <a href="/help">
                       <img src={question} alt="" />
                       <p>Help</p>
                     </a>

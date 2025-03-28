@@ -15,8 +15,8 @@ import image from "../../assets/images/image.png";
 import closeRed from "../../assets/images/close_red.png";
 import { addBus } from "../../apis/busOwner";
 import UseOneImgUpload from "../../hooks/UseOneImgUpload";
-import { busOwnerData } from "../../store/busOwnerSlice";
-import { useSelector } from "react-redux";
+import { busOwnerData, updateBusId } from "../../store/busOwnerSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function BusForm({ isOpen, onCancel, refresh }) {
   const { id, routesId, employeesId } = useSelector(busOwnerData);
@@ -50,6 +50,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       endTime: "",
     },
   ]);
+  const dispatch = useDispatch();
 
   const inputHandle = (field) => (e) => {
     setBusData({ ...busData, [field]: e.target.value });
@@ -246,6 +247,7 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       const { data, code, msg } = await addBus(submissionData);
 
       if (code === 0) {
+        dispatch(updateBusId(data._id));
         notification.success({
           message: "Bus Added Successfully",
         });

@@ -32,6 +32,7 @@ export default function MyButton({
         width: width,
         color: "white",
         fontSize: loading && 20,
+        borderRadius: 7,
       }}
     >
       {loading ? "" : name}

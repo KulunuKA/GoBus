@@ -13,6 +13,10 @@ export const busOwnerRegister = async (data) => {
   return await axiosInstance.post("public/busOwner/register", data);
 };
 
+export const busOwnerUpdate = async (id, data) => {
+  return await axiosInstance.put(`auth/busOwner/update/${id}`, data, options);
+};
+
 //get all buses
 export const getBuses = async (id) => {
   return await axiosInstance.get(`auth/busowner/getbuses/${id}`, options);
@@ -62,10 +66,14 @@ export const updateRoute = async (id, data) => {
   return await axiosInstance.put(`auth/route/update/${id}`, data, options);
 };
 
-export const getRequests = async(id)=>{
+export const getRequests = async (id) => {
   return await axiosInstance.get(`auth/busowner/trip/${id}`, options);
-}
+};
 
 export const handleTrips = async (id, status) => {
-  return await axiosInstance.put(`auth/busowner/trip/${id}`, { status }, options);
-}
+  return await axiosInstance.put(
+    `auth/busowner/trip/${id}`,
+    { status },
+    options
+  );
+};

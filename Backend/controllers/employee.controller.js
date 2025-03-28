@@ -24,9 +24,8 @@ const addEmployee = async (req, res, next) => {
     const employee = await Employee.create(req.body);
 
     res.status(201).send({
-      data: {
-        employee,
-      },
+      data: employee,
+
       code: 0,
       msg: "Added employee successfully",
     });

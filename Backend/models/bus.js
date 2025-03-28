@@ -53,6 +53,18 @@ const busSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  is_delay: {
+    type: Boolean,
+    default: false,
+  },
+  is_breakdown: {
+    type: Boolean,
+    default: false,
+  },
+  today_work: {
+    type: Boolean,
+    default: false,
+  },
   route_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Route",

@@ -6,8 +6,10 @@ import busauth from "../../assets/images/bus-station.png";
 import complain from "../../assets/images/complain-icon.png";
 import support from "../../assets/images/customer-support.png";
 import faqs from "../../assets/images/faqicon.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Help() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="main-passenger-container">
@@ -33,7 +35,7 @@ export default function Help() {
               <img src={support} alt="" />
               <p className="help-btn-name">Customer Support</p>
             </div>
-            <div className="help-section-btn">
+            <div className="help-section-btn" onClick={() => navigate("/complaints")}>
               <img src={complain} alt="" />
               <p className="help-btn-name">Complains</p>
             </div>

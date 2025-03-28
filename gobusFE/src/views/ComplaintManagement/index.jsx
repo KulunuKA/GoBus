@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import MyInput from "../../components/input";
 import { SearchOutlined } from "@ant-design/icons";
@@ -8,6 +8,7 @@ import EmptyDataMessage from "../../components/EmptyDataMessage";
 import { FaRegEnvelope, FaRegEnvelopeOpen } from "react-icons/fa";
 import ComplaintDetails from "../../components/ComplaintDetails";
 import Dropdown from "../../components/Dropdown";
+import { getComplaintsAD } from "../../apis/adminAPIs";
 
 export default function ComplaintManagement() {
   const [searchText, setSearchText] = useState("");
@@ -15,58 +16,27 @@ export default function ComplaintManagement() {
   const [isError, setIsError] = useState("");
   const [view, setView] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
+  const [complaints, setComplaints] = useState([]);
 
-  const complaintsList = [
-    {
-      complaintId: 1,
-      userId: 1,
-      about: "bus",
-      description: "This Complaint about bus",
-      status: "In Progress",
-      date: "2024-12-03",
-    },
-    {
-      complaintId: 2,
-      userId: 2,
-      about: "bus",
-      description: "This Complaint about bus",
-      status: "In Progress",
-      date: "2024-12-03",
-    },
-    {
-      complaintId: 3,
-      userId: 3,
-      about: "bus",
-      description:
-        "This Complaint about busaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      status: "Resolved",
-      date: "2024-12-03",
-    },
-    {
-      complaintId: 5,
-      userId: 1,
-      about: "bus",
-      description: "This Complaint about bus",
-      status: "In Progress",
-      date: "2024-12-03",
-    },
-    {
-      complaintId: 6,
-      userId: 2,
-      about: "bus",
-      description: "This Complaint about bus",
-      status: "In Progress",
-      date: "2024-12-03",
-    },
-    {
-      complaintId: 7,
-      userId: 3,
-      about: "bus",
-      description: "This Complaint about bus",
-      status: "Resolved",
-      date: "2024-12-03",
-    },
-  ];
+  const fetchComplaints = async () => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getComplaintsAD();
+      if (code === 0) {
+        setComplaints(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
 
   return (
     <div className="complaint-management">
@@ -75,18 +45,18 @@ export default function ComplaintManagement() {
       </div>
       <div className="complaint-summary">
         <div className="complaint-summary-box">
-          <p className="complaint-count">{complaintsList.length}</p>
+          <p className="complaint-count">{complaints.length}</p>
           <p>All Complaints</p>
         </div>
         <div className="complaint-summary-box">
           <p className="complaint-count">
-            {complaintsList.filter((c) => c.status === "In Progress").length}
+            {complaints.filter((c) => c.status === "Inprogress").length}
           </p>
           <p>In Progress</p>
         </div>
         <div className="complaint-summary-box">
           <p className="complaint-count">
-            {complaintsList.filter((c) => c.status === "Resolved").length}
+            {complaints.filter((c) => c.status === "Resolved").length}
           </p>
           <p>Resolved </p>
         </div>
@@ -154,27 +124,27 @@ export default function ComplaintManagement() {
                   <ErrorMessage message={isError} />
                 </td>
               </tr>
-            ) : complaintsList.length === 0 ? (
+            ) : complaints.length === 0 ? (
               <tr>
                 <td colSpan="6" className="center-content">
                   <EmptyDataMessage message="No Complaints to show" />
                 </td>
               </tr>
             ) : (
-              complaintsList.map((c, index) => (
+              complaints.map((c, index) => (
                 <tr
                   className={
-                    c.status === "In Progress" ? "unchecked" : undefined
+                    c.status === "Inprogress" ? "unchecked" : undefined
                   }
-                  key={c.complaintId}
+                  key={c._id}
                   onClick={() => setSelectedComplaint(c)}
                 >
-                  <td>{c.userId}</td>
-                  <td>{c.about}</td>
-                  <td className="description-cell">{c.description}</td>
-                  <td>{c.date}</td>
+                  <td>{c.userID}</td>
+                  <td>{c.complaintType}</td>
+                  <td className="description-cell">{c.complaint}</td>
+                  <td>{c.date.split("T")[0]}</td>
                   <td>
-                    {c.status !== "In Progress" ? (
+                    {c.status !== "Inprogress" ? (
                       <FaRegEnvelopeOpen />
                     ) : (
                       <FaRegEnvelope />
@@ -189,7 +159,10 @@ export default function ComplaintManagement() {
       {view && (
         <ComplaintDetails
           isOpen={view}
-          onClose={() => setView(!view)}
+          onClose={() => {
+            setView(!view);
+            fetchComplaints();
+          }}
           complaint={selectedComplaint}
         />
       )}

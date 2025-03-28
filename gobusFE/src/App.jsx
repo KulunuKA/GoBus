@@ -19,7 +19,6 @@ import Trips from "./views/Trips/index";
 import PublicPage from "./views/PublicPage/index";
 import AdministratorLayout from "./components/Layouts/AdministratorLayout";
 import AdminDashboard from "./views/AdminDashboard/index";
-import UserManagement from "./views/UserManagemenet/Index";
 import BusInventory from "./views/BusInventory";
 import RouteManagement from "./views/RouteManagement/INDEX.JSX";
 import ComplaintManagement from "./views/ComplaintManagement";
@@ -27,6 +26,8 @@ import AdminNotifications from "./views/AdminNotifications";
 import AdminSettings from "./views/AdminSettings";
 import AdminSupportCenter from "./views/AdminSupportCenter";
 import PassengerComplaints from "./views/PassengerComplaints";
+import PassengerManagement from "./views/PassengerManagemenet/Index";
+import AuthorityManagement from "./views/AuthorityManagement";
 
 function App() {
   return (
@@ -36,12 +37,16 @@ function App() {
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
-        <Route path="/userprofile" element={<UserAccount />} />
         <Route path="/bus/:id" element={<SingleBusPage />} />
         <Route path="/help" element={<Help />} />
-        <Route path="/complaints" element={<PassengerComplaints />} />
         <Route path="/public-buses" element={<PublicPage />} />
-        <Route path="/activity" element={<Trips />} />
+
+        {/* Passenger routes */}
+        <Route element={<RequireAuth allowedRole={"Passenger"} />}>
+          <Route path="/userprofile" element={<UserAccount />} />
+          <Route path="/activity" element={<Trips />} />
+          <Route path="/complaints" element={<PassengerComplaints />} />
+        </Route>
       </Route>
 
       {/* Bus Owner routes */}
@@ -55,10 +60,11 @@ function App() {
         </Route>
       </Route>
 
-      {/* Adnibistrator routes */}
+      {/* Administrator routes */}
       <Route path="/administrator" element={<AdministratorLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="users" element={<UserManagement />} />
+        <Route path="passengers" element={<PassengerManagement />} />
+        <Route path="authorities" element={<AuthorityManagement />} />
         <Route path="buses" element={<BusInventory />} />
         <Route path="routes" element={<RouteManagement />} />
         <Route path="complaints" element={<ComplaintManagement />} />
