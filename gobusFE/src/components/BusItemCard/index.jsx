@@ -2,6 +2,8 @@ import React from "react";
 import { Star } from "lucide-react";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineDirectionsBus, MdOutlineSecurity } from "react-icons/md";
+import { PiSeat } from "react-icons/pi";
 
 export default function BusItemCard({
   id,
@@ -9,6 +11,9 @@ export default function BusItemCard({
   rating = 4.8,
   authority,
   image,
+  busNumber,
+  seatCount,
+  busCondition, //ac / none ac
 }) {
   const navigate = useNavigate();
 
@@ -54,22 +59,30 @@ export default function BusItemCard({
 
   return (
     <div className="bus-card" onClick={() => navigate(`/bus/${id}`)}>
-      {/* Bus Image */}
       <img className="bus-image" src={image} alt={`${name} bus`} />
 
-      {/* Content Container */}
       <div className="card-content">
-        {/* Bus Name */}
-        <h2 className="bus-name">{name}</h2>
+        <h2 className="bus-name">
+          {name} / <span>{busNumber}</span>
+        </h2>
 
-        {/* Rating */}
-        <div className="rating-wrapper">{renderStars(rating)}</div>
+        <p className="authority-info">
+          <MdOutlineSecurity /> {authority}
+        </p>
+        <div className="bus-conditions">
+          <p className="bus-seatCount">
+           <div> <PiSeat /> {seatCount}</div>
+          </p>
 
-        {/* Authority */}
-        <p className="authority-info"> {authority}</p>
+          <p className="bus-seatCount">
+           <div> <MdOutlineDirectionsBus /> {busCondition ? "A/C" : "Non-A/C"}</div>
+          </p>
+        </div>
+        <div className="bc-btn-sec">
+          <div className="rating-wrapper">{renderStars(rating)}</div>
 
-        {/* Request Button */}
-        <button className="request-button">View Bus</button>
+          <button className="request-button">View Bus</button>
+        </div>
       </div>
     </div>
   );

@@ -142,8 +142,8 @@ export default function Special() {
         <div className="special-result-section">
           <div className="special-main-container">
             <div className="special-features-section">
-              {features.map((feature) => (
-                <div className="feature-box">
+              {features.map((feature, index) => (
+                <div className="feature-box" key={index}>
                   <div className="feature-icon-box">
                     <img src={feature.icon} alt="" />
                   </div>
@@ -175,6 +175,9 @@ export default function Special() {
                             rating={bus.rating}
                             authority={bus.ownerID.authorityName}
                             image={bus.pictures[0]}
+                            busNumber={bus.busNumber}
+                            seatCount={bus.seatNumber}
+                            busCondition={bus.ac}
                           />
                         </div>
                       ))}

@@ -49,6 +49,10 @@
   padding: 3px 10px;
 }
 
+a.activeLink{
+  color: #05944f;
+}
+
 a.nav-link:hover {
   color: #047240;
 }
