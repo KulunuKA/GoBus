@@ -22,10 +22,11 @@ export default function MyInput({
   backgroundColor = "#F1EFEF",
   borderColor = undefined,
   width = "100%",
+  height = "80px",
 }) {
   const inputContainerStyles = {
     width: "100%",
-    height: "80px",
+    height: height,
     display: "flex",
     flexDirection: "column",
     gap: "5px",

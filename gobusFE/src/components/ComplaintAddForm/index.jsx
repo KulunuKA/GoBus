@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, notification, Space } from "antd";
 import "./style.css";
 import Dropdown from "../../components/Dropdown";
@@ -39,6 +39,10 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
 
     if (!values.complaint) {
       newErrors.complaint = "Description is required";
+    } else if (values.complaint.length < 10) {
+      newErrors.complaint = "Description must be at least 10 characters";
+    } else if (values.complaint.length > 500) {
+      newErrors.complaint = "Description must be less than 300 characters";
     }
 
     setErrors(newErrors);
@@ -68,13 +72,21 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
       notification.error({
         message: "Something went wrong",
       });
     }
   };
+
+  useEffect(() => {
+    setComplaint({
+      userID: u_id,
+      complaintType: "",
+      complaint: "",
+    });
+    setErrors({});
+  }, [isOpen, u_id]);
 
   return (
     <>

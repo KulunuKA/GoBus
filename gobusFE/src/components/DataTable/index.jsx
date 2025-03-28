@@ -12,6 +12,7 @@ export default function DataTable({
   onEdit,
   onDelete,
   loading,
+  onView,
 }) {
   return (
     <>
@@ -33,7 +34,13 @@ export default function DataTable({
             </tr>
           ) : (
             data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+              <tr
+                key={rowIndex}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onView(row);
+                }}
+              >
                 {columns.map((col, colIndex) => (
                   <td key={colIndex}>
                     {col.type === "image" ? (
@@ -43,7 +50,6 @@ export default function DataTable({
                           alt="Item"
                           className="table-image"
                         />
-                        {console.log("Image eky:", col.key)}{" "}
                         {/* Console log added */}
                       </>
                     ) : col.type === "boolean" ? (
@@ -52,7 +58,7 @@ export default function DataTable({
                       ) : (
                         "False"
                       )
-                    ) : (
+                    ) :col.key  (
                       row[col.key]
                     )}
                   </td>
@@ -63,13 +69,19 @@ export default function DataTable({
                       name="Edit"
                       color={"rgba(5, 148, 79, 1)"}
                       icon={<EditOutlined />}
-                      onClick={() => onEdit(row)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(row);
+                      }}
                     />
                     <MyButton
                       name="Delete"
                       color={"#e74c3c"}
                       icon={<DeleteOutlined />}
-                      onClick={() => onDelete(row)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(row);
+                      }}
                     />
                   </div>
                 </td>
