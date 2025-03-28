@@ -20,13 +20,7 @@ export default function Passenger() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [inputErr, setInputErr] = useState({
-    email: false,
-    password: false,
-    username: false,
-    address: false,
-    mobile: false,
-  });
+  const [inputErr, setInputErr] = useState({});
   const [userData, setUserData] = useState({
     role: "Passenger",
     username: "",
@@ -40,31 +34,41 @@ export default function Passenger() {
     setUserData({ ...userData, [field]: e.target.value });
   };
 
+  const validateForm = (values) => {
+    const newErrors = {};
+    if (!values.username) {
+      newErrors.username = "Username is required";
+    }
+    if (!values.email) {
+      newErrors.email = "Email is required";
+    }
+    if (!values.mobile) {
+      newErrors.mobile = "Mobile is required";
+    }
+    if (!values.password) {
+      newErrors.password = "Password is required";
+    }
+
+    if (values.email && !values.email.includes("@")) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (values.password && values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (values.mobile && values.mobile.length < 10) {
+      newErrors.mobile = "Mobile must be at least 10 characters";
+    }
+
+    setInputErr(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
     try {
-      if (
-        !userData.username ||
-        !userData.email ||
-        !userData.password ||
-        !userData.mobile
-      ) {
-        setInputErr({
-          username: !userData.username,
-          email: !userData.email,
-          password: !userData.password,
-          address: !userData.address,
-          mobile: !userData.mobile,
-        });
-        notification.error({
-          message: "Required all fields",
-        });
-        return;
-      } else if (userData.mobile.length != 10) {
-        notification.error({
-          message: "Invalid phone number",
-        });
-        return;
-      }
+      if (!validateForm(userData)) return;
+
       setIsLoading(true);
 
       const { data, code, msg } = await passengerRegister(userData);
@@ -98,7 +102,7 @@ export default function Passenger() {
           <p>GoBus Passenger</p>
         </div>
         <div className="p-content">
-          <div className="p-form">
+          <div className="p-form" style={{ height: 450 }}>
             <section className="p-inputs">
               <MyInput
                 label={"Username"}
@@ -108,6 +112,7 @@ export default function Passenger() {
                 value={userData.username}
                 onChange={handleInput("username")}
                 error={inputErr.username}
+                errorMessage={inputErr.username}
               />
               <MyInput
                 label="Email"
@@ -117,6 +122,7 @@ export default function Passenger() {
                 value={userData.email}
                 onChange={handleInput("email")}
                 error={inputErr.email}
+                errorMessage={inputErr.email}
               />
               <MyInput
                 label="Password"
@@ -126,6 +132,7 @@ export default function Passenger() {
                 value={userData.password}
                 onChange={handleInput("password")}
                 error={inputErr.password}
+                errorMessage={inputErr.password}
               />
 
               <MyInput
@@ -136,6 +143,7 @@ export default function Passenger() {
                 type="text"
                 onChange={handleInput("mobile")}
                 error={inputErr.mobile}
+                errorMessage={inputErr.mobile}
               />
               <section className="check">
                 <section>
@@ -168,7 +176,7 @@ export default function Passenger() {
                 Do have an account?
                 <span
                   onClick={() => {
-                    navigate("/login")
+                    navigate("/login");
                   }}
                 >
                   {" "}

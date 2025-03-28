@@ -25,13 +25,7 @@ export default function BusOwner() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [inputErr, setInputErr] = useState({
-    email: false,
-    password: false,
-    authorityName: false,
-    address: false,
-    phone: false,
-  });
+  const [inputErr, setInputErr] = useState({});
   const [userData, setUserData] = useState({
     role: "BusOwner",
     authorityName: "",
@@ -61,32 +55,42 @@ export default function BusOwner() {
     setUserData({ ...userData, [field]: e.target.value });
   };
 
+  const validateForm = (values) => {
+    const newErrors = {};
+    if (!values.authorityName) {
+      newErrors.authorityName = "Authority Name is required";
+    }
+    if (!values.email) {
+      newErrors.email = "Email is required";
+    }
+    if (!values.password) {
+      newErrors.password = "Password is required";
+    }
+    if (!values.address) {
+      newErrors.address = "Address is required";
+    }
+    if (!values.phone) {
+      newErrors.phone = "Phone is required";
+    } else if (!/^\d+$/.test(values.phone)) {
+      newErrors.phone = "Phone must be a number";
+    } else if (values.phone.length < 10) {
+      newErrors.phone = "Phone must be at least 10 characters";
+    }
+
+    if (values.email && !values.email.includes("@")) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (values.password && values.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    setInputErr(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
     try {
-      if (
-        !userData.authorityName ||
-        !userData.email ||
-        !userData.password ||
-        !userData.address ||
-        !userData.phone
-      ) {
-        setInputErr({
-          authorityName: !userData.authorityName,
-          email: !userData.email,
-          password: !userData.password,
-          address: !userData.address,
-          phone: !userData.phone,
-        });
-        notification.error({
-          message: "Required all fields",
-        });
-        return;
-      } else if (userData.phone.length != 10) {
-        notification.error({
-          message: "Invalid phone number",
-        });
-        return;
-      }
+      if (!validateForm(userData)) return;
       setIsLoading(true);
 
       const { data, code, msg } = await busOwnerRegister(userData);
@@ -120,7 +124,7 @@ export default function BusOwner() {
           <p>GoBus Bus Owner</p>
         </div>
         <div className="p-content">
-          <div className="p-form">
+          <div className="p-form" style={{ height: 550 }}>
             <section className="p-inputs">
               <MyInput
                 label={"Authority Name"}
@@ -130,6 +134,7 @@ export default function BusOwner() {
                 value={userData.authorityName}
                 onChange={handleInput("authorityName")}
                 error={inputErr.authorityName}
+                errorMessage={inputErr.authorityName}
               />
               <MyInput
                 label="Email"
@@ -139,6 +144,7 @@ export default function BusOwner() {
                 value={userData.email}
                 onChange={handleInput("email")}
                 error={inputErr.email}
+                errorMessage={inputErr.email}
               />
               <MyInput
                 label="Password"
@@ -148,6 +154,7 @@ export default function BusOwner() {
                 value={userData.password}
                 onChange={handleInput("password")}
                 error={inputErr.password}
+                errorMessage={inputErr.password}
               />
               <MyInput
                 label={"Address"}
@@ -157,6 +164,7 @@ export default function BusOwner() {
                 type="text"
                 onChange={handleInput("address")}
                 error={inputErr.address}
+                errorMessage={inputErr.address}
               />
 
               <MyInput
@@ -167,6 +175,7 @@ export default function BusOwner() {
                 type="text"
                 onChange={handleInput("phone")}
                 error={inputErr.phone}
+                errorMessage={inputErr.phone}
               />
               <section className="check">
                 <section>

@@ -25,9 +25,10 @@ export default function MyInput({
 }) {
   const inputContainerStyles = {
     width: "100%",
+    height: "80px",
     display: "flex",
     flexDirection: "column",
-    gap: "8px",
+    gap: "5px",
   };
 
   const labelStyles = {
@@ -39,7 +40,6 @@ export default function MyInput({
   const errorTextStyles = {
     color: "#F5222D",
     fontSize: "14px",
-    marginTop: "1px",
   };
 
   const inputId =
