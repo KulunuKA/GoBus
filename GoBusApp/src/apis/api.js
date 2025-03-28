@@ -20,3 +20,12 @@ export const loginUser = async (credentials) => {
     throw error;
   }
 };
+export const handleStart = async (id, data) => {
+  try {
+    const response = await api.put(`/public/bus/employee/update/${id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
+    throw error;
+  }
+};

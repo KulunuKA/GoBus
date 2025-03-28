@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { View, Button, Text, StyleSheet } from "react-native";
 import { io } from "socket.io-client";
 import { getUserData } from "../store";
+import { handleStart } from "../apis/api";
 
 const socket = io(
   "https://fd0e-2402-4000-2300-573-254a-3857-b51-1f50.ngrok-free.app"
@@ -48,8 +49,15 @@ const Home = () => {
     }
   }, []);
 
-  const stopTrip = useCallback((subscription) => {
+  const stopTrip = useCallback(async (subscription) => {
     console.log("Trip Stopped");
+
+    const { data, msg, code } = await handleStart(busId, {
+      start_trip: false,
+    });
+    if (code === 0) {
+      console.log("Trip stopped successfully");
+    }
     setLocation(null);
     setLastUpdate(null);
     if (subscription) {
