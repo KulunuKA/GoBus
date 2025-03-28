@@ -9,6 +9,8 @@ import Loading from "../../components/Loading";
 import EmptyDataMessage from "../../components/EmptyDataMessage";
 import { useSelector } from "react-redux";
 import ErrorMessage from "../../components/ErrorMessage";
+import MyButton from "../../components/button";
+import { DeleteFilled } from "@ant-design/icons";
 
 export default function PassengerComplaints() {
   const [isAdd, setIsAdd] = useState(false);
@@ -69,7 +71,7 @@ export default function PassengerComplaints() {
               <p>Your Previous Complaints</p>
             </div>
             {loading ? (
-              <Loading size={70}/>
+              <Loading size={70} />
             ) : isError ? (
               <ErrorMessage message={isError} />
             ) : userComplaints.length === 0 ? (
@@ -91,13 +93,20 @@ export default function PassengerComplaints() {
                   <div className="prev-comp-status">
                     <p
                       className={
-                        complaint.status === "pending"
+                        complaint.status === "Inprogress"
                           ? "inprogress"
                           : "resolved"
                       }
                     >
                       {complaint.status}
                     </p>
+                    {complaint.status === "Resolved" && (
+                      <MyButton
+                        name=""
+                        icon={<DeleteFilled style={{color:"red"}}/>}
+                        color={"transparent"}
+                      />
+                    )}
                   </div>
                 </div>
               ))

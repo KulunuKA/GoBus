@@ -74,7 +74,11 @@
   color: #666;
   font-weight: 650;
 }
-
+.prev-comp-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .prev-comp-status p {
   font-size: 14px;
   font-weight: 550;

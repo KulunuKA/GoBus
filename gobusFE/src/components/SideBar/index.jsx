@@ -53,7 +53,6 @@ export default function SideBar() {
   const { confirm } = Modal;
 
   const logout = () => {
-    window.location.href = "/login";
     dispatch(clearStore());
   };
 
