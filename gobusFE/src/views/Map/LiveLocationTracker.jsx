@@ -51,7 +51,7 @@ export default function PassengerMap() {
         markers[Id] = L.marker([latitude, longitude]).addTo(map);
 
         // Center map on this bus location
-        map.setView([latitude, longitude], 15);
+        map.setView([latitude, longitude], 25);
       }
     });
 
@@ -68,7 +68,7 @@ export default function PassengerMap() {
           markers[busId].setLatLng([latitude, longitude]);
         }
 
-        map.setView([latitude, longitude], 15); // Adjusted zoom level to be more reasonable
+        map.setView([latitude, longitude], 25); 
       }
     };
 
