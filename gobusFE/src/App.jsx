@@ -29,6 +29,7 @@ import PassengerComplaints from "./views/PassengerComplaints";
 import PassengerManagement from "./views/PassengerManagemenet/Index";
 import AuthorityManagement from "./views/AuthorityManagement";
 import PassengerMap from "./views/Map/LiveLocationTracker";
+import AdminLogin from "./views/Admin_loginForm";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
       </Route>
 
       {/* Administrator routes */}
+      <Route path="/adminlogin" element={<AdminLogin />} />
       <Route path="/administrator" element={<AdministratorLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="passengers" element={<PassengerManagement />} />

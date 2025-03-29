@@ -110,6 +110,8 @@ export default function Dashboard() {
     activeBusesPublicServiceInStand +
     activeBusesSpecialService;
 
+  const busDataTitle = ["Authority Name", "Email", "Phone", "Address"];
+
   const handleUpdate = async () => {
     try {
       setLoading(true);
@@ -179,27 +181,32 @@ export default function Dashboard() {
       <div className="owner-dashboard-profile">
         <p>Account Information</p>
         <div className="owner-dashboard-profile-data-field">
-          {["authorityName", "email", "phone", "address"].map((field) => (
-            <div key={field} className="authority-dashboard-account-datafield">
-              <div className="authority-dashboard-account-data-filed">
-                <p className="authority-dashboard-account-data-title">
-                  {field}:
-                </p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={userData[field]}
-                    onChange={(e) => handleInputChange(field, e.target.value)}
-                    className="authority-dashboard-account-data-input"
-                  />
-                ) : (
-                  <p className="authority-dashboard-account-data">
-                    {userData[field]}
+          {["authorityName", "email", "phone", "address"].map(
+            (field, index) => (
+              <div
+                key={field}
+                className="authority-dashboard-account-datafield"
+              >
+                <div className="authority-dashboard-account-data-filed">
+                  <p className="authority-dashboard-account-data-title">
+                    {busDataTitle[index]}:
                   </p>
-                )}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={userData[field]}
+                      onChange={(e) => handleInputChange(field, e.target.value)}
+                      className="authority-dashboard-account-data-input"
+                    />
+                  ) : (
+                    <p className="authority-dashboard-account-data">
+                      {userData[field]}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
         <div style={{ marginTop: 20 }}>
           {isEditing ? (
