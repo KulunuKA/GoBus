@@ -22,6 +22,7 @@ export const loginUser = async (credentials) => {
 };
 export const handleStart = async (id, data) => {
   try {
+    console.log(id, data);
     const response = await api.put(`/public/bus/employee/update/${id}`, data);
     console.log(response.data);
     return response.data;

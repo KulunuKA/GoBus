@@ -18,12 +18,17 @@ const Home = () => {
 
   const startTrip = useCallback(async () => {
     try {
-      console.log("called startTrip");
+      console.log("called startTrip with busId:", busId);
+
+      if (!busId) {
+        console.error("Cannot start trip: busId is null");
+        return null;
+      }
 
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.error("Permission not granted!");
-        return;
+        return null;
       }
 
       const subscription = await Location.watchPositionAsync(
@@ -45,24 +50,36 @@ const Home = () => {
       return subscription;
     } catch (error) {
       console.error("Error starting trip:", error);
+      return null;
     }
-  }, []);
+  }, [busId]);
 
   const stopTrip = useCallback(async (subscription) => {
-    console.log("Trip Stopped");
+    console.log("Trip Stopped with busId:", busId);
 
-    const { data, msg, code } = await handleStart(busId, {
-      start_trip: false,
-    });
-    if (code === 0) {
-      console.log("Trip stopped successfully");
+    if (busId) {
+      try {
+        const { data, msg, code } = await handleStart(busId, {
+          start_trip: false,
+        });
+        if (code === 0) {
+          console.log("Trip stopped successfully");
+        } else {
+          console.error("Failed to stop trip in database:", msg);
+        }
+      } catch (error) {
+        console.error("Error stopping trip:", error);
+      }
+    } else {
+      console.error("Cannot stop trip: busId is null");
     }
+    
     setLocation(null);
     setLastUpdate(null);
     if (subscription) {
       subscription.remove();
     }
-  }, []);
+  }, [busId]);
 
   useEffect(() => {
     let locationSubscription = null;
@@ -71,6 +88,8 @@ const Home = () => {
       startTrip().then((subscription) => {
         locationSubscription = subscription;
       });
+    } else if (locationSubscription) {
+      stopTrip(locationSubscription);
     }
 
     return () => {
@@ -81,15 +100,20 @@ const Home = () => {
   }, [start, startTrip, stopTrip]);
 
   const getBusData = async () => {
-    const userData = await getUserData();
-    if (userData) {
-      setBusData(userData);
-      setBusId(userData[0]._id);
-      console.log("busId", userData[0]._id);
-    } else {
-      console.log("No bus data found.");
+    try {
+      const userData = await getUserData();
+      if (userData && userData.length > 0) {
+        setBusData(userData[0]);
+        setBusId(userData[0]._id);
+        console.log("busId set to:", userData[0]._id);
+      } else {
+        console.log("No bus data found.");
+      }
+    } catch (error) {
+      console.error("Error getting bus data:", error);
     }
   };
+
   useEffect(() => {
     getBusData();
   }, []);
@@ -99,7 +123,13 @@ const Home = () => {
       <Button
         title={start ? "Stop Trip" : "Start Trip"}
         onPress={() => setStart(!start)}
+        disabled={!busId}
       />
+      {!busId && (
+        <Text style={styles.errorText}>
+          Waiting for bus data to load...
+        </Text>
+      )}
       {location && (
         <View style={styles.infoContainer}>
           <Text style={styles.locationText}>
@@ -142,6 +172,10 @@ const styles = StyleSheet.create({
     color: "#666",
     marginTop: 10,
   },
+  errorText: {
+    color: "red",
+    marginTop: 10,
+  }
 });
 
 export default Home;
