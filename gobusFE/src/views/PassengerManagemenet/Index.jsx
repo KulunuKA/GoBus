@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import {
   ExclamationCircleFilled,
@@ -11,6 +11,8 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import EmptyDataMessage from "../../components/EmptyDataMessage";
 import { Modal, notification } from "antd";
+import { deletePassengerAD, getPassengersAD } from "../../apis/adminAPIs";
+import DataTable from "../../components/DataTable";
 
 export default function PassengerManagement() {
   const [isAdd, setIsAdd] = useState(false);
@@ -29,6 +31,45 @@ export default function PassengerManagement() {
     { key: "mobile", title: "Mobile", type: "number" },
   ];
 
+  const fetchPassengers = async () => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getPassengersAD();
+      if (code === 0) {
+        setPassenger(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  const deletePas = async (id) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await deletePassengerAD(id);
+      if (code === 0) {
+        setPassenger((prev) => prev.filter((e) => e._id !== id));
+        notification.success({
+          message: msg,
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPassengers();
+  }, []);
+
   return (
     <div className="passenger-management">
       <div className="pm-header">
@@ -38,11 +79,11 @@ export default function PassengerManagement() {
         <div className="pm-body-header">
           <div>
             <MyInput
-              placeholder="Enter Bus Number"
+              placeholder="Search by username"
               prefix={<SearchOutlined />}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              borderRadius="30px"
+              height=""
             />
           </div>
           <MyButton
@@ -63,9 +104,21 @@ export default function PassengerManagement() {
       ) : (
         <DataTable
           columns={columns}
-          data={passenger.filter((e) => e.username.includes(searchText))}
+          data={passengers.filter((e) =>
+            e?.username
+              .toLocaleLowerCase()
+              .includes(searchText?.toLocaleLowerCase())
+          )}
           onEdit={console.log("Edit Button Clicked")}
-          onDelete={console.log("Delete Clicked")}
+          onDelete={(data) => {
+            confirm({
+              title: "Are you sure you want to delete this passenger?",
+              icon: <ExclamationCircleFilled />,
+              onOk() {
+                deletePas(data._id);
+              },
+            });
+          }}
         />
       )}
     </div>

@@ -131,7 +131,7 @@ export default function Employee() {
               </tr>
             ) : (
               employees
-                .filter((e) => e.name.includes(searchText))
+                .filter((e) => e.name?.toLocaleLowerCase().includes(searchText?.toLocaleLowerCase()))
                 .map((emp, index) => (
                   <tr key={emp._id}>
                     <td>{emp.name}</td>
@@ -141,6 +141,7 @@ export default function Employee() {
                     <td>{emp.status}</td>
                     <td>
                       <MyButton
+                        size="small"
                         name="Edit"
                         color={"rgba(5, 148, 79, 1)"}
                         icon={<EditOutlined />}
@@ -152,6 +153,7 @@ export default function Employee() {
                         }}
                       />
                       <MyButton
+                        size="small"
                         name="Delete"
                         color={"#e74c3c"}
                         icon={<DeleteOutlined />}
@@ -204,8 +206,6 @@ export default function Employee() {
           }}
         />
       )}
-
-
     </div>
   );
 }
