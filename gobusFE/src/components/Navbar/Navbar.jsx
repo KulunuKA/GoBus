@@ -35,7 +35,7 @@ export default function Navbar() {
     dispatch(clearStorePassenger());
   };
 
-  function truncateUsernmae(username) {
+  function truncateUsername(username) {
     if (username.length > 14) {
       return username.substring(0, 14) + "...";
     }
@@ -153,7 +153,7 @@ export default function Navbar() {
               <div className="user-data-dropdown">
                 <div className="user-name-image-dropdown">
                   <div className="user-name-dropdown">
-                    <h2>{username}</h2>
+                    <h2>{truncateUsername(username)}</h2>
                   </div>
                   <div className="user-image-dropdown">
                     <img src={man} alt="" />
