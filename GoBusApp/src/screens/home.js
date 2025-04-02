@@ -6,7 +6,7 @@ import { getUserData } from "../store";
 import { handleStart } from "../apis/api";
 
 const socket = io(
-  "https://6a8d-2402-4000-2300-573-859e-6069-56a5-e7e4.ngrok-free.app"
+  "https://abe0-2402-4000-2082-4858-f569-ffe5-e5d9-5ae7.ngrok-free.app"
 );
 
 const Home = () => {
