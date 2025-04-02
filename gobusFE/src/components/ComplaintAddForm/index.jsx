@@ -42,7 +42,7 @@ export default function ComplaintAddForm({ isOpen, onCancel }) {
     } else if (values.complaint.length < 10) {
       newErrors.complaint = "Description must be at least 10 characters";
     } else if (values.complaint.length > 500) {
-      newErrors.complaint = "Description must be less than 300 characters";
+      newErrors.complaint = "Description must be less than 500 characters";
     }
 
     setErrors(newErrors);

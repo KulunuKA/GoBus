@@ -7,6 +7,7 @@ import MyButton from "../../components/button";
 import {
   citiesWithDistrict,
   sriLankanDistricts,
+  onlyCities,
 } from "../../assets/district_city";
 import { Upload } from "antd";
 import Loading from "../../components/Loading";
@@ -18,7 +19,7 @@ import { busOwnerData } from "../../store/busOwnerSlice";
 import { useSelector } from "react-redux";
 
 export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
-  const { id } = useSelector(busOwnerData);
+  const { id, routesId, employeesId } = useSelector(busOwnerData);
   const busTypes = ["Public transport", "Special service", "Both"];
   const [busData, setBusData] = useState({
     ownerID: id,
@@ -31,12 +32,21 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     district: data.district,
     city: data.city,
     pictures: data.pictures,
+    timetable: data.timetable,
+    route_id: data.route_id,
+    driverID: data.driverID,
   });
+
   const [imgLoading, setImgLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [isImgErr, setIsImgErr] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [timetableRounds, setTimetableRounds] = useState(
+    data.timetable.length > 0
+      ? data.timetable
+      : [{ startPlace: "", endPlace: "", startTime: "", endTime: "" }]
+  );
 
   const inputHandle = (field) => (e) => {
     setBusData({ ...busData, [field]: e.target.value });
@@ -118,23 +128,6 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
       newErrors.seatNumber = "Seat Number must be between 1 and 60";
     }
 
-    // Timetable validation for public transport
-    if (values.busType === "public transport") {
-      const validTimetable = timetableRounds.filter(
-        (round) =>
-          round.round &&
-          round.startPlace &&
-          round.startTime &&
-          round.endPlace &&
-          round.endTime
-      );
-
-      if (validTimetable.length === 0) {
-        newErrors.timetable =
-          "At least one complete timetable entry is required for public transport";
-      }
-    }
-
     if (values.pictures.some((pic) => pic === "")) {
       setIsImgErr("All images must be uploaded");
     }
@@ -175,6 +168,15 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     );
   }
 
+  const handleTimetableChange = (index, field, value) => {
+    const updatedTimetable = [...timetableRounds];
+    updatedTimetable[index] = {
+      ...updatedTimetable[index],
+      [field]: value,
+    };
+    setTimetableRounds(updatedTimetable);
+  };
+
   const handleSubmit = async (id) => {
     try {
       const isValid = validateForm(busData);
@@ -190,6 +192,7 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
         timetable:
           busData.busType === "public transport" ? timetableRounds : [],
       };
+
 
       const { data, code, msg } = await updateBusAPI(id, submissionData);
       if (code === 0) {
@@ -207,6 +210,90 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
         message: "Something went wrong!",
       });
     }
+  };
+
+  const renderTimetableFields = () => {
+    return timetableRounds.map((round, index) => (
+      <div className="timetable-round" key={index}>
+        <h4 className="round-title">Round {index + 1}</h4>
+        <div className="timetable-grid">
+          <div className="timetable-field">
+            <label>Start Place</label>
+            <DropDown
+              placeholder={"Select trip start"}
+              value={round.startPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "startPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>Start Time</label>
+            <MyInput
+              type="time"
+              value={round.startTime}
+              onChange={(e) =>
+                handleTimetableChange(index, "startTime", e.target.value)
+              }
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Place</label>
+            <DropDown
+              placeholder={"Select trip end"}
+              value={round.endPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "endPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Time</label>
+            <MyInput
+              type="time"
+              value={round.endTime}
+              onChange={(e) => {
+                console.log(e.target.value);
+                handleTimetableChange(index, "endTime", e.target.value);
+              }}
+            />
+          </div>
+        </div>
+        {index === timetableRounds.length - 1 && (
+          <div className="timetable-actions">
+            {index > 0 && (
+              <MyButton
+                name="Remove"
+                width={120}
+                color="#EE5252"
+                onClick={() => {
+                  const updated = [...timetableRounds];
+                  updated.pop();
+                  setTimetableRounds(updated);
+                }}
+              />
+            )}
+            <MyButton
+              name="Add Round"
+              width={120}
+              color="#2D3436"
+              onClick={() => addNewRound(index + 1)}
+            />
+          </div>
+        )}
+      </div>
+    ));
   };
   return (
     <>
@@ -317,6 +404,46 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
                 />
               </div>
             </div>
+
+            {busData.busType == "public transport" && (
+              <div className="timetable-container">
+                <h3 className="timetable-header">Bus Timetable</h3>
+                {renderTimetableFields()}
+              </div>
+            )}
+
+            {busData.busType === "public transport" && (
+              <div className="bt-select">
+                <label>Route</label>
+                <DropDown
+                  options={routesId.map((e) => ({
+                    label: e.start + " - " + e.end,
+                    value: e._id,
+                  }))}
+                  value={busData.route_id.route_number}
+                  onChange={(value) => {
+                    setBusData({ ...busData, route_id: value });
+                  }}
+                />
+              </div>
+            )}
+
+            {busData.busType === "public transport" && (
+              <div className="bt-select">
+                <label>Driver</label>
+                <DropDown
+                  options={employeesId.map((e) => ({
+                    label: e.name,
+                    value: e._id,
+                  }))}
+                  value={busData.driverID.name}
+                  placeholder={"Select driver"}
+                  onChange={(value) => {
+                    setBusData({ ...busData, driverID: value });
+                  }}
+                />
+              </div>
+            )}
 
             <div className="ab-btn">
               <MyButton

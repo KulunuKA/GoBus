@@ -137,7 +137,9 @@ export default function Bus() {
               </tr>
             ) : (
               buses
-                .filter((e) => e.busNumber.includes(searchText))
+                .filter((e) =>
+                  e.busNumber?.toLowerCase().includes(searchText?.toLowerCase())
+                )
                 .map((bus, index) => (
                   <tr key={bus._id} onClick={() => setSelectedBusDetails(bus)}>
                     <td>

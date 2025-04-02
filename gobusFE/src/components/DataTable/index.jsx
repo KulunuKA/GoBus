@@ -58,7 +58,7 @@ export default function DataTable({
                       ) : (
                         "False"
                       )
-                    ) :col.key  (
+                    ) : (
                       row[col.key]
                     )}
                   </td>
@@ -66,6 +66,7 @@ export default function DataTable({
                 <td>
                   <div className="table-actions">
                     <MyButton
+                      size="small"
                       name="Edit"
                       color={"rgba(5, 148, 79, 1)"}
                       icon={<EditOutlined />}
@@ -75,6 +76,7 @@ export default function DataTable({
                       }}
                     />
                     <MyButton
+                      size="small"
                       name="Delete"
                       color={"#e74c3c"}
                       icon={<DeleteOutlined />}

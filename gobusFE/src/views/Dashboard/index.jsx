@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import "./style.css";
 import MyButton from "../../components/button";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { busOwnerData } from "../../store/busOwnerSlice";
 import { busOwnerUpdate } from "../../apis/busOwner";
+import { updatePassengerInfo } from "../../store/passengerSlice";
+import { notification } from "antd";
 
 export default function Dashboard() {
   const [isEditing, setIsEditing] = useState(false);
   const {
-    _id: id,
     busesId,
     routesId,
     employeesId,
@@ -19,6 +20,8 @@ export default function Dashboard() {
     address,
     logo,
   } = useSelector(busOwnerData);
+  let id = useSelector(busOwnerData).id;
+  const dispatch = useDispatch();
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -46,39 +49,6 @@ export default function Dashboard() {
 
   const handleSaveClick = () => {
     setShowPopup(true);
-  };
-
-  const handleConfirm = async () => {
-    try {
-      setLoading(true);
-      if (
-        !userData.address ||
-        !userData.email ||
-        !userData.phone ||
-        !userData.authorityName
-      ) {
-        notification.error({ message: "Please fill all fields" });
-        setLoading(false);
-        return;
-      }
-
-      const { data, msg, code } = await busOwnerUpdate(id, userData);
-      if (code === 0) {
-        dispatch(updatePassengerInfo(data));
-        notification.success({ message: msg });
-
-        setOriginalData(userData);
-      } else {
-        notification.error({ message: "Something went wrong" });
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      notification.error({ message: "Something went wrong" });
-    } finally {
-      setLoading(false);
-      setIsEditing(false);
-      setShowPopup(false);
-    }
   };
 
   const handleCancel = () => {
@@ -110,6 +80,8 @@ export default function Dashboard() {
     activeBusesPublicServiceInStand +
     activeBusesSpecialService;
 
+  const dataHeaders = ["AuthorityName", "Email", "Phone", "Address"];
+
   const handleUpdate = async () => {
     try {
       setLoading(true);
@@ -129,13 +101,15 @@ export default function Dashboard() {
       if (code === 0) {
         dispatch(updatePassengerInfo(data));
         notification.success({
-          message: msg,
+          message: "Profile updated successfully",
         });
       } else {
         notification.error({
           message: "Something went wrong",
         });
       }
+      setOriginalData(userData);
+      setUserData(userData);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -179,27 +153,32 @@ export default function Dashboard() {
       <div className="owner-dashboard-profile">
         <p>Account Information</p>
         <div className="owner-dashboard-profile-data-field">
-          {["authorityName", "email", "phone", "address"].map((field) => (
-            <div key={field} className="authority-dashboard-account-datafield">
-              <div className="authority-dashboard-account-data-filed">
-                <p className="authority-dashboard-account-data-title">
-                  {field}:
-                </p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={userData[field]}
-                    onChange={(e) => handleInputChange(field, e.target.value)}
-                    className="authority-dashboard-account-data-input"
-                  />
-                ) : (
-                  <p className="authority-dashboard-account-data">
-                    {userData[field]}
+          {["authorityName", "email", "phone", "address"].map(
+            (field, index) => (
+              <div
+                key={index}
+                className="authority-dashboard-account-datafield"
+              >
+                <div className="authority-dashboard-account-data-filed">
+                  <p className="authority-dashboard-account-data-title">
+                    {dataHeaders[index]}:
                   </p>
-                )}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={userData[field]}
+                      onChange={(e) => handleInputChange(field, e.target.value)}
+                      className="authority-dashboard-account-data-input"
+                    />
+                  ) : (
+                    <p className="authority-dashboard-account-data">
+                      {userData[field]}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
         <div style={{ marginTop: 20 }}>
           {isEditing ? (
@@ -208,7 +187,9 @@ export default function Dashboard() {
               name="Save"
               loading={loading}
               color="#05944F"
-              onClick={handleSaveClick}
+              onClick={() => {
+                handleSaveClick();
+              }}
             />
           ) : (
             <MyButton
@@ -224,7 +205,7 @@ export default function Dashboard() {
       {showPopup && (
         <ConfirmationPopup
           message="Are you sure?"
-          onConfirm={handleConfirm}
+          onConfirm={handleUpdate}
           onCancel={handleCancel}
           yesText="Yes"
           noText="No"
