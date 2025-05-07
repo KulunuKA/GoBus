@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   StatusBar,
 } from "react-native";
 import { loginUser } from "../apis/api";
-import { storeUserData } from "../store";
+import { getUserData, removeUserData, storeUserData } from "../store";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import logo from "../../assets/logo.png";
@@ -25,6 +25,21 @@ const LoginScreen = ({ navigation }) => {
   });
   const [error, setError] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  const getBusData = async () => {
+    try {
+      const userData = await getUserData();
+      console.log(userData)
+    } catch (error) {
+      console.error("Error getting bus data:", error);
+      Alert.alert("Error", "Failed to load bus information");
+    }
+  };
+
+  useEffect(() => {
+    // removeUserData()
+    getBusData();
+  }, []);
 
   const handleLogin = async () => {
     Keyboard.dismiss();

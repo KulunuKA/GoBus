@@ -21,8 +21,8 @@ export default function FeedbackSlider({ feedbackArray }) {
         <Slider {...settings}>
           {feedbackArray.map((feedback, index) => (
             <div key={index} className="single-bus-overall-feedbacks-content">
-              <p className="feedback-content">{feedback.review}</p>
-              <p className="feedback-writer">{feedback.username}</p>
+              <p className="feedback-content">{feedback.feedback}</p>
+              <p className="feedback-writer">{feedback.user_id.username}</p>
             </div>
           ))}
         </Slider>

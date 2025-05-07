@@ -1,24 +1,30 @@
 import * as Location from "expo-location";
 import { useEffect, useState, useCallback, useRef } from "react";
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  SafeAreaView, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
   StatusBar,
-  Alert
+  Alert,
+  Platform,
+  ToastAndroid,
+  Switch,
 } from "react-native";
 import { io } from "socket.io-client";
-import { getUserData } from "../store";
-import { handleStart } from "../apis/api";
+import { getUserData, storeUserData } from "../store";
+import { handleStatus } from "../apis/api";
 import CustomButton from "../components/CustomButton";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  FontAwesome,
+  AntDesign,
+  MaterialCommunityIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
-const SOCKET_URL = "https://abe0-2402-4000-2082-4858-f569-ffe5-e5d9-5ae7.ngrok-free.app";
+const SOCKET_URL =
+  "https://63ef-2402-4000-2110-43e6-819a-984d-e486-303.ngrok-free.app";
 
 const Home = ({ navigation }) => {
   const [busData, setBusData] = useState(null);
@@ -28,37 +34,42 @@ const Home = ({ navigation }) => {
   const [busId, setBusId] = useState(null);
   const [connecting, setConnecting] = useState(false);
   const [socketStatus, setSocketStatus] = useState("disconnected");
+  const [busStatus, setBusStatus] = useState({
+    is_delay: false,
+    is_breakdown: false,
+    today_work: false,
+  });
   const mapRef = useRef(null);
   const socketRef = useRef(null);
 
   // Initialize socket connection
   useEffect(() => {
-    // socketRef.current = io(SOCKET_URL, {
-    //   reconnectionAttempts: 5,
-    //   reconnectionDelay: 1000,
-    //   timeout: 10000,
-    // });
+    socketRef.current = io(SOCKET_URL, {
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 10000,
+    });
 
-    // socketRef.current.on("connect", () => {
-    //   setSocketStatus("connected");
-    //   console.log("Socket connected");
-    // });
+    socketRef.current.on("connect", () => {
+      setSocketStatus("connected");
+      console.log("Socket connected");
+    });
 
-    // socketRef.current.on("disconnect", () => {
-    //   setSocketStatus("disconnected");
-    //   console.log("Socket disconnected");
-    // });
+    socketRef.current.on("disconnect", () => {
+      setSocketStatus("disconnected");
+      console.log("Socket disconnected");
+    });
 
-    // socketRef.current.on("connect_error", (error) => {
-    //   setSocketStatus("error");
-    //   console.error("Socket connection error:", error);
-    // });
+    socketRef.current.on("connect_error", (error) => {
+      setSocketStatus("error");
+      console.error("Socket connection error:", error);
+    });
 
-    // return () => {
-    //   if (socketRef.current) {
-    //     socketRef.current.disconnect();
-    //   }
-    // };
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
   }, []);
 
   const startTrip = useCallback(async () => {
@@ -75,7 +86,7 @@ const Home = ({ navigation }) => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
-          "Permission Required", 
+          "Permission Required",
           "Location permission is needed to track your bus route."
         );
         setConnecting(false);
@@ -84,7 +95,7 @@ const Home = ({ navigation }) => {
 
       // Update trip status in database
       try {
-        const response = await handleStart(busId, { start_trip: true });
+        const response = await handleStatus(busId, { start_trip: true });
         if (response.code !== 0) {
           Alert.alert("Error", response.msg || "Failed to start trip");
           setConnecting(false);
@@ -110,16 +121,23 @@ const Home = ({ navigation }) => {
           setConnecting(false);
 
           // Center map on current location
-          mapRef.current?.animateToRegion({
-            latitude,
-            longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }, 1000);
+          mapRef.current?.animateToRegion(
+            {
+              latitude,
+              longitude,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            },
+            1000
+          );
 
           // Emit real-time location to the server
           if (socketRef.current && socketRef.current.connected) {
-            socketRef.current.emit("setLocation", { busId, latitude, longitude });
+            socketRef.current.emit("setLocation", {
+              busId,
+              latitude,
+              longitude,
+            });
           }
         }
       );
@@ -152,7 +170,7 @@ const Home = ({ navigation }) => {
           console.error("Error stopping trip:", error);
           Alert.alert("Warning", "Trip stopped but server update failed");
         }
-      } 
+      }
 
       setLocation(null);
       setLastUpdate(null);
@@ -187,13 +205,26 @@ const Home = ({ navigation }) => {
       if (userData && userData.length > 0) {
         setBusData(userData[0]);
         setBusId(userData[0]._id);
+        setBusStatus({
+          ...busStatus,
+          is_delay: userData[0].is_delay,
+          is_breakdown: userData[0].is_breakdown,
+          today_work: userData[0].today_work,
+        });
         console.log("busId set to:", userData[0]._id);
       } else {
         console.log("No bus data found.");
         Alert.alert(
-          "No Bus Data", 
+          "No Bus Data",
           "No bus information found. Please log in again.",
-          [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                console.log("User logged out. Redirecting to login screen.");
+              },
+            },
+          ]
         );
       }
     } catch (error) {
@@ -203,35 +234,67 @@ const Home = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // getBusData();
+    getBusData();
   }, []);
+
+  const changeStatus = async (status) => {
+    try {
+      const { data, msg, code } = await handleStatus(busId, status);
+      console.log("Status change response:", data, msg, code);
+      if (code === 0) {
+        await storeUserData(data.bus);
+        setBusStatus((prevStatus) => ({
+          ...prevStatus,
+          ...status,
+        }));
+        if (status.is_delay) {
+          ToastAndroid.show("Delay reported successfully", ToastAndroid.SHORT);
+        } else if (status.is_breakdown) {
+          ToastAndroid.show(
+            "Breakdown reported successfully",
+            ToastAndroid.SHORT
+          );
+        }
+      }
+    } catch (error) {
+      Alert.alert(
+        "Status update failed",
+        "There was a problem connecting to the server. Please try again."
+      );
+    }
+  };
 
   const handleReportDelay = () => {
     Alert.alert(
-      "Report Delay",
-      "Do you want to report a delay for this route?",
+      busStatus.is_delay ? " Fixed Delay " : "Report Delay",
+      busStatus.is_delay
+        ? "Do you want to mark the delay as fixed?"
+        : "Do you want to report a delay for this route?",
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Report", 
-          style: "default",
-          onPress: () => console.log("Delay reported") 
-        }
+        {
+          text: "Report",
+          style: "destructive",
+          onPress: () => changeStatus({ is_delay: !busStatus.is_delay }),
+        },
       ]
     );
   };
 
   const handleReportBreakdown = () => {
     Alert.alert(
-      "Report Breakdown",
-      "Do you want to report a vehicle breakdown?",
+      busStatus.is_breakdown ? " Fixed Breakdown " : "Report Breakdown",
+      busStatus.is_breakdown
+        ? "Do you want to mark the bus as fixed?"
+        : "Do you want to report a breakdown for this route?",
       [
         { text: "Cancel", style: "cancel" },
-        { 
-          text: "Report", 
+        {
+          text: "Report",
           style: "destructive",
-          onPress: () => console.log("Breakdown reported") 
-        }
+          onPress: () =>
+            changeStatus({ is_breakdown: !busStatus.is_breakdown }),
+        },
       ]
     );
   };
@@ -240,9 +303,9 @@ const Home = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
       <View style={styles.container}>
-        {/* Header */}
+        {/* Fixed Header */}
         <View style={styles.header}>
-          <View>
+          <View style={styles.headerLeftSection}>
             <Text style={styles.headerTitle}>Driver Dashboard</Text>
             {busData && (
               <Text style={styles.busInfo}>
@@ -250,24 +313,44 @@ const Home = ({ navigation }) => {
               </Text>
             )}
           </View>
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusLabel}>Status:</Text>
-            <View style={styles.statusIndicator}>
-              <View 
-                style={[
-                  styles.statusDot, 
-                  {
-                    backgroundColor: start 
-                      ? "#05944F" 
-                      : socketStatus === "error" 
-                        ? "#E53E3E" 
-                        : "#F0B429"
-                  }
-                ]} 
+
+          <View style={styles.headerRightSection}>
+            <View style={styles.switchContainer}>
+              <Text style={styles.switchLabel}>Today's work</Text>
+              <Switch
+                trackColor={{ false: "#d1d5db", true: "#81b0ff" }}
+                thumbColor={busStatus.today_work ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={() => {
+                  setBusStatus((prevStatus) => ({
+                    ...prevStatus,
+                    today_work: !prevStatus.today_work,
+                  }));
+                  changeStatus({ today_work: !busStatus.today_work });
+                }}
+                value={busStatus.today_work}
               />
-              <Text style={styles.statusText}>
-                {start ? "Active" : "Inactive"}
-              </Text>
+            </View>
+
+            <View style={styles.statusContainer}>
+              <Text style={styles.statusLabel}>Status:</Text>
+              <View style={styles.statusIndicator}>
+                <View
+                  style={[
+                    styles.statusDot,
+                    {
+                      backgroundColor: start
+                        ? "#05944F"
+                        : socketStatus === "error"
+                        ? "#E53E3E"
+                        : "#F0B429",
+                    },
+                  ]}
+                />
+                <Text style={styles.statusText}>
+                  {start ? "Active" : "Inactive"}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -285,7 +368,7 @@ const Home = ({ navigation }) => {
                   setStart(!start);
                 }}
                 type={start ? "secondary" : "primary"}
-                disabled={!busId || connecting}
+                disabled={!busId || connecting || busStatus.today_work}
                 loading={connecting}
                 icon={
                   start ? (
@@ -320,13 +403,18 @@ const Home = ({ navigation }) => {
                   />
                 }
                 width="48%"
+                bgColor={busStatus.is_delay ? "#05944F" : "#E53E3E"}
+                disabled={!busId || connecting || busStatus.today_work || start}
               />
               <CustomButton
-                title="Report Breakdown"
+                title={busStatus.is_breakdown ? "Fixed " : "Report Breakdown"}
                 onPress={handleReportBreakdown}
                 type="outline"
                 icon={<AntDesign name="warning" size={20} color="#ffffff" />}
                 width="48%"
+                color={"#ffffff"}
+                bgColor={busStatus.is_breakdown ? "#05944F" : "#E53E3E"}
+                disabled={!busId || connecting || busStatus.today_work || start}
               />
             </View>
           </View>
@@ -336,9 +424,7 @@ const Home = ({ navigation }) => {
             <View style={styles.mapHeaderContainer}>
               <Text style={styles.cardTitle}>Live Location</Text>
               {lastUpdate && (
-                <Text style={styles.updateText}>
-                  Last update: {lastUpdate}
-                </Text>
+                <Text style={styles.updateText}>Last update: {lastUpdate}</Text>
               )}
             </View>
             <View style={styles.mapContainer}>
@@ -353,6 +439,10 @@ const Home = ({ navigation }) => {
                     latitudeDelta: 0.005,
                     longitudeDelta: 0.005,
                   }}
+                  showsCompass={true}
+                  showsTraffic={true}
+                  toolbarEnabled={true}
+                  mapType={Platform.OS === "android" ? "terrain" : "standard"}
                 >
                   <Marker
                     coordinate={{
@@ -369,11 +459,7 @@ const Home = ({ navigation }) => {
                 </MapView>
               ) : (
                 <View style={styles.placeholderContainer}>
-                  <Ionicons 
-                    name="location-outline" 
-                    size={48} 
-                    color="#CCCCCC" 
-                  />
+                  <Ionicons name="location-outline" size={48} color="#CCCCCC" />
                   <Text style={styles.placeholderText}>
                     Start trip to view live location
                   </Text>
@@ -399,9 +485,23 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  headerLeftSection: {
+    flex: 1,
+  },
+  headerRightSection: {
+    alignItems: "flex-end",
   },
   headerTitle: {
     fontSize: 20,
@@ -413,6 +513,17 @@ const styles = StyleSheet.create({
     color: "#05944F",
     fontWeight: "600",
     marginTop: 4,
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  switchLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#666666",
+    marginRight: 8,
   },
   statusContainer: {
     flexDirection: "row",

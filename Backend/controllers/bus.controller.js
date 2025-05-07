@@ -36,7 +36,7 @@ const addBus = async (req, res, next) => {
 };
 
 //update bus
-const updateBus = async (req, res, next) => {
+const updateBusStatus = async (req, res, next) => {
   try {
     const updates = Object.keys(req.body);
 
@@ -163,7 +163,7 @@ const getBus = async (req, res, next) => {
 
 module.exports = {
   addBus,
-  updateBus,
+  updateBusStatus,
   deleteBus,
   getBuses,
   getBusesPassenger,

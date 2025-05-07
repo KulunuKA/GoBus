@@ -81,3 +81,12 @@ export const addComplaint = async (data) => {
 export const deleteComplaint = async (id) => {
   return await axiosInstance.delete(`auth/complaint/delete/${id}`, options);
 };
+
+export const addFeedback = async (data) => {
+  await axiosInstance.post(`auth/feedback/addfeedback`, data, options);
+};
+
+export const getFeedbacks = async (id) => {
+  console.log(id);
+  return await axiosInstance.get(`auth/feedback/getfeedback/${id}`, options);
+};
