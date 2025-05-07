@@ -29,6 +29,10 @@ import PassengerComplaints from "./views/PassengerComplaints";
 import PassengerManagement from "./views/PassengerManagemenet/Index";
 import AuthorityManagement from "./views/AuthorityManagement";
 import PassengerMap from "./views/Map/LiveLocationTracker";
+import CustomerSupport from "./views/CustomerSupport";
+import AdminChatRoom from "./views/AdminChatRoom";
+import ChatPageAdmin from "./views/ChatPageAdmin";
+import SupportInbox from "./views/SupportInbox";
 
 function App() {
   return (
@@ -47,6 +51,8 @@ function App() {
           <Route path="/userprofile" element={<UserAccount />} />
           <Route path="/activity" element={<Trips />} />
           <Route path="/complaints" element={<PassengerComplaints />} />
+          <Route path="/customer-support" element={<CustomerSupport />} />
+          <Route path="/customer-support/support-inbox" element={<SupportInbox />} />
           <Route path="/map/:busId" element={<PassengerMap />} />
         </Route>
       </Route>
@@ -70,7 +76,8 @@ function App() {
         <Route path="buses" element={<BusInventory />} />
         <Route path="routes" element={<RouteManagement />} />
         <Route path="complaints" element={<ComplaintManagement />} />
-        <Route path="notifications" element={<AdminNotifications />} />
+        <Route path="chatRoom" element={<AdminChatRoom />} />
+        <Route path="chatRoom/:ticketId" element={<ChatPageAdmin />} />
         <Route path="supports" element={<AdminSupportCenter />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>

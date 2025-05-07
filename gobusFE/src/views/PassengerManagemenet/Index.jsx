@@ -87,7 +87,7 @@ export default function PassengerManagement() {
             />
           </div>
           <MyButton
-            name="Add Bus"
+            name="Add Passenger"
             icon={<PlusCircleOutlined />}
             color={"#2D3436"}
             onClick={() => setIsAdd(true)}
