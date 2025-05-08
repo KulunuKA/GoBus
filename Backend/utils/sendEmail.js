@@ -1,29 +1,55 @@
 import nodemailer from "nodemailer";
+import fs from "fs";
+import handlebars from "handlebars";
+import path from "path";
+import { fileURLToPath } from "url";
 
-export const sendEmail = async (email, subject, message) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Function to generate email HTML
+export const generateEmailHTML = ({
+  username,
+  status,
+  authorityName,
+  ownerEmail,
+  ownerPhone,
+}) => {
+  const templatePath = path.join(__dirname, "trip-status-template.html");
+  const templateSource = fs.readFileSync(templatePath, "utf8");
+  const template = handlebars.compile(templateSource);
+
+  return template({
+    username,
+    statusText: status === "approved" ? "approved" : "rejected",
+    statusClass: status === "approved" ? "status-approved" : "status-rejected",
+    isApproved: status === "approved",
+    authorityName,
+    ownerEmail,
+    ownerPhone,
+  });
+};
+
+// Function to send email
+export const sendEmail = async (to, subject, htmlContent) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: "kulunukasthuri38@gmail.com",
-        pass: "qhyc zpvw ogig hrtm",
+        pass: "qhyc zpvw ogig hrtm", // App password (replace securely)
       },
     });
 
     const mailOptions = {
       from: "pasindumalshan934@gmail.com",
-      to: email,
-      subject: subject,
-      text: message,
+      to,
+      subject,
+      html: htmlContent,
     };
 
-    await transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error sending email:", error);
-      } else {
-        console.log("Email sent:", info.response);
-      }
-    });
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
   } catch (error) {
     console.error("Error sending email:", error);
   }

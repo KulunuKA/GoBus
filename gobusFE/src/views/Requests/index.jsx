@@ -50,7 +50,7 @@ export default function Requests() {
       }
       setBtnLoadingId("");
     } catch (error) {
-      // setBtnLoadingId("");
+      setBtnLoadingId("");
       notification.error({
         message: "Something went wrong!",
       });
