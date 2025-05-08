@@ -10,7 +10,7 @@ const passengerAuth = require("../middlewares/passengerAuth");
 const FeedbackRouter = Router();
 
 FeedbackRouter.post("/addfeedback", passengerAuth, createFeedback);
-FeedbackRouter.get("/getfeedback/:id", passengerAuth, getFeedbacks);
+FeedbackRouter.get("/getfeedback/:id", getFeedbacks);
 FeedbackRouter.get("/feedback/:id", passengerAuth, getFeedback);
 FeedbackRouter.delete("/feedback/:id", passengerAuth, deleteFeedback);
 FeedbackRouter.put("/feedback/:id", passengerAuth, updateFeedback);

@@ -11,6 +11,7 @@ import { passengerData } from "../../store/passengerSlice";
 import Loading from "../../components/Loading";
 import MyButton from "../../components/button";
 import { MousePointer2 } from "lucide-react";
+import SignInModal from "../../components/SignInModal";
 
 export default function Feedback({ busDetails }) {
   const { id: u_id } = useSelector(passengerData);
@@ -23,19 +24,7 @@ export default function Feedback({ busDetails }) {
     rating: 2.5,
     feedback: "",
   });
-  const calOverallReviewsCount = (numReviewBus, numReviewDriver) => {
-    return numReviewBus + numReviewDriver;
-  };
-
-  const calOverallRating = (busRating, driverRating) => {
-    if (typeof busRating !== "number" || typeof driverRating !== "number") {
-      throw new Error("Invalid rating value");
-    }
-
-    const overallRating = (busRating + driverRating) / 2;
-
-    return Math.round(overallRating * 10) / 10;
-  };
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   const handleRatingChange = (value) => {
     setFeedBackData((prev) => ({ ...prev, rating: value }));
@@ -56,6 +45,10 @@ export default function Feedback({ busDetails }) {
   }
 
   const handleClickHere = () => {
+    if (!u_id) {
+      setShowSignInModal(true);
+      return;
+    }
     setShowRatingForm(true);
   };
 
@@ -66,17 +59,18 @@ export default function Feedback({ busDetails }) {
   const handleAddFeedback = async () => {
     setLoading(true);
     try {
-      setFeedBackData((prev) => ({
-        ...prev,
+      let feedback = {
+        ...feedbackData,
         bus_id: busDetails._id,
-      }));
+      };
 
-      const { data, code, msg } = await addFeedback(feedbackData);
+      const { data, code, msg } = await addFeedback(feedback);
       if (code === 0) {
+        feedbacks.push(data);
         notification.success({
           message: "Feedback added successfully",
         });
-        setFeedBackData({ rating: 0, feedback: "" });
+        setShowRatingForm(false);
       }
 
       setLoading(false);
@@ -143,7 +137,7 @@ export default function Feedback({ busDetails }) {
                       style={{ margin: "10px 0" }}
                     />
                   </div>
-                  <div className="feedback-btn">
+                  <div>
                     <MyButton
                       name="Submit"
                       icon={<MousePointer2 />}
@@ -181,6 +175,11 @@ export default function Feedback({ busDetails }) {
           )}
         </div>
       </div>
+
+      <SignInModal
+        isOpen={showSignInModal}
+        closeModal={() => setShowSignInModal(false)}
+      />
     </div>
   );
 }

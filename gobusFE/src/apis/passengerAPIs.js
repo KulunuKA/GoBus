@@ -83,7 +83,7 @@ export const deleteComplaint = async (id) => {
 };
 
 export const addFeedback = async (data) => {
-  await axiosInstance.post(`auth/feedback/addfeedback`, data, options);
+  return await axiosInstance.post(`auth/feedback/addfeedback`, data, options);
 };
 
 export const getFeedbacks = async (id) => {
