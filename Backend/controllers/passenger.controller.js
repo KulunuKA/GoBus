@@ -24,7 +24,7 @@ const registerPassenger = async (req, res, next) => {
         token,
       },
       code: 0,
-      msg: "Ok",
+      msg: "Registration Successfull",
     });
   } catch (error) {
     console.log(error);

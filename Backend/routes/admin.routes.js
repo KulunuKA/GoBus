@@ -11,13 +11,22 @@ const {
   getAllChats,
   deactivateChat,
   closeTicket,
+  editePassenger,
+  getAuthority,
 } = require("../controllers/admin.controller");
+const { registerPassenger } = require("../controllers/passenger.controller");
+const { registerBusOwner, updateBusOwner } = require("../controllers/busOwner.controller");
 const AdminRouter = Router();
 
 AdminRouter.get("/complaints", getComplaints);
 AdminRouter.put("/complaints/:id", complaintResolved);
 AdminRouter.get("/passengers", getPassengers);
+AdminRouter.post("/passengers", registerPassenger);
+AdminRouter.get("/authorities", getAuthority);
+AdminRouter.post("/authorities", registerBusOwner);
+AdminRouter.put("/authorities/:id", updateBusOwner);
 AdminRouter.delete("/passengers/:id", deletePassenger);
+AdminRouter.put("/passengers/:id", editePassenger);
 AdminRouter.get("/supportTickets", getSupportTickets);
 AdminRouter.put("/supportTickets/:id", supportTicektUpdateInprogress);
 AdminRouter.get("/chatRoom/:id", getChats);

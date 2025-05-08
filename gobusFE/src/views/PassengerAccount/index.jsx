@@ -14,6 +14,7 @@ export default function PassengerAccount({ selectedTab }) {
   const dispatch = useDispatch();
   const reduxUser = useSelector(passengerData);
   const [isEditing, setIsEditing] = useState({});
+  const [showBtn, setShowBtn] = useState(false);
   const [userData, setUserData] = useState({
     mobile: reduxUser.mobile,
     username: reduxUser.username,
@@ -32,6 +33,7 @@ export default function PassengerAccount({ selectedTab }) {
   };
 
   const handleEditClick = (field) => {
+    setShowBtn(true);
     if (unSavedField && unSavedField !== field) {
       setNextField(field);
       setShowPopup(true);
@@ -68,7 +70,7 @@ export default function PassengerAccount({ selectedTab }) {
     setShowPopup(false);
   };
 
-  const handleUpdate = async() => {
+  const handleUpdate = async () => {
     try {
       setLoading(true);
       if (!userData.username || !userData.email || !userData.mobile) {
@@ -78,7 +80,13 @@ export default function PassengerAccount({ selectedTab }) {
         return;
       }
 
-      const { data, msg, code } =await passengerUpdate(userData);
+      if (values.mobile && values.mobile.length < 10) {
+        newErrors.mobile = "Mobile must be at least 10 characters";
+      } else if (!/^\d+$/.test(values.mobile)) {
+        newErrors.mobile = "Phone must be a number";
+      }
+
+      const { data, msg, code } = await passengerUpdate(userData);
       if (code === 0) {
         dispatch(updatePassengerInfo(data));
         notification.success({
@@ -90,6 +98,9 @@ export default function PassengerAccount({ selectedTab }) {
         });
       }
       setLoading(false);
+      setIsEditing({});
+      setUnSavedField(null);
+      setShowBtn(false);
     } catch (error) {
       setLoading(false);
       console.log("error", error);
@@ -143,11 +154,20 @@ export default function PassengerAccount({ selectedTab }) {
                   onEdit={() => handleEditClick("email")}
                   onSave={() => handleSaveClick("email")}
                   onChange={(e) => handleOnChange("email", e.target.value)}
+                  readOnly={true}
                 />
 
-                <div style={{ marginTop: 20 }}>
-                  <MyButton width={200} color="rgba(5, 148, 79, 1)" name="Update" loading={loading} onClick={handleUpdate}/>
-                </div>
+                {showBtn && (
+                  <div style={{ marginTop: 20 }}>
+                    <MyButton
+                      width={200}
+                      color="rgba(5, 148, 79, 1)"
+                      name="Update"
+                      loading={loading}
+                      onClick={handleUpdate}
+                    />
+                  </div>
+                )}
               </div>
             </>
           )}
