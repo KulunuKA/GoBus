@@ -11,6 +11,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import TicketDetailsCard from "../../components/TicketDetailsCard";
 import supportVector from "../../assets/images/tripvector.jpeg";
 import { useNavigate } from "react-router-dom";
+import MyButton from "../../components/button";
 
 export default function SupportInbox() {
   const { id } = useSelector(passengerData);
@@ -94,7 +95,7 @@ export default function SupportInbox() {
                       <EmptyTickets
                         msg={"You have no opend tickets."}
                         btnName={"Create New Ticket"}
-                        navigateTo={"/support/new"}
+                        navigateTo={"/customer-support"}
                       />
                     )}
                   </div>
@@ -148,7 +149,7 @@ export default function SupportInbox() {
             </p>
             <div
               className="tickets-sidebar-btn"
-              onClick={() => navigate("/support/new")}
+              onClick={() => navigate("/customer-support")}
             >
               <p>Create New Ticket</p>
             </div>
@@ -167,12 +168,11 @@ const EmptyTickets = ({ msg, btnName, navigateTo }) => {
       <div className="ticket-cards-no-data-message-box">
         <p>{msg}</p>
         {btnName && (
-          <div
-            className="ticket-cards-no-data-message-box-btn"
+          <MyButton
+            name="Create New Ticket"
+            color={"#28a745"}
             onClick={() => navigate(navigateTo)}
-          >
-            <p>{btnName}</p>
-          </div>
+          />
         )}
       </div>
     </div>

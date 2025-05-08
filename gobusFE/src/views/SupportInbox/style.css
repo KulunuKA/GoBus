@@ -106,21 +106,6 @@
   text-align: center;
 }
 
-.ticket-cards-no-data-message-box-btn {
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.ticket-cards-no-data-message-box-btn:hover {
-  background-color: #1e7e34;
-}
-
 .ticket-data-section-past {
   /* Keeping this as it might not be relevant here */
   margin-top: 70px;

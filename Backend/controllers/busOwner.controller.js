@@ -1,6 +1,7 @@
 const BusOwner = require("../models/busOwner");
 const Trip = require("../models/trip");
 const AppError = require("../utils/appError");
+const { sendEmail } = require("../utils/sendEmail");
 
 //register bus owner
 const registerBusOwner = async (req, res, next) => {
@@ -95,16 +96,28 @@ const handleTrip = async (req, res, next) => {
       return next(new AppError(400, "Please provide the status"));
     }
 
-    const isCheck = await Trip.findById(req.params.id);
+    const isCheck = await Trip.findById(req.params.id) .populate("userID", "username email");
     if (!isCheck) {
       return next(new AppError(404, "Trip not found"));
     }
+
+
 
     const trip = await Trip.findByIdAndUpdate(
       req.params.id,
       { status: req.body.status },
       { new: true, runValidators: true }
     );
+
+    if(req.body.status === "approved"){
+      const user = await Trip.findById(req.params.id).populate("userID", "username email");
+      const email = user.userID.email;
+      const username = user.userID.username;
+      // send email to user
+      const subject = "Trip Request Approved";
+      const message = `Dear ${username},\n\nYour trip request has been approved.\n\nThank you,\nBus Owner Team`;
+      sendEmail(email, subject, message);
+    }
 
     res.status(200).send({
       code: 0,
