@@ -9,6 +9,7 @@ import { FaBusAlt, FaUsers, FaUsersCog } from "react-icons/fa";
 import { MdContactSupport, MdDashboard, MdOutlineRoute } from "react-icons/md";
 import { LuBadgeAlert } from "react-icons/lu";
 import { IoIosMore, IoIosNotifications, IoMdSettings } from "react-icons/io";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 export default function ControllPanel() {
@@ -67,10 +68,10 @@ export default function ControllPanel() {
 
   const tablistB = [
     {
-      name: "notifications",
-      title: "Notifications",
-      query: "notifications",
-      icon: <IoIosNotifications />,
+      name: "chatRoom",
+      title: "Chat Room",
+      query: "chatRoom",
+      icon: <IoChatbubbleEllipsesSharp />,
     },
     {
       name: "support",

@@ -61,8 +61,8 @@ export default function Navbar() {
     };
   }, [lastScroll]);
 
-
-  const username = passengerRedux?.username || busOwnerRedux?.authorityName || "User";
+  const username =
+    passengerRedux?.username || busOwnerRedux?.authorityName || "User";
 
   return (
     <nav className={`navbar ${visible ? "visible" : "hidden"}`}>
@@ -190,7 +190,10 @@ export default function Navbar() {
                   <img src={chatting} alt="" />
                   <p>Messages</p>
                 </a>
-                <a href="#" className="dropdown-link">
+                <a
+                  href="/customer-support/support-inbox"
+                  className="dropdown-link"
+                >
                   <img src={support} alt="" />
                   <p>Support Inbox</p>
                 </a>
