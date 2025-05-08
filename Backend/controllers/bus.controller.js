@@ -55,6 +55,7 @@ const updateBusStatus = async (req, res, next) => {
       msg: "Updated",
     });
   } catch (error) {
+    console.log(error)
     if (error.name === "ValidationError") {
       return next(new AppError(400, error.message));
     }

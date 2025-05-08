@@ -22,9 +22,10 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { calculateDistance } from "../utils/calculateDistance ";
 
 const SOCKET_URL =
-  "https://63ef-2402-4000-2110-43e6-819a-984d-e486-303.ngrok-free.app";
+  "https://8e67-2402-4000-2110-43e6-e4ff-9f5b-627b-33ad.ngrok-free.app";
 
 const Home = ({ navigation }) => {
   const [busData, setBusData] = useState(null);
@@ -40,6 +41,9 @@ const Home = ({ navigation }) => {
     today_work: false,
   });
   const mapRef = useRef(null);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const [previousLocation, setPreviousLocation] = useState(null);
+  const distanceUpdateIntervalRef = useRef(null);
   const socketRef = useRef(null);
 
   // Initialize socket connection
@@ -222,6 +226,7 @@ const Home = ({ navigation }) => {
               text: "OK",
               onPress: () => {
                 console.log("User logged out. Redirecting to login screen.");
+                navigation.navigate("Login");
               },
             },
           ]
@@ -254,6 +259,13 @@ const Home = ({ navigation }) => {
             "Breakdown reported successfully",
             ToastAndroid.SHORT
           );
+        }
+
+        if (!status.today_work) {
+          navigation.navigate("OffDay", {
+            busId: busId,
+            totalDistance: totalDistance,
+          });
         }
       }
     } catch (error) {
@@ -299,6 +311,66 @@ const Home = ({ navigation }) => {
     );
   };
 
+  // Track distance when trip is active
+  useEffect(() => {
+    if (start && location) {
+      // Initialize previous location when trip starts
+      if (!previousLocation) {
+        setPreviousLocation(location);
+      }
+
+      // Set up regular distance updates
+      distanceUpdateIntervalRef.current = setInterval(async () => {
+        try {
+          // Get current location
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== "granted") {
+            console.log("Permission to access location was denied");
+            return;
+          }
+
+          const currentLocation = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.High,
+          });
+
+          if (previousLocation) {
+            // Calculate distance between previous and current location
+            const distance = calculateDistance(
+              previousLocation.latitude,
+              previousLocation.longitude,
+              currentLocation.coords.latitude,
+              currentLocation.coords.longitude
+            );
+
+            // Only add significant movement to prevent GPS drift from affecting total
+            if (distance > 0.01) {
+              // 10 meters minimum to count
+              setTotalDistance((prevDistance) => prevDistance + distance);
+              setPreviousLocation({
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Error updating distance:", error);
+        }
+      }, 10000); // Update every 10 seconds
+
+      return () => {
+        if (distanceUpdateIntervalRef.current) {
+          clearInterval(distanceUpdateIntervalRef.current);
+        }
+      };
+    } else if (!start) {
+      // Clear interval when trip ends
+      if (distanceUpdateIntervalRef.current) {
+        clearInterval(distanceUpdateIntervalRef.current);
+        distanceUpdateIntervalRef.current = null;
+      }
+    }
+  }, [start, location, previousLocation]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
@@ -311,6 +383,10 @@ const Home = ({ navigation }) => {
               <Text style={styles.busInfo}>
                 Bus #{busData.busNumber || "Unknown"}
               </Text>
+            )}
+            {/* total distance */}
+            {totalDistance > 0 && (
+              <Text style={styles.busInfo}>{totalDistance.toFixed(2)} m</Text>
             )}
           </View>
 
@@ -368,7 +444,7 @@ const Home = ({ navigation }) => {
                   setStart(!start);
                 }}
                 type={start ? "secondary" : "primary"}
-                disabled={!busId || connecting || busStatus.today_work}
+                disabled={!busId || connecting || !busStatus.today_work}
                 loading={connecting}
                 icon={
                   start ? (
@@ -404,7 +480,7 @@ const Home = ({ navigation }) => {
                 }
                 width="48%"
                 bgColor={busStatus.is_delay ? "#05944F" : "#E53E3E"}
-                disabled={!busId || connecting || busStatus.today_work || start}
+                disabled={!busId || connecting || !start}
               />
               <CustomButton
                 title={busStatus.is_breakdown ? "Fixed " : "Report Breakdown"}
@@ -414,7 +490,7 @@ const Home = ({ navigation }) => {
                 width="48%"
                 color={"#ffffff"}
                 bgColor={busStatus.is_breakdown ? "#05944F" : "#E53E3E"}
-                disabled={!busId || connecting || busStatus.today_work || start}
+                disabled={!busId || connecting  || !start}
               />
             </View>
           </View>
