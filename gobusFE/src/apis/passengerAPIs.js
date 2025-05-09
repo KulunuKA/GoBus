@@ -82,6 +82,14 @@ export const addComplaint = async (data) => {
   return await axiosInstance.post(`auth/complaint/create`, data, options);
 };
 
+export const changePassword = async (data, config) => {
+  return await axiosInstance.post(
+    `auth/passenger/change-password`,
+    data,
+    config
+  );
+};
+
 export const openTicket = async (data) => {
   return await axiosInstance.post(
     `auth/customer-supports/createTicket`,
