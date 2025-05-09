@@ -7,8 +7,10 @@ import ConfirmationPopup from "../../components/ConfirmationPopup/index";
 import { passengerData, updatePassengerInfo } from "../../store/passengerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import MyButton from "../../components/button";
-import { notification } from "antd";
+import { Modal, notification } from "antd";
 import { passengerUpdate } from "../../apis/passengerAPIs";
+import { MdLockReset } from "react-icons/md";
+import PassengerPasswordChange from "../../components/PassengerPasswordChange";
 
 export default function PassengerAccount({ selectedTab }) {
   const dispatch = useDispatch();
@@ -25,6 +27,7 @@ export default function PassengerAccount({ selectedTab }) {
   const [nextField, setNextField] = useState(null);
   const [orginalData, setOrginalData] = useState(userData);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const closePrevEdit = () => {
     const editingField = Object.keys(isEditing).find((key) => isEditing[key]);
@@ -77,13 +80,22 @@ export default function PassengerAccount({ selectedTab }) {
         notification.error({
           message: "Please fill all the fields",
         });
+        setLoading(false);
         return;
       }
 
-      if (values.mobile && values.mobile.length < 10) {
-        newErrors.mobile = "Mobile must be at least 10 characters";
-      } else if (!/^\d+$/.test(values.mobile)) {
-        newErrors.mobile = "Phone must be a number";
+      if (userData.mobile && userData.mobile.length < 10) {
+        notification.error({
+          message: "Mobile must be at least 10 characters",
+        });
+        setLoading(false);
+        return;
+      } else if (!/^\d+$/.test(userData.mobile)) {
+        notification.error({
+          message: "Phone must be a number",
+        });
+        setLoading(false);
+        return;
       }
 
       const { data, msg, code } = await passengerUpdate(userData);
@@ -171,6 +183,81 @@ export default function PassengerAccount({ selectedTab }) {
               </div>
             </>
           )}
+          {selectedTab === "security" && (
+            <div className="passenger-profile-account-dataset">
+              <h3
+                style={{
+                  color: "#2D3436",
+                  fontSize: "23px",
+                  fontWeight: "600",
+                  marginBottom: "10px",
+                }}
+              >
+                Loging to GoBus
+              </h3>
+              <div
+                className="hr-line"
+                style={{
+                  width: "400px",
+                  height: "3px",
+                  color: "#f5f5f5",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              ></div>
+              <p
+                className="ppacd-label"
+                style={{
+                  color: "#2D3436",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  marginBottom: "10px",
+                }}
+              >
+                Password
+              </p>
+              <div
+                className="ppacd-field"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "150px",
+                }}
+              >
+                <p
+                  className="ppacd-pswd"
+                  style={{
+                    color: "#2D3436",
+                    fontSize: "20px",
+                    fontWeight: "600",
+                  }}
+                >
+                  ******
+                </p>
+                <div className="ppacd-pbtn" style={{}}>
+                  <MyButton
+                    name="Reset"
+                    icon={<MdLockReset />}
+                    color={" #05944F"}
+                    onClick={() => {
+                      setShowModal(true);
+                      console.log("isOpen: ", showModal);
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                className="hr-line"
+                style={{
+                  width: "400px",
+                  height: "3px",
+                  color: "#f5f5f5",
+                  marginTop: "20px",
+                  marginBottom: "10px",
+                }}
+              ></div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -179,6 +266,15 @@ export default function PassengerAccount({ selectedTab }) {
           message="You have unsaved changes. Do you want to save them?"
           onConfirm={handleConfirm}
           onCancel={handleCancel}
+        />
+      )}
+
+      {showModal && (
+        <PassengerPasswordChange
+          isOpen={true}
+          onClose={() => {
+            setShowModal(false);
+          }}
         />
       )}
     </>

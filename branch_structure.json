@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "customer_support",
+    "dependabot/npm_and_yarn/gobusFE/multi-5ea19b96cb",
+    "fine_tune_2",
+    "main",
+    "origin",
+    "pdf_ganeration",
+    "release_finalize",
+    "user_management_admin"
+  ],
+  "parent": {
+    "customer_support": "main",
+    "dependabot/npm_and_yarn/gobusFE/multi-5ea19b96cb": "main",
+    "fine_tune_2": "main",
+    "main": null,
+    "origin": "main",
+    "pdf_ganeration": "main",
+    "release_finalize": "main",
+    "user_management_admin": "main"
+  },
+  "order": [
+    "main",
+    "customer_support",
+    "dependabot/npm_and_yarn/gobusFE/multi-5ea19b96cb",
+    "fine_tune_2",
+    "origin",
+    "pdf_ganeration",
+    "release_finalize",
+    "user_management_admin"
+  ]
+}
