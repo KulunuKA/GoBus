@@ -1,75 +1,105 @@
 .ticket-details {
-    margin-top: 10px;
-    padding: 20px;
-    max-height: 70vh;
-    overflow-y: auto;
-    background: #ffffff;
-  }
-  
-  .ticket-header {
-    width: 100%;
-    text-align: center;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e0e0e0;
-  }
-  
-  .ticket-header p {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #2c3e50;
-  }
-  
-  .ticket-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 15px;
-  }
-  
-  .ticket-content-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    word-break: break-word;
-  }
-  
-  .ticket-content-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  .ticket-content-item p {
-    font-size: 15px;
-    font-weight: 500;
-    color: #2c3e50;
-    margin: 2px 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  
-  .ticket-content-item p:first-child {
-    font-weight: 600;
-    color: #34495e;
-  }
-  
-  .ticket-pictures-container {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-  }
-  
-  .ticket-pictures-container img {
-    width: 130px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
+  padding: 20px;
+}
+
+.td-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #05944f;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.td-header p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #05944f;
+  margin: 0;
+}
+
+.td-content {
+  margin: 15px 0;
+}
+
+.td-content-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.td-content-item p:first-child {
+  min-width: 120px;
+  font-weight: bold;
+  color: #2d3436;
+}
+
+.td-content-item p:last-child {
+  flex: 1;
+  color: #2d3436;
+  word-break: break-word; /* Add this line */
+}
+
+.des-content {
+  flex-direction: column;
+}
+
+.des-content p:last-child {
+  margin-top: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-left: 3px solid #05944f;
+  word-break: break-word; /* Add this line */
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.download-pdf-btn {
+  margin-left: auto;
+}
+
+.pdf-download-link {
+  background-color: #2d3436;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.pdf-download-link:hover {
+  background-color: #1e2628;
+  color: white;
+}
+
+.pdf-download-link:before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E");
+  background-size: contain;
+  display: inline-block;
+}
+
+.ticket-pictures-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.ticket-pictures-container img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
