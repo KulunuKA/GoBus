@@ -30,6 +30,25 @@ export const getPassengersAD = async () => {
   return await axiosInstance.get("auth/admin/passengers");
 };
 
+export const addPassengerAD = async (data) => {
+  return await axiosInstance.post("auth/admin/passengers", data);
+};
+export const editPassengerAD = async (id, data) => {
+  return await axiosInstance.put(`auth/admin/passengers/${id}`, data);
+};
+
+export const getAuthoritiesAD = async () => {
+  return await axiosInstance.get("auth/admin/authorities");
+};
+
+export const addBusAuthorityAD = async (data) => {
+  return await axiosInstance.post("auth/admin/authorities", data);
+};
+
+export const editAuthorityAD = async (id, data) => {
+  return await axiosInstance.put(`auth/admin/authorities/${id}`, data);
+};
+
 export const deletePassengerAD = async (id) => {
   return await axiosInstance.delete(`auth/admin/passengers/${id}`);
 };
@@ -41,7 +60,6 @@ export const getSupportTicketsAD = async () => {
 export const getAllChatsAD = async () => {
   return await axiosInstance.get("auth/admin/chatRoom");
 };
-
 
 export const updateTicketInProgressAD = async (id, data) => {
   try {
@@ -61,27 +79,24 @@ export const updateTicketInProgressAD = async (id, data) => {
       console.error("Response status:", error.response.status);
     }
 
-    
     throw new Error(
       `Failed to update ticket: ${error.response?.data?.msg || error.message}`
     );
   }
 };
 
-
 export const createOrOpenChatAD = async (ticketId, userId) => {
   try {
     console.log(
       `Creating/opening chat for ticket ${ticketId} and user ${userId}`
     );
-    
+
     const response = await axiosInstance.put(
       `auth/admin/chatRoom/${ticketId}`,
       { userId }
     );
     console.log("Create chat response:", response);
 
-    
     return response.data || { success: true, ticketId, userId };
   } catch (error) {
     console.error("Error creating/opening chat:", error);
@@ -91,7 +106,6 @@ export const createOrOpenChatAD = async (ticketId, userId) => {
       console.error("Response status:", error.response.status);
     }
 
-    
     throw new Error(
       `Failed to create chat: ${error.response?.data?.msg || error.message}`
     );

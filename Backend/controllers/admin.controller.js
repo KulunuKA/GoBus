@@ -4,6 +4,7 @@ const Passenger = require("../models/passenger");
 const Chat = require("../models/chat");
 const AppError = require("../utils/appError");
 const mongoose = require("mongoose");
+const BusOwner = require("../models/busOwner");
 
 const getComplaints = async (req, res, next) => {
   try {
@@ -129,6 +130,19 @@ const getPassengers = async (req, res, next) => {
   }
 };
 
+const getAuthority = async (req, res, next) => {
+  try {
+    const authorities = await BusOwner.find();
+    res.status(201).send({
+      data: authorities,
+      msg: "Authorities fetched successfully",
+      code: 0,
+    });
+  } catch (error) {
+    next(new AppError(400, error.message));
+  }
+};
+
 const deletePassenger = async (req, res, next) => {
   try {
     const passenger = await Passenger.findByIdAndDelete(req.params.id);
@@ -142,6 +156,44 @@ const deletePassenger = async (req, res, next) => {
     });
   } catch (error) {
     next(new AppError(500, error.message));
+  }
+};
+
+//update passenger details
+const editePassenger = async (req, res, next) => {
+  try {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ["username", "email", "mobile"];
+    const isValidOperation = updates.every((update) =>
+      allowedUpdates.includes(update)
+    );
+
+    if (!isValidOperation) {
+      return next(new AppError(400, "Invalid updates"));
+    }
+
+    const passenger = await Passenger.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!passenger) {
+      return next(new AppError(404, "No passenger found"));
+    }
+    passenger.save();
+
+    const { _id: id, username, mobile, email } = passenger;
+    res.status(200).send({
+      data: {
+        id,
+        username,
+        mobile,
+        email,
+      },
+      code: 0,
+      msg: "Passenger Updated",
+    });
+  } catch (error) {
+    next(new AppError(400, "Server error"));
   }
 };
 
@@ -317,4 +369,6 @@ module.exports = {
   getAllChats,
   closeTicket,
   deactivateChat,
+  editePassenger,
+  getAuthority,
 };

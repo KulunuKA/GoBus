@@ -4,7 +4,7 @@ import { PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import MyInput from "../../components/input";
 import { getAllChatsAD } from "../../apis/adminAPIs";
 import moment from "moment";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
 export default function AdminChatRoom() {
   const [searchText, setSearchText] = useState("");
@@ -12,7 +12,6 @@ export default function AdminChatRoom() {
   const [isError, setIsError] = useState("");
   const [chats, setChats] = useState([]);
   const [filteredChats, setFilteredChats] = useState([]);
-  const [isAdd, setIsAdd] = useState(false);
 
   const fetchChats = async () => {
     try {
@@ -52,19 +51,17 @@ export default function AdminChatRoom() {
     return moment(timestamp).fromNow();
   };
 
- 
   const getLastMessageTime = (chat) => {
     if (chat.messages && chat.messages.length > 0) {
       return new Date(chat.messages[chat.messages.length - 1].timestamp);
     }
-    return new Date(chat.createdAt); 
+    return new Date(chat.createdAt);
   };
 
- 
   const sortedChats = [...filteredChats].sort((a, b) => {
     const timeA = getLastMessageTime(a);
     const timeB = getLastMessageTime(b);
-    return timeB - timeA; 
+    return timeB - timeA;
   });
 
   if (loading) {
@@ -143,14 +140,6 @@ export default function AdminChatRoom() {
           )}
         </div>
       </div>
-      {isAdd && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Create New Chat</h2>
-            <button onClick={() => setIsAdd(false)}>Close</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
