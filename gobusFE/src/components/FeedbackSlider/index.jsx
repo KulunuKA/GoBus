@@ -3,6 +3,7 @@ import "./style.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Rate } from "antd";
 
 export default function FeedbackSlider({ feedbackArray }) {
   const settings = {
@@ -11,8 +12,9 @@ export default function FeedbackSlider({ feedbackArray }) {
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false,
+    autoplay: true,
     arrows: true,
+    autoplaySpeed: 3000,
   };
 
   return (
@@ -21,8 +23,9 @@ export default function FeedbackSlider({ feedbackArray }) {
         <Slider {...settings}>
           {feedbackArray.map((feedback, index) => (
             <div key={index} className="single-bus-overall-feedbacks-content">
-              <p className="feedback-content">{feedback.review}</p>
-              <p className="feedback-writer">{feedback.username}</p>
+              <Rate value={feedback.rating} disabled/>
+              <p className="feedback-content">{feedback.feedback}</p>
+              <p className="feedback-writer">{feedback.user_id.username}</p>
             </div>
           ))}
         </Slider>

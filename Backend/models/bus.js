@@ -69,6 +69,26 @@ const busSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Route",
   },
+  fuel_consumption: {
+    type: Number,
+    required: true,
+  },
+  daily_income: [
+    {
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+      income: {
+        type: Number,
+        required: true,
+      },
+      distance: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   timetable: [
     {
       round: {
@@ -153,6 +173,7 @@ busSchema.pre("findOneAndDelete", async function (next) {
     next(error);
   }
 });
+
 
 const Bus = mongoose.model("Bus", busSchema);
 

@@ -1,4 +1,3 @@
-
 .single-bus-image-section {
   width: 100%;
   height: 80vh;
@@ -74,7 +73,6 @@
   width: 100%;
   padding-bottom: 10px;
   border-bottom: 3px solid #05944f;
-  margin-bottom: 40px;
 }
 
 .info-box-header h3 {
@@ -189,8 +187,6 @@
 
 .single-bus-overall-feedbacks {
   width: 100%;
-  margin-top: 20px;
-  padding: 20px;
 }
 
 .single-bus-overall-feedbacks-header {

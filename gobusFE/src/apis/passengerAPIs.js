@@ -62,6 +62,10 @@ export const getTrips = async (id) => {
   return await axiosInstance.get(`auth/trip/get/${id}`);
 };
 
+export const getUserTickets = async (id) => {
+  return await axiosInstance.get(`auth/customer-supports/getUserTickets/${id}`);
+};
+
 export const cancelTrip = async (id) => {
   return await axiosInstance.delete(`auth/trip/delete/${id}`, options);
 };
@@ -78,6 +82,31 @@ export const addComplaint = async (data) => {
   return await axiosInstance.post(`auth/complaint/create`, data, options);
 };
 
+export const changePassword = async (data, config) => {
+  return await axiosInstance.post(
+    `auth/passenger/change-password`,
+    data,
+    config
+  );
+};
+
+export const openTicket = async (data) => {
+  return await axiosInstance.post(
+    `auth/customer-supports/createTicket`,
+    data,
+    options
+  );
+};
+
 export const deleteComplaint = async (id) => {
   return await axiosInstance.delete(`auth/complaint/delete/${id}`, options);
+};
+
+export const addFeedback = async (data) => {
+  return await axiosInstance.post(`auth/feedback/addfeedback`, data, options);
+};
+
+export const getFeedbacks = async (id) => {
+  console.log(id);
+  return await axiosInstance.get(`auth/feedback/getfeedback/${id}`, options);
 };

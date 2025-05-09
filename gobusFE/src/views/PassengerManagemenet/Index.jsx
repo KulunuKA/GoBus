@@ -13,6 +13,8 @@ import EmptyDataMessage from "../../components/EmptyDataMessage";
 import { Modal, notification } from "antd";
 import { deletePassengerAD, getPassengersAD } from "../../apis/adminAPIs";
 import DataTable from "../../components/DataTable";
+import AdminUserAddForm from "../../components/AdminUserAddForm";
+import AdminUserUpdateFormForm from "../../components/AdminUserUpdateForm";
 
 export default function PassengerManagement() {
   const [isAdd, setIsAdd] = useState(false);
@@ -87,10 +89,10 @@ export default function PassengerManagement() {
             />
           </div>
           <MyButton
-            name="Add Bus"
+            name="Add Passenger"
             icon={<PlusCircleOutlined />}
             color={"#2D3436"}
-            onClick={() => setIsAdd(true)}
+            onClick={() => setView(true)}
           />
         </div>
       </div>
@@ -103,13 +105,20 @@ export default function PassengerManagement() {
         <EmptyDataMessage message="No user to show" />
       ) : (
         <DataTable
+          onView={(data) => {
+            console.log("onView: ", data);
+          }}
           columns={columns}
           data={passengers.filter((e) =>
             e?.username
               .toLocaleLowerCase()
               .includes(searchText?.toLocaleLowerCase())
           )}
-          onEdit={console.log("Edit Button Clicked")}
+          onEdit={(data) => {
+            console.log("Edit Button Clicked", data);
+            setSelectedPassenger(data);
+            setIsUpdate(true);
+          }}
           onDelete={(data) => {
             confirm({
               title: "Are you sure you want to delete this passenger?",
@@ -118,6 +127,26 @@ export default function PassengerManagement() {
                 deletePas(data._id);
               },
             });
+          }}
+        />
+      )}
+
+      {view && (
+        <AdminUserAddForm
+          isOpen={view}
+          user="passenger"
+          onClose={() => {
+            setView(!view);
+          }}
+        />
+      )}
+      {isUpdate && (
+        <AdminUserUpdateFormForm
+          user="passenger"
+          isOpen={isUpdate}
+          selectedUser={selectedPassenger}
+          onClose={() => {
+            setIsUpdate(!isUpdate);
           }}
         />
       )}

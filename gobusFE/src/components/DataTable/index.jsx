@@ -50,7 +50,7 @@ export default function DataTable({
                           alt="Item"
                           className="table-image"
                         />
-                        {/* Console log added */}
+                       
                       </>
                     ) : col.type === "boolean" ? (
                       row[col.key] ? (

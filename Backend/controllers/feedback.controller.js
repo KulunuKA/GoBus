@@ -8,24 +8,17 @@ const createFeedback = async (req, res, next) => {
     if (
       !req.body.feedback ||
       !req.body.rating ||
-      !req.body.userID ||
-      !req.body.busID
+      !req.body.user_id ||
+      !req.body.bus_id
     ) {
-      return next(
-        new AppError(
-          400,
-          "Please provide feedback, rating, userId and productId"
-        )
-      );
+      return next(new AppError(400, "Please provide feedback, rating, userId"));
     }
 
     const feedback = await Feedback.create(req.body);
 
     res.status(201).send({
       msg: "add feedback successfully",
-      data: {
-        feedback,
-      },
+      data: feedback,
       code: 0,
     });
   } catch (error) {
@@ -36,16 +29,38 @@ const createFeedback = async (req, res, next) => {
 // Get all feedbacks
 const getFeedbacks = async (req, res, next) => {
   try {
-    const feedbacks = await Feedback.find();
+
+    if (!req.params.id) {
+      return next(new AppError("Please provide bus id", 400));
+    }
+
+    //get user's feedbacks and user'name
+    const feedbacks = await Feedback.find({ bus_id: req.params.id }).populate(
+      "user_id",
+      "username"
+    );
+
+    // const bus = await Bus.findById(req.params.id).populate("driverID");
+    // if (!bus) {
+    //   return next(new AppError("No bus found with that ID", 404));
+    // }
+    // const driver = bus.driverID;
+    // const driverFeedbacks = await Feedback.find({ driver_id: driver._id });
+    // const driverRating = driverFeedbacks.reduce((acc, feedback) => {
+    //   return acc + feedback.rating;
+    // }, 0);
+    // const driverAverageRating = driverFeedbacks.length
+    //   ? driverRating / driverFeedbacks.length
+    //   : 0;
+    // bus.driverID.averageRating = driverAverageRating;
 
     res.status(200).send({
       msg: "get feedbacks successfully",
-      data: {
-        feedbacks,
-      },
+      data: feedbacks,
       code: 0,
     });
   } catch (error) {
+    console.log(error);
     next(new AppError(error.message, 400));
   }
 };
