@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,34 +17,31 @@ import { MaterialIcons, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import { useRoute } from "@react-navigation/native";
-import { handleStatus } from "../apis/api";
+import { addIncome, handleStatus } from "../apis/api";
+import { getUserData } from "../store";
 
 const OffDayScreen = ({ navigation }) => {
   const { busId, totalDistance } = useRoute().params || {};
   const [incomeData, setIncomeData] = useState({
-    daily_income: {
-      income: 0,
-      date: new Date().toISOString().split("T")[0],
-      distance: totalDistance,
-    },
+    income: 0,
+    date: new Date().toISOString().split("T")[0],
+    distance: totalDistance,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
+  const [incomeHistory, setIncomeHistory] = useState([]);
 
-  // Function to handle saving the income data
   const handleSubmit = async () => {
-    // Clear previous errors
     setError({});
 
-    // Validate input
     let newErrors = {};
 
-    if (!incomeData.daily_income.income) {
+    if (!incomeData.income) {
       newErrors.income = "Please enter a valid income";
-    } else if (isNaN(incomeData.daily_income.income)) {
-        newErrors.income = "Income must be a number";
-    } else if (incomeData.daily_income.income <= 0) {
-        newErrors.income = "Income must be greater than zero";
+    } else if (isNaN(incomeData.income)) {
+      newErrors.income = "Income must be a number";
+    } else if (incomeData.income <= 0) {
+      newErrors.income = "Income must be greater than zero";
     }
 
     // If we have errors, show them and don't proceed
@@ -56,7 +53,7 @@ const OffDayScreen = ({ navigation }) => {
     try {
       setIsLoading(true);
 
-      const { data, msg, code } = await handleStatus(busId, incomeData);
+      const { data, msg, code } = await addIncome(busId, incomeData);
       // Show success message
       if (code == 0) {
         navigation.navigate("Home");
@@ -69,11 +66,9 @@ const OffDayScreen = ({ navigation }) => {
               onPress: () => {
                 // Reset form after successful submission
                 setIncomeData({
-                  daily_income: {
-                    income: "",
-                    date: new Date().toISOString().split("T")[0],
-                    totalDistance: totalDistance,
-                  },
+                  income: "",
+                  date: new Date().toISOString().split("T")[0],
+                  totalDistance: totalDistance,
                 });
               },
             },
@@ -90,6 +85,26 @@ const OffDayScreen = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+
+  const getBusData = async () => {
+    try {
+      const userData = await getUserData();
+      console.log(userData);
+      if (userData) {
+        setIncomeHistory(userData.daily_income);
+      }
+    } catch (error) {
+      console.error("Error getting bus data:", error);
+      Alert.alert("Error", "Failed to load bus information");
+    }
+  };
+
+  useEffect(() => {
+    // removeUserData()
+    getBusData();
+  }, []);
+
+  console.log(incomeHistory);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -132,25 +147,20 @@ const OffDayScreen = ({ navigation }) => {
                 <CustomInput
                   label="Income Amount"
                   placeholder="Enter income"
-                  value={incomeData.daily_income.income}
+                  value={incomeData.income}
                   onChangeText={(text) =>
                     setIncomeData({
                       ...incomeData,
-                      daily_income: {
-                        ...incomeData.daily_income,
-                        income: parseInt(text),
-                      },
+                      income: parseInt(text),
                     })
                   }
                   error={error.income}
                   keyboardType="decimal-pad"
                 />
 
-                <CustomInput
-                  label="Total Distance (km)"
-                  placeholder="Add notes about this income"
-                  value={totalDistance}
-                />
+                <Text style={styles.sectionTitle}>
+                  Distance Traveled: {totalDistance} km
+                </Text>
 
                 <View style={styles.infoContainer}>
                   <Ionicons
@@ -192,21 +202,29 @@ const OffDayScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.historyItem}>
-                <View style={styles.historyItemLeft}>
-                  <Text style={styles.historyDate}>May 6, 2025</Text>
-                  <Text style={styles.historyNotes}>Weekend shift</Text>
-                </View>
-                <Text style={styles.historyAmount}>$145.00</Text>
-              </View>
-
-              <View style={styles.historyItem}>
-                <View style={styles.historyItemLeft}>
-                  <Text style={styles.historyDate}>May 1, 2025</Text>
-                  <Text style={styles.historyNotes}>Holiday bonus</Text>
-                </View>
-                <Text style={styles.historyAmount}>$200.00</Text>
-              </View>
+              {incomeHistory.length > 0 ? (
+                incomeHistory.map((item, index) => (
+                  <View key={index} style={styles.historyItem}>
+                    <View style={styles.historyItemLeft}>
+                      <Text style={styles.historyDate}>
+                        {new Date(item.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}
+                      </Text>
+                      <Text style={styles.historyNotes}>
+                        {item.distance || "No notes"}
+                      </Text>
+                    </View>
+                    <Text style={styles.historyAmount}>
+                      LKR {item.income.toFixed(2)}
+                    </Text>
+                  </View>
+                ))
+              ) : (
+                <Text>No income history available</Text>
+              )}
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>

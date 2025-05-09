@@ -7,7 +7,7 @@
   font-family: outfit;
 }
 :where(.css-dev-only-do-not-override-dkbvqv).ant-notification {
-  z-index: 200000;
+  z-index: 2000000;
 }
 .req-body-content {
   min-height: 30vh;
