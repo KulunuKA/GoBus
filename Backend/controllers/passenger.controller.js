@@ -1,5 +1,7 @@
 const Passenger = require("../models/passenger");
 const AppError = require("../utils/appError");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // passenger register
 const registerPassenger = async (req, res, next) => {
@@ -39,6 +41,39 @@ const registerPassenger = async (req, res, next) => {
     } else {
       next(new AppError(409, "Server error"));
     }
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.passenger._id;
+
+  try {
+    const passenger = await Passenger.findById(userId);
+    const isMatch = await bcrypt.compare(currentPassword, passenger.password);
+
+    if (!isMatch)
+      return res.status(400).send({
+        data: "",
+        code: 1,
+        msg: "Current password is incorrect",
+      });
+
+    passenger.password = newPassword;
+    await passenger.save();
+
+    res.status(200).send({
+      data: passenger,
+      code: 0,
+      msg: "Password updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send({
+      data: "",
+      code: 2,
+      msg: "Server error",
+    });
+    next(new AppError(500, "Server error"));
   }
 };
 
@@ -104,4 +139,9 @@ const deletePassenger = async (req, res, next) => {
   }
 };
 
-module.exports = { registerPassenger, updatePassenger, deletePassenger };
+module.exports = {
+  registerPassenger,
+  updatePassenger,
+  deletePassenger,
+  changePassword,
+};
