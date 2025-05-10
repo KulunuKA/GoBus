@@ -17,7 +17,7 @@
 }
 
 .owner-dashboard-summary-box {
-  width: 180px;
+  width: fit-content;
   height: 120px;
   display: flex;
   flex-direction: column;
@@ -29,6 +29,7 @@
   border-radius: 8px;
   cursor: pointer;
   position: relative;
+  padding: 15px 20px;
 }
 
 .owner-dashboard-summary-box span {
@@ -135,5 +136,178 @@ p.owner-dashboard-count {
   }
   50% {
     color: #a0a0a0;
+  }
+}
+
+/* BusIncomeDisplay.css */
+
+.bus-dashboard-container {
+  padding: 16px;
+  max-width: 1000px;
+}
+
+.dashboard-heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bus-card {
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 15px 20px;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.bus-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bus-info {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container {
+  background-color: #e6f0ff;
+  padding: 8px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.icon {
+  color: #1a73e8;
+}
+
+.bus-number {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.trip-count {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.income-info {
+  display: flex;
+  align-items: center;
+}
+
+.total-income {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+}
+
+.arrow {
+  transform: rotate(0deg);
+  transition: transform 0.2s ease;
+}
+
+.arrow.rotated {
+  transform: rotate(90deg);
+}
+
+.details-container {
+  width: 100%;
+
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.details-heading {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #444;
+}
+
+.trip-item {
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.trip-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.trip-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+}
+
+.detail-icon {
+  margin-right: 4px;
+}
+
+.income-icon {
+  color: #34a853;
+}
+
+.distance-icon {
+  color: #1a73e8;
+}
+
+.income-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.distance-text {
+  font-size: 14px;
+}
+
+.no-data {
+  color: #666;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .trip-details {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-item {
+    margin-bottom: 8px;
   }
 }
