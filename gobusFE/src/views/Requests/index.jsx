@@ -15,6 +15,7 @@ export default function Requests() {
   const { confirm } = Modal;
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errLoading, setErrLoading] = useState(false);
   const [isError, setIsError] = useState("");
   const [searchText, setSearchText] = useState("");
   const [btnLoadingId, setBtnLoadingId] = useState("");

@@ -11,6 +11,9 @@ const addBus = async (req, res, next) => {
       !req.body.password ||
       !req.body.pictures ||
       !req.body.seatNumber ||
+      !req.body.fuel_consumption ||
+      !req.body.max_fuel_level ||
+      !req.body.current_fuel_level ||
       !req.body.busType ||
       !req.body.district ||
       !req.body.city
@@ -55,7 +58,7 @@ const updateBusStatus = async (req, res, next) => {
       msg: "Updated",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error.name === "ValidationError") {
       return next(new AppError(400, error.message));
     }
@@ -161,6 +164,8 @@ const getBus = async (req, res, next) => {
     next(new AppError(500, "Server error"));
   }
 };
+
+
 
 module.exports = {
   addBus,
