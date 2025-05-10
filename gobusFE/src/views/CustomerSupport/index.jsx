@@ -31,8 +31,13 @@ export default function CustomerSupport() {
     if (!ticket.subject) {
       newError.subject = "Subject is required";
     }
+
     if (!ticket.description) {
       newError.description = "Description is required";
+    }
+
+    if (ticket.description.length < 20) {
+      newError.description = "Description must be at least 20 characters";
     }
 
     setError(newError);
@@ -62,6 +67,7 @@ export default function CustomerSupport() {
       };
 
       const { data, code, msg } = await openTicket(ticketPayload);
+
       if (code == 0) {
         notification.success({ message: msg });
 

@@ -57,8 +57,12 @@ export default function Feedback({ busDetails }) {
   };
 
   const handleAddFeedback = async () => {
-    setLoading(true);
     try {
+      if (!u_id) {
+        setShowSignInModal(true);
+        return;
+      }
+       setLoading(true);
       let feedback = {
         ...feedbackData,
         bus_id: busDetails._id,

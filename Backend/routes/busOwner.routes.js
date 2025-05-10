@@ -6,6 +6,7 @@ const {
   updateBusOwner,
   deleteBusOwner,
   getTripRequests,
+  getIncomeHistory,
 } = require("../controllers/busOwner.controller");
 const { getBuses } = require("../controllers/bus.controller");
 const BusOwnerRouter = Router();
@@ -16,5 +17,6 @@ BusOwnerRouter.delete("/delete/:id", busOwnerAuth, deleteBusOwner);
 BusOwnerRouter.put("/trip/:id", busOwnerAuth, handleTrip);
 BusOwnerRouter.get("/trip/:id", busOwnerAuth, getTripRequests);
 BusOwnerRouter.get("/getbuses/:id", busOwnerAuth, getBuses);
+BusOwnerRouter.get("/income/:id", busOwnerAuth, getIncomeHistory);
 
 module.exports = BusOwnerRouter;

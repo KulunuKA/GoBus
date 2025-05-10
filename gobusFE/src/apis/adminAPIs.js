@@ -9,6 +9,10 @@ const options = {
   header: headers,
 };
 
+export const adminLogin = async (data) => {
+  return await axiosInstance.post("auth/admin/login", data, options);
+};
+
 export const getComplaintsAD = async () => {
   return await axiosInstance.get("auth/admin/complaints");
 };

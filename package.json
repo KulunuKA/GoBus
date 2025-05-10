@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@react-pdf/renderer": "^4.3.0",
-    "lodash": "^4.17.21",
-    "react-gauge-chart": "^0.5.1"
-  }
-}

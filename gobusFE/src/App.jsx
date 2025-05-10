@@ -33,12 +33,15 @@ import CustomerSupport from "./views/CustomerSupport";
 import AdminChatRoom from "./views/AdminChatRoom";
 import ChatPageAdmin from "./views/ChatPageAdmin";
 import SupportInbox from "./views/SupportInbox";
+import AdminLogin from "./views/AdminLogin";
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register/:role" element={<Register />} />
+      <Route path="/admin" element={<AdminLogin />} />
+
       <Route path="/" element={<PassengerLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/special" element={<Special />} />
@@ -52,7 +55,10 @@ function App() {
           <Route path="/activity" element={<Trips />} />
           <Route path="/complaints" element={<PassengerComplaints />} />
           <Route path="/customer-support" element={<CustomerSupport />} />
-          <Route path="/customer-support/support-inbox" element={<SupportInbox />} />
+          <Route
+            path="/customer-support/support-inbox"
+            element={<SupportInbox />}
+          />
           <Route path="/map/:busId" element={<PassengerMap />} />
         </Route>
       </Route>

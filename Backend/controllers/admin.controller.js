@@ -5,6 +5,36 @@ const Chat = require("../models/chat");
 const AppError = require("../utils/appError");
 const mongoose = require("mongoose");
 const BusOwner = require("../models/busOwner");
+const Admin = require("../models/admin");
+
+//admin login
+const adminLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return next(new AppError(400, "Please provide admin name and password"));
+    }
+    const admin = await Admin.findByCredentials(email, password);
+    if (!admin) {
+      return next(new AppError(401, "Invalid credentials"));
+    }
+
+    let token = await admin.generateAuthToken();
+
+    res.status(200).send({
+      data: {
+        id: admin._id,
+        email: admin.email,
+        token,
+      },
+      msg: "Login successful",
+      code: 0,
+    });
+  } catch (error) {
+    console.error("Error in adminLogin:", error);
+    next(new AppError(500, "Server error"));
+  }
+};
 
 const getComplaints = async (req, res, next) => {
   try {
@@ -172,10 +202,14 @@ const editePassenger = async (req, res, next) => {
       return next(new AppError(400, "Invalid updates"));
     }
 
-    const passenger = await Passenger.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const passenger = await Passenger.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     if (!passenger) {
       return next(new AppError(404, "No passenger found"));
     }
@@ -371,4 +405,5 @@ module.exports = {
   deactivateChat,
   editePassenger,
   getAuthority,
+  adminLogin,
 };
