@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import bus from "../../assets/images/busblack.png";
 import article from "../../assets/images/content-writing.png";
@@ -7,8 +7,14 @@ import complain from "../../assets/images/complain-icon.png";
 import support from "../../assets/images/customer-support.png";
 import faqs from "../../assets/images/faqicon.png";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { passengerData } from "../../store/passengerSlice";
+import SignInModal from "../../components/SignInModal";
 
 export default function Help() {
+  const { id: u_id } = useSelector(passengerData);
+  const [showSignInModal, setShowSignInModal] = useState(false);
+
   const navigate = useNavigate();
   return (
     <>
@@ -33,7 +39,13 @@ export default function Help() {
             </div>
             <div
               className="help-section-btn"
-              onClick={() => navigate("/customer-support")}
+              onClick={() => {
+                if (!u_id) {
+                  setShowSignInModal(true);
+                  return;
+                }
+                navigate("/customer-support");
+              }}
             >
               <img src={support} alt="" />
               <p className="help-btn-name">Customer Support</p>
@@ -60,6 +72,11 @@ export default function Help() {
           </div>
         </div>
       </div>
+
+      <SignInModal
+        isOpen={showSignInModal}
+        closeModal={() => setShowSignInModal(false)}
+      />
     </>
   );
 }

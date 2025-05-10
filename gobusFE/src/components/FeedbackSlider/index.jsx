@@ -6,14 +6,20 @@ import "slick-carousel/slick/slick-theme.css";
 import { Rate } from "antd";
 
 export default function FeedbackSlider({ feedbackArray }) {
+
+  console.log("Feedback array", feedbackArray);
+  if (!feedbackArray || feedbackArray.length === 0) {
+    return <div className="no-feedbacks">No feedbacks available</div>;
+  }
+
   const settings = {
-    dots: false,
-    infinite: true,
+    dots: feedbackArray.length > 1,
+    infinite: feedbackArray.length > 1,
     speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
-    arrows: true,
+    autoplay: feedbackArray.length > 1,
+    arrows: feedbackArray.length > 1,
     autoplaySpeed: 3000,
   };
 

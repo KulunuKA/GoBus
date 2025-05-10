@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import MyButton from "../../components/button";
 import ConfirmationPopup from "../../components/ConfirmationPopup";
 import { useDispatch, useSelector } from "react-redux";
 import { busOwnerData } from "../../store/busOwnerSlice";
-import { busOwnerUpdate } from "../../apis/busOwner";
+import { busOwnerUpdate, getBuses, getIncome } from "../../apis/busOwner";
 import { updatePassengerInfo } from "../../store/passengerSlice";
 import { notification } from "antd";
+import BusIncomeDisplay from "./Income";
 
 export default function Dashboard() {
   const [isEditing, setIsEditing] = useState(false);
@@ -38,6 +39,10 @@ export default function Dashboard() {
 
   const [userData, setUserData] = useState(originalData);
   const [loading, setLoading] = useState(false);
+  const [buses, setBuses] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [incomeData, setIncomeData] = useState([]);
 
   const handleInputChange = (field, value) => {
     setUserData((prev) => ({ ...prev, [field]: value }));
@@ -56,35 +61,45 @@ export default function Dashboard() {
     setIsEditing(false);
     setShowPopup(false);
   };
-  const buses = [
-    { id: 1, status: "In Route" },
-    { id: 2, status: "In Service" },
-    { id: 3, status: "In Stand" },
-    { id: 4, status: "Not Working" },
-    { id: 5, status: "In Route" },
-    { id: 6, status: "In Route" },
-  ];
 
-  const activeBusesPublicService = buses.filter(
-    (key) => key.status === "In Route"
-  ).length;
-  const activeBusesSpecialService = buses.filter(
-    (key) => key.status === "In Service"
-  ).length;
-  const activeBusesPublicServiceInStand = buses.filter(
-    (key) => key.status === "In Stand"
-  ).length;
+  const fetchedBuses = async () => {
+    try {
+      setLoading(true);
+      const { data, code, msg } = await getBuses(id);
+      const res = await getIncome(id);
 
-  const totalActiveBuses =
-    activeBusesPublicService +
-    activeBusesPublicServiceInStand +
-    activeBusesSpecialService;
+      console.log(res);
+
+      if (code === 0) {
+        setBuses(data);
+      }
+
+      if (res.code === 0) {
+        setIncomeData(res.data);
+        let total = 0;
+        res.data?.forEach((item) => {
+          item.income?.forEach((income) => {
+            total += income.income;
+          });
+        });
+        setTotalIncome(total);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const activeBusesPublicService = buses?.filter(
+    (key) => key.today_work === true
+  ).length;
 
   const dataHeaders = ["AuthorityName", "Email", "Phone", "Address"];
 
   const handleUpdate = async () => {
     try {
-      setLoading(true);
+      setBtnLoading(true);
       if (
         !userData.address ||
         !userData.email ||
@@ -110,9 +125,9 @@ export default function Dashboard() {
       }
       setOriginalData(userData);
       setUserData(userData);
-      setLoading(false);
+      setBtnLoading(false);
     } catch (error) {
-      setLoading(false);
+      setBtnLoading(false);
       console.log("error", error);
       notification.error({
         message: "Something went wrong",
@@ -120,6 +135,9 @@ export default function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    fetchedBuses();
+  }, []);
   return (
     <div className="dashboard">
       <div className="owner-dashboard-header">
@@ -132,7 +150,7 @@ export default function Dashboard() {
             style={{ backgroundColor: "rgba(5, 148, 79, 1)" }}
           ></div>
           <p className="owner-dashboard-count">
-            {totalActiveBuses}/{busesId?.length}
+            {activeBusesPublicService}/{buses?.length}
           </p>
           <p>Active / Total Buses</p>
         </div>
@@ -146,10 +164,11 @@ export default function Dashboard() {
         </div>
         <div className="owner-dashboard-summary-box">
           <span>LKR:</span>
-          <p className="owner-dashboard-count">89290</p>
+          <p className="owner-dashboard-count">{totalIncome}</p>
           <p>Today Revenue</p>
         </div>
       </div>
+
       <div className="owner-dashboard-profile">
         <p>Account Information</p>
         <div className="owner-dashboard-profile-data-field">
@@ -185,7 +204,7 @@ export default function Dashboard() {
             <MyButton
               width={200}
               name="Save"
-              loading={loading}
+              loading={btnLoading}
               color="#05944F"
               onClick={() => {
                 handleSaveClick();
@@ -195,13 +214,16 @@ export default function Dashboard() {
             <MyButton
               width={200}
               name="Update"
-              loading={loading}
+              loading={btnLoading}
               color="#05944F"
               onClick={handleUpdateClick}
             />
           )}
         </div>
       </div>
+
+      <BusIncomeDisplay busData={incomeData} />
+
       {showPopup && (
         <ConfirmationPopup
           message="Are you sure?"

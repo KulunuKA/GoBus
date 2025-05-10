@@ -13,11 +13,13 @@ const {
   closeTicket,
   editePassenger,
   getAuthority,
+  adminLogin,
 } = require("../controllers/admin.controller");
 const { registerPassenger } = require("../controllers/passenger.controller");
 const { registerBusOwner, updateBusOwner } = require("../controllers/busOwner.controller");
 const AdminRouter = Router();
 
+AdminRouter.post("/login", adminLogin)
 AdminRouter.get("/complaints", getComplaints);
 AdminRouter.put("/complaints/:id", complaintResolved);
 AdminRouter.get("/passengers", getPassengers);

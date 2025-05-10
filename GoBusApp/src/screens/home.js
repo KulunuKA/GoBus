@@ -22,10 +22,13 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { calculateDistance } from "../utils/calculateDistance ";
+import useDistanceTracker, {
+  calculateDistance,
+} from "../utils/calculateDistance ";
 
-const SOCKET_URL =
-  "https://8e67-2402-4000-2110-43e6-e4ff-9f5b-627b-33ad.ngrok-free.app";
+import { NGROK_URL } from "../Keys";
+
+const SOCKET_URL = NGROK_URL;
 
 const Home = ({ navigation }) => {
   const [busData, setBusData] = useState(null);
@@ -41,9 +44,6 @@ const Home = ({ navigation }) => {
     today_work: false,
   });
   const mapRef = useRef(null);
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [previousLocation, setPreviousLocation] = useState(null);
-  const distanceUpdateIntervalRef = useRef(null);
   const socketRef = useRef(null);
 
   // Initialize socket connection
@@ -76,6 +76,39 @@ const Home = ({ navigation }) => {
     };
   }, []);
 
+  const stopTrip = async () => {
+    try {
+      setConnecting(true);
+
+      const { code, msg, data } = await handleStatus(busId, {
+        start_trip: false,
+      });
+
+      if (code !== 0) {
+        Alert.alert("Error", msg || "Failed to end trip");
+        setConnecting(false);
+        return;
+      }
+
+      await storeUserData(data.bus);
+      setStart(false);
+      setLocation(null);
+      setLastUpdate(null);
+
+      // Optional: Emit stop message to server
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("endTrip", { busId });
+      }
+
+      ToastAndroid.show("Trip ended successfully", ToastAndroid.SHORT);
+    } catch (error) {
+      console.error("Failed to stop trip:", error);
+      Alert.alert("Error", "Could not stop the trip");
+    } finally {
+      setConnecting(false);
+    }
+  };
+
   const startTrip = useCallback(async () => {
     try {
       setConnecting(true);
@@ -99,11 +132,16 @@ const Home = ({ navigation }) => {
 
       // Update trip status in database
       try {
-        const response = await handleStatus(busId, { start_trip: true });
-        if (response.code !== 0) {
-          Alert.alert("Error", response.msg || "Failed to start trip");
+        const { data, code, msg } = await handleStatus(busId, {
+          start_trip: true,
+        });
+        // console.log("Trip start response:", response);
+        if (code !== 0) {
+          Alert.alert("Error", msg || "Failed to start trip");
           setConnecting(false);
           return null;
+        } else {
+          await storeUserData(data.bus);
         }
       } catch (error) {
         console.error("API Error:", error);
@@ -155,36 +193,6 @@ const Home = ({ navigation }) => {
     }
   }, [busId]);
 
-  const stopTrip = useCallback(
-    async (subscription) => {
-      console.log("Stopping trip with busId:", busId);
-
-      if (busId) {
-        try {
-          const { data, msg, code } = await handleStart(busId, {
-            start_trip: false,
-          });
-          if (code === 0) {
-            console.log("Trip stopped successfully");
-          } else {
-            console.error("Failed to stop trip in database:", msg);
-            Alert.alert("Warning", "Trip stopped but server update failed");
-          }
-        } catch (error) {
-          console.error("Error stopping trip:", error);
-          Alert.alert("Warning", "Trip stopped but server update failed");
-        }
-      }
-
-      setLocation(null);
-      setLastUpdate(null);
-      if (subscription) {
-        subscription.remove();
-      }
-    },
-    [busId]
-  );
-
   useEffect(() => {
     let locationSubscription = null;
 
@@ -201,21 +209,23 @@ const Home = ({ navigation }) => {
         locationSubscription?.remove();
       }
     };
-  }, [start, startTrip, stopTrip]);
+  }, [start, startTrip]);
 
   const getBusData = async () => {
     try {
       const userData = await getUserData();
-      if (userData && userData.length > 0) {
-        setBusData(userData[0]);
-        setBusId(userData[0]._id);
+
+      if (userData) {
+        setBusData(userData);
+        setBusId(userData._id);
+        setStart(userData.start_trip);
         setBusStatus({
           ...busStatus,
-          is_delay: userData[0].is_delay,
-          is_breakdown: userData[0].is_breakdown,
-          today_work: userData[0].today_work,
+          is_delay: userData.is_delay,
+          is_breakdown: userData.is_breakdown,
+          today_work: userData.today_work,
         });
-        console.log("busId set to:", userData[0]._id);
+        console.log("busId set to:", userData._id);
       } else {
         console.log("No bus data found.");
         Alert.alert(
@@ -261,7 +271,8 @@ const Home = ({ navigation }) => {
           );
         }
 
-        if (!status.today_work) {
+        console.log("Status updated successfully:", status);
+        if (!status.today_work && !busStatus.start_trip) {
           navigation.navigate("OffDay", {
             busId: busId,
             totalDistance: totalDistance,
@@ -311,65 +322,7 @@ const Home = ({ navigation }) => {
     );
   };
 
-  // Track distance when trip is active
-  useEffect(() => {
-    if (start && location) {
-      // Initialize previous location when trip starts
-      if (!previousLocation) {
-        setPreviousLocation(location);
-      }
-
-      // Set up regular distance updates
-      distanceUpdateIntervalRef.current = setInterval(async () => {
-        try {
-          // Get current location
-          const { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== "granted") {
-            console.log("Permission to access location was denied");
-            return;
-          }
-
-          const currentLocation = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High,
-          });
-
-          if (previousLocation) {
-            // Calculate distance between previous and current location
-            const distance = calculateDistance(
-              previousLocation.latitude,
-              previousLocation.longitude,
-              currentLocation.coords.latitude,
-              currentLocation.coords.longitude
-            );
-
-            // Only add significant movement to prevent GPS drift from affecting total
-            if (distance > 0.01) {
-              // 10 meters minimum to count
-              setTotalDistance((prevDistance) => prevDistance + distance);
-              setPreviousLocation({
-                latitude: currentLocation.coords.latitude,
-                longitude: currentLocation.coords.longitude,
-              });
-            }
-          }
-        } catch (error) {
-          console.error("Error updating distance:", error);
-        }
-      }, 10000); // Update every 10 seconds
-
-      return () => {
-        if (distanceUpdateIntervalRef.current) {
-          clearInterval(distanceUpdateIntervalRef.current);
-        }
-      };
-    } else if (!start) {
-      // Clear interval when trip ends
-      if (distanceUpdateIntervalRef.current) {
-        clearInterval(distanceUpdateIntervalRef.current);
-        distanceUpdateIntervalRef.current = null;
-      }
-    }
-  }, [start, location, previousLocation]);
+  const totalDistance = useDistanceTracker(start, location);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -386,7 +339,11 @@ const Home = ({ navigation }) => {
             )}
             {/* total distance */}
             {totalDistance > 0 && (
-              <Text style={styles.busInfo}>{totalDistance.toFixed(2)} m</Text>
+              <Text style={styles.busInfo}>
+                {totalDistance < 1000
+                  ? `${totalDistance.toFixed(0)} m`
+                  : `${(totalDistance / 1000).toFixed(2)} km`}
+              </Text>
             )}
           </View>
 
@@ -405,6 +362,7 @@ const Home = ({ navigation }) => {
                   changeStatus({ today_work: !busStatus.today_work });
                 }}
                 value={busStatus.today_work}
+                disabled={connecting || !busId || start}
               />
             </View>
 
@@ -441,7 +399,11 @@ const Home = ({ navigation }) => {
                 title={start ? "End Trip" : "Start Trip"}
                 onPress={() => {
                   if (connecting) return;
-                  setStart(!start);
+                  if (start) {
+                    stopTrip();
+                  } else {
+                    setStart(true);
+                  }
                 }}
                 type={start ? "secondary" : "primary"}
                 disabled={!busId || connecting || !busStatus.today_work}
@@ -490,7 +452,7 @@ const Home = ({ navigation }) => {
                 width="48%"
                 color={"#ffffff"}
                 bgColor={busStatus.is_breakdown ? "#05944F" : "#E53E3E"}
-                disabled={!busId || connecting  || !start}
+                disabled={!busId || connecting || !start}
               />
             </View>
           </View>

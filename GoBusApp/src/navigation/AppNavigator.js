@@ -4,16 +4,13 @@ import Login from "../screens/login";
 import HomeScreen from "../screens/home";
 import OffDayScreen from "../screens/OffDay";
 
+
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
-  useEffect(() => {
-    // removeUserData()
-  }, []);
-
   return (
     <Stack.Navigator
-      initialRouteName={"Home"}
+      initialRouteName={"Login"}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Login" component={Login} />
