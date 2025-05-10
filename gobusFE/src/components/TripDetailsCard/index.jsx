@@ -196,18 +196,9 @@ export default function TripDetailsCard({ trip, refresh }) {
             <div className="trips-popup-detail-field">
               <p className="trips-popup-detail-label ">Req. Note:</p>
               <p className="trips-popup-detail-data long-data-field">
-                {tripDetails.note}
+                {tripDetails.description}
               </p>
             </div>
-
-            {trip.status !== "pending" && (
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label ">Req. Reply:</p>
-                <p className="trips-popup-detail-data long-data-field">
-                  {tripDetails.reply}
-                </p>
-              </div>
-            )}
 
             {trip.status === "pending" && (
               <div className="trips-popup-btn-section">
@@ -221,7 +212,10 @@ export default function TripDetailsCard({ trip, refresh }) {
                     >
                       <p>Edit</p>
                     </div>
-                    <div className="trips-popup-btn-cancle" onClick={deleteTrip}>
+                    <div
+                      className="trips-popup-btn-cancle"
+                      onClick={deleteTrip}
+                    >
                       <p>Cancel Request</p>
                     </div>
                   </>

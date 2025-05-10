@@ -11,6 +11,9 @@ const addBus = async (req, res, next) => {
       !req.body.password ||
       !req.body.pictures ||
       !req.body.seatNumber ||
+      !req.body.fuel_consumption ||
+      !req.body.max_fuel_level ||
+      !req.body.current_fuel_level ||
       !req.body.busType ||
       !req.body.district ||
       !req.body.city

@@ -73,6 +73,14 @@ const busSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  max_fuel_level: {
+    type: Number,
+    required: true,
+  },
+  current_fuel_level: {
+    type: Number,
+    required: true,
+  },
   daily_income: [
     {
       date: {
@@ -173,7 +181,6 @@ busSchema.pre("findOneAndDelete", async function (next) {
     next(error);
   }
 });
-
 
 const Bus = mongoose.model("Bus", busSchema);
 

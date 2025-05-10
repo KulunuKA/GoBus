@@ -27,6 +27,9 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     password: data.password,
     busNumber: data.busNumber,
     seatNumber: data.seatNumber,
+    fuel_consumption: data.fuel_consumption,
+    max_fuel_level: data.max_fuel_level,
+    current_fuel_level: data.current_fuel_level,
     busType: data.busType,
     ac: data.ac,
     district: data.district,
@@ -128,6 +131,31 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
       newErrors.seatNumber = "Seat Number must be between 1 and 60";
     }
 
+    if (!values.fuel_consumption) {
+      newErrors.fuel_consumption = "Average Fuel Consumption is required";
+    } else if (values.fuel_consumption < 1) {
+      newErrors.fuel_consumption =
+        "Average Fuel Consumption must be a positive value";
+    }
+
+    if (!values.max_fuel_level) {
+      newErrors.max_fuel_level = "Max Fuel Level is required";
+    } else if (values.max_fuel_level < 1) {
+      newErrors.max_fuel_level = "Max Fuel Level must be a positive value";
+    }
+
+    if (!values.current_fuel_level) {
+      newErrors.current_fuel_level = "Current Fuel Level is required";
+    } else if (values.current_fuel_level < 1) {
+      newErrors.current_fuel_level =
+        "Current Fuel Level must be a positive value";
+    }
+
+    if (values.current_fuel_level > values.max_fuel_level) {
+      newErrors.current_fuel_level =
+        "Current level must be equal or lower than the Max level";
+    }
+
     if (values.pictures.some((pic) => pic === "")) {
       setIsImgErr("All images must be uploaded");
     }
@@ -192,7 +220,6 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
         timetable:
           busData.busType === "public transport" ? timetableRounds : [],
       };
-
 
       const { data, code, msg } = await updateBusAPI(id, submissionData);
       if (code === 0) {
@@ -340,6 +367,36 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
                 onChange={inputHandle("seatNumber")}
                 value={busData.seatNumber}
               />
+
+              <MyInput
+                label={"Average Fuel Consumption"}
+                type="number"
+                onChange={inputHandle("fuel_consumption")}
+                value={busData.fuel_consumption}
+                error={errors.fuel_consumption}
+                errorMessage={errors.fuel_consumption}
+                placeholder={"Kilometers per liter (km/L)"}
+              />
+              <MyInput
+                label={"Maximum Fuel Level"}
+                type="number"
+                onChange={inputHandle("max_fuel_level")}
+                value={busData.max_fuel_level}
+                error={errors.max_fuel_level}
+                errorMessage={errors.max_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
+              <MyInput
+                label={"Current Fuel Level"}
+                type="number"
+                onChange={inputHandle("current_fuel_level")}
+                value={busData.current_fuel_level}
+                error={errors.current_fuel_level}
+                errorMessage={errors.current_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
               <div className="bt-select">
                 <label>District</label>
                 <DropDown
