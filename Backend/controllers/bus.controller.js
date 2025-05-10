@@ -122,6 +122,7 @@ const getBusesPassenger = async (req, res, next) => {
       buses = buses.filter((bus) => {
         if (!bus.route_id) return false;
         const cities = bus.route_id.main_cities;
+
         const city1 = cities.includes(req.query.start);
         const city2 = cities.includes(req.query.end);
         return city1 && city2;

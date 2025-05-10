@@ -67,6 +67,10 @@ export default function BookForm({ isOpen, onClose }) {
       newErrors.description = "Description is required";
     }
 
+    if (values.description.length > 100) {
+      newErrors.description = "Description should be less than 100 characters";
+    }
+
     console.log(newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

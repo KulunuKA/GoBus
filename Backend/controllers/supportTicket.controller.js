@@ -3,16 +3,19 @@ const AppError = require("../utils/appError");
 
 const createTicket = async (req, res, next) => {
   try {
+    //backend validation
     if (!req.body.userId || !req.body.subject || !req.body.description) {
       return next(new AppError(400, "Invalid required fields"));
     }
+
     const ticket = new Ticket(req.body);
+
     await ticket.save();
 
     res.status(200).send({
       data: ticket,
       code: 0,
-      msg: "Ticket Opend",
+      msg: "Ticket Opened successfully",
     });
   } catch (error) {
     console.log(error);
