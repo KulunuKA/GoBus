@@ -11,6 +11,9 @@ const addBus = async (req, res, next) => {
       !req.body.password ||
       !req.body.pictures ||
       !req.body.seatNumber ||
+      !req.body.fuel_consumption ||
+      !req.body.max_fuel_level ||
+      !req.body.current_fuel_level ||
       !req.body.busType ||
       !req.body.district ||
       !req.body.city
@@ -55,7 +58,7 @@ const updateBusStatus = async (req, res, next) => {
       msg: "Updated",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error.name === "ValidationError") {
       return next(new AppError(400, error.message));
     }
@@ -119,6 +122,7 @@ const getBusesPassenger = async (req, res, next) => {
       buses = buses.filter((bus) => {
         if (!bus.route_id) return false;
         const cities = bus.route_id.main_cities;
+
         const city1 = cities.includes(req.query.start);
         const city2 = cities.includes(req.query.end);
         return city1 && city2;
@@ -161,6 +165,8 @@ const getBus = async (req, res, next) => {
     next(new AppError(500, "Server error"));
   }
 };
+
+
 
 module.exports = {
   addBus,

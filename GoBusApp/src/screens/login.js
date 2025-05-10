@@ -43,7 +43,6 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     Keyboard.dismiss();
-
     try {
       // Form validation
       let newErrors = {};
@@ -67,7 +66,7 @@ const LoginScreen = ({ navigation }) => {
 
       const response = await loginUser(credentials);
       const { data, msg, code } = response;
-
+      console.log("Login response:", response);
       if (code === 0) {
         await storeUserData(data);
         navigation.navigate("Home", { busData: data });

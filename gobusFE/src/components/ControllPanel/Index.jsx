@@ -10,11 +10,12 @@ import { MdContactSupport, MdDashboard, MdOutlineRoute } from "react-icons/md";
 import { LuBadgeAlert } from "react-icons/lu";
 import { IoIosMore, IoIosNotifications, IoMdSettings } from "react-icons/io";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ControllPanel() {
   const [tab, setTab] = useState("dashboard");
   const navigate = useNavigate();
+  const location = useLocation();
   const [showMore, setShowMore] = useState(false);
 
   const adminData = {
@@ -74,7 +75,7 @@ export default function ControllPanel() {
       icon: <IoChatbubbleEllipsesSharp />,
     },
     {
-      name: "support",
+      name: "supports",
       title: "Help & Support",
       query: "supports",
       icon: <MdContactSupport />,
@@ -88,9 +89,9 @@ export default function ControllPanel() {
   ];
 
   useEffect(() => {
-    const path = window.location.pathname.split("/")[2];
+    const path = location.pathname.split("/")[2];
     setTab(path);
-  }, []);
+  }, [location.pathname]);
 
   return (
     <>

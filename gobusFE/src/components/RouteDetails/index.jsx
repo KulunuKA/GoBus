@@ -1,5 +1,6 @@
 import React from "react";
 import { Modal } from "antd";
+import "./style.css";
 
 export default function RouteDetails({ isOpen, onClose, route }) {
   const key_values = [
