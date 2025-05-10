@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Truck, DollarSign, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  Truck,
+  DollarSign,
+  MapPin,
+  ReceiptTextIcon,
+} from "lucide-react";
 import "./style.css";
+import MyButton from "../../components/button";
+import { BusIncomePDFDownload } from "./BusIncome";
 
-export default function BusIncomeDisplay({busData}) {
+export default function BusIncomeDisplay({ busData }) {
   const [selectedBus, setSelectedBus] = useState(null);
   const [incomeData, setIncomeData] = useState([]);
 
@@ -116,6 +124,8 @@ export default function BusIncomeDisplay({busData}) {
             )}
           </div>
         ))}
+
+        <BusIncomePDFDownload busData={busData} />
       </div>
     </div>
   );

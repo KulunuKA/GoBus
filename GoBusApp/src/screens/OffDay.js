@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -30,6 +30,9 @@ const OffDayScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
   const [incomeHistory, setIncomeHistory] = useState([]);
+  const [busData, setBusData] = useState({});
+  const [fuelConsumption, setFuelConsumption] = useState(0);
+  const [currentFuel, setCurrentFuel] = useState(0);
 
   const handleSubmit = async () => {
     setError({});
@@ -54,6 +57,10 @@ const OffDayScreen = ({ navigation }) => {
       setIsLoading(true);
 
       const { data, msg, code } = await addIncome(busId, incomeData);
+
+      const res = await handleStatus(busId, {
+        current_fuel_level: updateCurrentFuel(),
+      });
       // Show success message
       if (code == 0) {
         navigation.navigate("Home");
@@ -91,7 +98,10 @@ const OffDayScreen = ({ navigation }) => {
       const userData = await getUserData();
       console.log(userData);
       if (userData) {
+        setBusData(userData);
         setIncomeHistory(userData.daily_income);
+        setFuelConsumption(busData.fuel_consumption);
+        setCurrentFuel(busData.current_fuel_level);
       }
     } catch (error) {
       console.error("Error getting bus data:", error);
@@ -99,12 +109,14 @@ const OffDayScreen = ({ navigation }) => {
     }
   };
 
+  const updateCurrentFuel = () => {
+    return currentFuel - totalDistance / fuelConsumption;
+  };
+
   useEffect(() => {
     // removeUserData()
     getBusData();
   }, []);
-
-  console.log(incomeHistory);
 
   return (
     <SafeAreaView style={styles.safeArea}>
