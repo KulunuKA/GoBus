@@ -43,7 +43,6 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     Keyboard.dismiss();
-
     try {
       // Form validation
       let newErrors = {};

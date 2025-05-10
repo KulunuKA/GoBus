@@ -25,7 +25,7 @@ const OffDayScreen = ({ navigation }) => {
   const [incomeData, setIncomeData] = useState({
     income: 0,
     date: new Date().toISOString().split("T")[0],
-    distance: totalDistance,
+    distance: totalDistance.toFixed(2),
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({});
@@ -55,11 +55,12 @@ const OffDayScreen = ({ navigation }) => {
 
     try {
       setIsLoading(true);
+      const fuel = updateCurrentFuel();
 
       const { data, msg, code } = await addIncome(busId, incomeData);
 
       const res = await handleStatus(busId, {
-        current_fuel_level: updateCurrentFuel(),
+        current_fuel_level: fuel.toFixed(2),
       });
       // Show success message
       if (code == 0) {
@@ -96,12 +97,13 @@ const OffDayScreen = ({ navigation }) => {
   const getBusData = async () => {
     try {
       const userData = await getUserData();
-      console.log(userData);
+
       if (userData) {
         setBusData(userData);
         setIncomeHistory(userData.daily_income);
-        setFuelConsumption(busData.fuel_consumption);
-        setCurrentFuel(busData.current_fuel_level);
+
+        setFuelConsumption(userData.fuel_consumption);
+        setCurrentFuel(userData.current_fuel_level);
       }
     } catch (error) {
       console.error("Error getting bus data:", error);
@@ -110,7 +112,11 @@ const OffDayScreen = ({ navigation }) => {
   };
 
   const updateCurrentFuel = () => {
-    return currentFuel - totalDistance / fuelConsumption;
+    if (totalDistance === 0) {
+      return currentFuel;
+    }
+    const fuelBalance = currentFuel - totalDistance / fuelConsumption;
+    return fuelBalance < 0 ? 0 : fuelBalance;
   };
 
   useEffect(() => {

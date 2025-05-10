@@ -324,10 +324,6 @@ const Home = ({ navigation }) => {
 
   const totalDistance = useDistanceTracker(start, location);
 
-  useEffect(() => {
-    console.log("Distance Updated:", totalDistance);
-  }, [totalDistance]);
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
