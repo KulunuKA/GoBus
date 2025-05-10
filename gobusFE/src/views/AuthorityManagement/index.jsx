@@ -156,7 +156,6 @@ export default function AuthorityManagement() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [view, setView] = useState(false);
   const [selectedAuthority, setSelectedAuthority] = useState(null);
-  
 
   const columns = [
     { key: "authorityName", title: "Name", type: "text" },
@@ -262,6 +261,7 @@ export default function AuthorityManagement() {
             setSelectedAuthority(data);
             setIsUpdate(true);
           }}
+          isDelete={false}
           onDelete={(data) => {
             confirm({
               title: "Are you sure you want to delete this Authority?",

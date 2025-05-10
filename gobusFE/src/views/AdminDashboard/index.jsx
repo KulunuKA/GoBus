@@ -3,15 +3,22 @@ import "./style.css";
 import PieCharts from "../../components/PieChart";
 import { getPassengersAD, getAuthoritiesAD } from "../../apis/adminAPIs";
 import Loading from "../../components/Loading";
+import { getPublicBuses, getSpecialBuses } from "../../apis/passengerAPIs";
 
 export default function AdminDashboard() {
   const [passengers, setPassengers] = useState([]);
   const [authorities, setAuthorities] = useState([]);
+  const [publicBusses, setPublicBusses] = useState([]);
+  const [specialBusses, setSpecialBusses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
   const [userData, setUserData] = useState([
     { name: "Passengers", value: 0, color: "#7BC4A0" },
     { name: "Bus Owners", value: 0, color: "#05944F" },
+  ]);
+  const [busData, setBusData] = useState([
+    { name: "Public Service", value: 0, color: "#7BC4A0" },
+    { name: "Special Service", value: 0, color: "#05944F" },
   ]);
 
   const fetchAuthorities = async () => {
@@ -50,9 +57,53 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchPublicBuses = async (
+    type = "public transport",
+    start,
+    end,
+    condition
+  ) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getPublicBuses(
+        type,
+        start,
+        end,
+        condition
+      );
+      if (code === 0) {
+        setPublicBusses(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
+  const fetchSpecialBuses = async (type = "special service", dis, cit) => {
+    try {
+      setIsError("");
+      setLoading(true);
+      const { data, code, msg } = await getSpecialBuses(type, dis, cit);
+      if (code === 0) {
+        setSpecialBusses(data);
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setIsError("Something went wrong!");
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchPassengers();
     fetchAuthorities();
+    fetchPublicBuses();
+    fetchSpecialBuses();
   }, []);
 
   useEffect(() => {
@@ -65,6 +116,15 @@ export default function AdminDashboard() {
       {
         name: "Bus Owners",
         value: authorities.length,
+        color: "#05944F",
+      },
+    ]);
+
+    setBusData([
+      { name: "Public Service", value: publicBusses.length, color: "#7BC4A0" },
+      {
+        name: "Special Service",
+        value: specialBusses.length,
         color: "#05944F",
       },
     ]);
@@ -91,12 +151,9 @@ export default function AdminDashboard() {
           </div>
           <div className="chart-card">
             <h3>Total Buses</h3>
-            <PieCharts data={userData} title={"Bus Insights"} />{" "}
-            {/* You might want different data for this chart */}
+            <PieCharts data={busData} title={"Bus Insights"} />{" "}
           </div>
-          {/* You can add more chart cards here */}
         </div>
-        {/* You can add other relevant information or components here */}
       </main>
     </div>
   );

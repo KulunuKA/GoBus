@@ -13,6 +13,7 @@ export default function DataTable({
   onDelete,
   loading,
   onView,
+  isDelete = true,
 }) {
   return (
     <>
@@ -50,7 +51,6 @@ export default function DataTable({
                           alt="Item"
                           className="table-image"
                         />
-                       
                       </>
                     ) : col.type === "boolean" ? (
                       row[col.key] ? (
@@ -75,16 +75,18 @@ export default function DataTable({
                         onEdit(row);
                       }}
                     />
-                    <MyButton
-                      size="small"
-                      name="Delete"
-                      color={"#e74c3c"}
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(row);
-                      }}
-                    />
+                    {isDelete && (
+                      <MyButton
+                        size="small"
+                        name="Delete"
+                        color={"#e74c3c"}
+                        icon={<DeleteOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(row);
+                        }}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
