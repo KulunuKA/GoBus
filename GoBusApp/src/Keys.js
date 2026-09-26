@@ -1,0 +1,1 @@
+export const NGROK_URL = "https://803f-2402-4000-2080-492e-c5ac-561a-7172-1078.ngrok-free.app"

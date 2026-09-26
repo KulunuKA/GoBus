@@ -59,6 +59,10 @@ export default function Passenger() {
 
     if (values.mobile && values.mobile.length < 10) {
       newErrors.mobile = "Mobile must be at least 10 characters";
+    } else if (!/^\d+$/.test(values.mobile)) {
+      newErrors.mobile = "Phone must be a number";
+    } else if (values.mobile.length < 10) {
+      newErrors.mobile = "Phone must be at least 10 characters";
     }
 
     setInputErr(newErrors);

@@ -32,6 +32,8 @@ export default function Trips() {
 
   const declinedTrips = trips.filter((trip) => trip.status === "rejected");
 
+  
+
   const TabList = [
     { name: "Upcomings", tabName: "upcomings" },
     { name: "Pendings", tabName: "pendings" },

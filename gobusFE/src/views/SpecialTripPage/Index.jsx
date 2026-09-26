@@ -167,7 +167,11 @@ export default function Special() {
                 ) : (
                   <div className="special-results">
                     {buses
-                      ?.filter((e) => e.name.includes(searchText))
+                      ?.filter((e) =>
+                        e.name
+                          ?.toLowerCase()
+                          .includes(searchText?.toLowerCase())
+                      )
                       .map((bus) => (
                         <div key={bus._id} className="special-result">
                           <BusItemCard

@@ -1,78 +1,67 @@
-.bus-details {
-  margin-top: 10px;
+.bus-details-s {
   padding: 20px;
-  max-height: 70vh;
-  overflow-y: auto;
-  background: #ffffff;
 }
 
-.bd-header {
-  width: 100%;
-  text-align: center;
+.bd-header-s {
+  border-bottom: 2px solid #05944f;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 20px;
 }
 
-.bd-header p {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #2c3e50;
-}
-
-.bd-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.bd-content p {
-  font-size: 16px;
-  font-weight: 500;
-  color: #34495e;
-  margin: 5px 0;
-}
-
-.bd-content-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bd-content-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.bd-content-item p {
-  font-size: 16px;
-  font-weight: 500;
-  color: #2c3e50;
+.bd-header-s p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #05944f;
   margin: 0;
 }
 
-.bd-content-item p:first-child {
-  font-weight: 600;
-  color: #34495e;
-}
-
-.bus-pictures-container {
+.bd-content-s > div {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
+  flex-direction: column;
 }
 
-.bus-pictures-container img {
-  width: 130px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
+.bus-pictures-container-s {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  overflow-x: auto;
+}
+
+.bus-pictures-container-s img {
+  max-width: 150px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.bd-content-item-s {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 30px;
+}
+
+.bd-content-item-s p:first-child {
+  min-width: 150px;
+  font-weight: bold;
+  color: #2d3436;
+}
+
+.bd-content-item-s p:last-child {
+  flex: 1;
+  color: #2d3436;
+  word-break: break-word;
+}
+
+.fuel-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.fuel-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2d3436;
+  margin-bottom: 5px;
 }

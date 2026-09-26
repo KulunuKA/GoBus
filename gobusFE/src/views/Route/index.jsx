@@ -136,6 +136,7 @@ export default function Route() {
                     <td>{route.distance + " KM"}</td>
                     <td>
                       <MyButton
+                        size="small"
                         name="Edit"
                         color={"rgba(5, 148, 79, 1)"}
                         icon={<EditOutlined />}
@@ -147,6 +148,7 @@ export default function Route() {
                         }}
                       />
                       <MyButton
+                        size="small"
                         name="Delete"
                         color={"#e74c3c"}
                         icon={<DeleteOutlined />}

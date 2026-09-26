@@ -7,7 +7,6 @@ import ErrorMessage from "../../components/ErrorMessage";
 import EmptyDataMessage from "../../components/EmptyDataMessage";
 import { FaRegEnvelope, FaRegEnvelopeOpen } from "react-icons/fa";
 import ComplaintDetails from "../../components/ComplaintDetails";
-import Dropdown from "../../components/Dropdown";
 import { getComplaintsAD } from "../../apis/adminAPIs";
 
 export default function ComplaintManagement() {
@@ -38,6 +37,10 @@ export default function ComplaintManagement() {
     fetchComplaints();
   }, []);
 
+  const filterComplaints = complaints.filter((complaint) => {
+    return complaint.userID?.toLowerCase().includes(searchText?.toLowerCase());
+  });
+
   return (
     <div className="complaint-management">
       <div className="complaint-header">
@@ -63,41 +66,17 @@ export default function ComplaintManagement() {
       </div>
       <div className="complaint-body">
         <div className="complaint-body-header">
-          <div style={{ width: "300px" }}>
-            <MyInput
-              placeholder="Enter User ID"
-              prefix={<SearchOutlined />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              borderRadius="7px"
-              width="200px"
-            />
-          </div>
-          <div style={{ width: "300px" }}>
-            <MyInput
-              placeholder="Filter By Date"
-              prefix={<SearchOutlined />}
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              borderRadius="7px"
-              type="date"
-              width="200px"
-            />
-          </div>
-          <div>
-            <Dropdown
-              placeholder={"Complaints About"}
-              width="200px"
-              borderRadius="7px"
-            />
-          </div>
-
-          <div>
-            <Dropdown
-              placeholder={"Resolved / In Progress"}
-              width="200px"
-              borderRadius="7px"
-            />
+          <div style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
+              <MyInput
+                placeholder="Search by User Id"
+                prefix={<SearchOutlined />}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                height=""
+                borderRadius="7px"
+              />
+            </div>
           </div>
         </div>
 
@@ -124,14 +103,14 @@ export default function ComplaintManagement() {
                   <ErrorMessage message={isError} />
                 </td>
               </tr>
-            ) : complaints.length === 0 ? (
+            ) : filterComplaints.length === 0 ? (
               <tr>
                 <td colSpan="6" className="center-content">
                   <EmptyDataMessage message="No Complaints to show" />
                 </td>
               </tr>
             ) : (
-              complaints.map((c, index) => (
+              filterComplaints.map((c, index) => (
                 <tr
                   className={
                     c.status === "Inprogress" ? "unchecked" : undefined

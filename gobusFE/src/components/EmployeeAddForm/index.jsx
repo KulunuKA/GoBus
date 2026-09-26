@@ -125,6 +125,8 @@ export default function EmployeeForm({ isOpen, onCancel, refresh }) {
                     label: e,
                     value: e,
                   }))}
+                  error={errors.position}
+                  errorMessage={errors.position}
                 />
               </div>
             </div>

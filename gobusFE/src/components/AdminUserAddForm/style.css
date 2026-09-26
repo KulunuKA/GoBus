@@ -1,0 +1,30 @@
+.auaf-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px;
+}
+
+.auaf-topic h2 {
+  color: #374151;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.auaf-details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auaf-input {
+  width: 100%;
+}
+
+.auaf-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+

@@ -1,0 +1,86 @@
+.req-body-content {
+  min-height: 30vh;
+  background-color: #fff;
+}
+
+.request-card {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.request-top {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-top p {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.request-bottom {
+  margin-bottom: 15px;
+}
+
+.requestDetail {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.detailLabel {
+  font-weight: 600;
+  color: #666;
+  margin-right: 10px;
+  min-width: 100px;
+}
+
+.requestActions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.requestActions > div {
+  width: fit-content;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Add this style to your style.css or a relevant CSS file */
+.pdf-download-link-request {
+  background-color: #2d3436;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  transition: background-color 0.3s;
+  margin-left: 10px; /* Add some spacing from other buttons */
+}
+
+.pdf-download-link-request:hover {
+  background-color: #1e2628;
+  color: white;
+}
+
+.pdf-download-link-request:before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' /%3E%3C/svg%3E");
+  background-size: contain;
+  display: inline-block;
+}

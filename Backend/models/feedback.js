@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const feedbackSchema = new mongoose.Schema({
-  userID: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Passenger",
     required: true,
   },
-  busID: {
-    type: String,
+  bus_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Bus",
     required: true,
   },
   feedback: {

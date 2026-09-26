@@ -77,3 +77,37 @@ tr:hover {
 .bnd{
     margin-right: 10px;
 }
+
+
+.bus-body-header > div:last-child {
+  display: flex;
+  gap: 10px;
+  align-items: center; 
+}
+
+.pdf-download-link-fuel {
+  background-color: #05944F;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.pdf-download-link-fuel:hover {
+  background-color: #04753b;
+  color: white;
+}
+
+.pdf-download-link-fuel:before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 15v-1a4 4 0 00-4-4H8m0 0l3-3m-3 3l3 3m-1 14v-1a4 4 0 014-4h8m0 0l-3-3m3 3l-3-3' /%3E%3C/svg%3E");
+  background-size: contain;
+  display: inline-block;
+}
