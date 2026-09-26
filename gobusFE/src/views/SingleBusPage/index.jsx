@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./style.css";
 import bus from "../../assets/images/singlebus.jpg";
 import driver from "../../assets/images/passenger.jpg";
-import click from "../../assets/images/click.png";
 import RouteQueueSlider from "../../components/RouteQueueSlider/index";
 import location from "../../assets/images/location.png";
 import reservation from "../../assets/images/reservation.png";
-import FeedbackSlider from "../../components/FeedbackSlider/index";
 import PassengerButton from "../../components/PassengerButton";
-import { Rate } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import { getBus } from "../../apis/passengerAPIs";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import BookForm from "../../components/BookForm";
@@ -17,6 +13,7 @@ import SignInModal from "../../components/SignInModal";
 import { passengerData } from "../../store/passengerSlice";
 import { useSelector } from "react-redux";
 import { convertTo12HourFormat } from "../../util/time_format";
+import Feedback from "./Feedback";
 
 const busDetails = {
   busNumber: "NB-1234",
@@ -54,19 +51,7 @@ const busDetails = {
   },
 };
 
-const calOverallReviewsCount = (numReviewBus, numReviewDriver) => {
-  return numReviewBus + numReviewDriver;
-};
 
-const calOverallRating = (busRating, driverRating) => {
-  if (typeof busRating !== "number" || typeof driverRating !== "number") {
-    throw new Error("Invalid rating value");
-  }
-
-  const overallRating = (busRating + driverRating) / 2;
-
-  return Math.round(overallRating * 10) / 10;
-};
 
 const busRoutes = [
   {
@@ -104,10 +89,7 @@ const busRoutes = [
 ];
 
 export default function SingleBusPage() {
-  const [passengerFeedbacksShow, setPassengerFeedbacksShow] = useState(true);
-  const [feedbackType, setFeedbackType] = useState("bus");
-  const [showRatingForm, setShowRatingForm] = useState(false);
-  const [feedbackData, setFeedBackData] = useState({ rating: 0, feedback: "" });
+
   const { id } = useParams();
   const [bus, setBus] = useState({
     busNumber: "",
@@ -140,50 +122,6 @@ export default function SingleBusPage() {
     }
   };
 
-  const handleRatingChange = (value) => {
-    setFeedBackData((prev) => ({ ...prev, rating: value }));
-  };
-
-  const handleFeedbackChange = (e) => {
-    setFeedBackData((prev) => ({ ...prev, feedback: e.target.value }));
-  };
-
-  const handleRatingSubmit = () => {
-    if (feedbackType === "bus") {
-      window.alert("You Gave Feedback for Bus Service!! ", feedbackData.rating);
-    } else if (feedbackType === "driver") {
-      window.alert("You Gave Feedback for Bus Driver!! ", feedbackData.rating);
-    }
-    setFeedBackData({ rating: 0, feedback: "" });
-  };
-
-  let feedbackContent;
-
-  if (feedbackType === "bus") {
-    feedbackContent = (
-      <>
-        <FeedbackSlider feedbackArray={busDetails.feedbacks} />
-      </>
-    );
-  }
-
-  if (feedbackType === "driver") {
-    feedbackContent = (
-      <>
-        <FeedbackSlider feedbackArray={busDetails.driver.feedbacks} />
-      </>
-    );
-  }
-
-  const handleClickHere = () => {
-    setPassengerFeedbacksShow(false);
-    setShowRatingForm(true);
-  };
-
-  const handleClickOnReview = () => {
-    setPassengerFeedbacksShow((prev) => !prev);
-    setShowRatingForm((prev) => !prev);
-  };
 
   useEffect(() => {
     fetchBus();
@@ -197,6 +135,7 @@ export default function SingleBusPage() {
       return () => clearInterval(interval);
     }
   }, [currentIndex]);
+  
   return (
     <>
       <div className="main-passenger-container">
@@ -310,138 +249,7 @@ export default function SingleBusPage() {
             </div>
           )}
 
-          <div className="single-bus-feedback-rating-section">
-            <div className="single-bus-info-box">
-              <div className="info-box-header">
-                <h3>Feedback & Ratings</h3>
-              </div>
-              <div className="single-bus-overall-ratings">
-                <div className="rating-display-box">
-                  <h2 className="rate-number">
-                    {calOverallRating(
-                      busDetails.rating,
-                      busDetails.driver.rating
-                    )}
-                  </h2>
-                  <p className="rate-category">Overall Rating</p>
-                </div>
-                <div className="rating-display-box">
-                  <h2 className="rate-number">{busDetails.rating}</h2>
-                  <p className="rate-category">Bus Service</p>
-                </div>
-                <div className="rating-display-box">
-                  <h2 className="rate-number">{busDetails.driver.rating}</h2>
-                  <p className="rate-category">Bus Driver</p>
-                </div>
-                <div
-                  className="rating-display-box"
-                  onClick={handleClickOnReview}
-                >
-                  <h2 className="rate-number">
-                    {calOverallReviewsCount(
-                      busDetails.feedbacks.length,
-                      busDetails.driver.feedbacks.length
-                    )}
-                  </h2>
-                  <p className="rate-category">Reviews</p>
-                </div>
-              </div>
-              {passengerFeedbacksShow && (
-                <div className="single-bus-overall-feedbacks">
-                  <div className="single-bus-overall-feedbacks-header">
-                    <p
-                      className={feedbackType === "bus" ? "active" : ""}
-                      onClick={() => setFeedbackType("bus")}
-                    >
-                      Reviews about Bus Service
-                    </p>
-                    <div className="vr-line"></div>
-                    <p
-                      className={feedbackType === "driver" ? "active" : ""}
-                      onClick={() => setFeedbackType("driver")}
-                    >
-                      Reviews about Bus Driver
-                    </p>
-                  </div>
-                  <div className="single-bus-overall-feedbacks-contents">
-                    {feedbackContent}
-                  </div>
-                </div>
-              )}
-              <div className="single-bus-passenger-feedbacking-section">
-                {!showRatingForm && (
-                  <div className="single-bus-passenger-feedbacking-section-message">
-                    <p>
-                      We value your feedback!{" "}
-                      <span onClick={handleClickHere}>Click here</span> to rate
-                      our service!
-                    </p>
-                  </div>
-                )}
-                {showRatingForm && (
-                  <div className="single-bus-overall-feedbacks">
-                    <div className="single-bus-overall-feedbacks-header">
-                      <p
-                        className={feedbackType === "bus" ? "active" : ""}
-                        onClick={() => setFeedbackType("bus")}
-                      >
-                        Rate about Bus Service
-                      </p>
-                      <div className="vr-line"></div>
-                      <p
-                        className={feedbackType === "driver" ? "active" : ""}
-                        onClick={() => setFeedbackType("driver")}
-                      >
-                        Rate about Bus Driver
-                      </p>
-                    </div>
-                    <div className="single-bus-overall-feedbacks-contents">
-                      <div className="single-bus-feedback-rate-box">
-                        <div className="star-rate-section">
-                          {feedbackType === "bus" && (
-                            <p>Give Your Rate about Service : </p>
-                          )}
-                          {feedbackType === "driver" && (
-                            <p>Give Your Rate about Driver : </p>
-                          )}
-                          <Rate
-                            allowHalf
-                            defaultValue={2.5}
-                            onChange={handleRatingChange}
-                          />
-                        </div>
-                        <div className="star-rate-section">
-                          {feedbackType === "bus" && (
-                            <p>Give Your Feedback about Service : </p>
-                          )}
-                          {feedbackType === "driver" && (
-                            <p>Give Your Feedback about Driver : </p>
-                          )}
-                          <TextArea
-                            rows={4}
-                            placeholder="Enter your feedback here..."
-                            value={feedbackData.feedback}
-                            onChange={handleFeedbackChange}
-                            style={{ margin: "10px 0" }}
-                          />
-                        </div>
-                        <div className="feedback-btn">
-                          <PassengerButton
-                            name="SUBMIT"
-                            borderRadius="5px"
-                            fontSize="18px"
-                            fontWeight="500"
-                            icon={click}
-                            onClick={handleRatingSubmit}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+         <Feedback busDetails={bus}/>
         </div>
       </div>
     </>
@@ -519,6 +327,7 @@ const BusInfo = ({ data }) => {
     return (
       <>
         {data.busType === "public transport" &&
+          data.today_work &&
           data.start_trip &&
           !data.is_delay &&
           !data.is_breakdown && (
@@ -564,16 +373,7 @@ const BusInfo = ({ data }) => {
               </p>
             </div>
           )}
-        {data.busType === "public transport" &&
-          data.start_trip &&
-          !data.is_delay &&
-          !data.is_breakdown && (
-            <div className="information-with-btn">
-              <p className="information-with-btn-para">
-                Bus Status: The bus is on time but has not started yet.
-              </p>
-            </div>
-          )}
+
         {data.busType === "public transport" &&
           data.start_trip &&
           data.is_breakdown && (

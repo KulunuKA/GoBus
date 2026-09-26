@@ -10,6 +10,7 @@ export default function EditableField({
   onChange,
   onSave,
   onEdit,
+  readOnly = false,
 }) {
   return (
     <>
@@ -17,7 +18,7 @@ export default function EditableField({
         <div className="passenger-profile-account-data-filed">
           <p className="passenger-profile-account-data-title">{label}</p>
 
-          {isEditing ? (
+          {isEditing && !readOnly ? (
             <input
               type="text"
               value={data}
@@ -28,16 +29,18 @@ export default function EditableField({
             <p className="passenger-profile-account-data">{data}</p>
           )}
         </div>
-        <img
-          src={isEditing ? save : edit}
-          alt=""
-          onClick={isEditing ? onSave : onEdit}
-          className={
-            isEditing
-              ? "passenger-profile-account-data-save"
-              : "passenger-profile-account-data-edit"
-          }
-        />
+        {!readOnly && (
+          <img
+            src={isEditing ? save : edit}
+            alt=""
+            onClick={isEditing ? onSave : onEdit}
+            className={
+              isEditing
+                ? "passenger-profile-account-data-save"
+                : "passenger-profile-account-data-edit"
+            }
+          />
+        )}
       </div>
     </>
   );

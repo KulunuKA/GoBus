@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./style.css";
 import { Modal, notification } from "antd";
-import { updateTrip } from "../../apis/passengerAPIs";
+import { cancelTrip, updateTrip } from "../../apis/passengerAPIs";
 
 export default function TripDetailsCard({ trip, refresh }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -45,6 +45,24 @@ export default function TripDetailsCard({ trip, refresh }) {
       if (code === 0) {
         notification.success({
           message: "Trip updated successfully!",
+        });
+        refresh();
+        setShowPopup(false);
+      }
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: "Something went wrong!",
+      });
+    }
+  };
+
+  const deleteTrip = async () => {
+    try {
+      const { data, code, msg } = await cancelTrip(trip._id);
+      if (code === 0) {
+        notification.success({
+          message: "Trip deleted successfully!",
         });
         refresh();
         setShowPopup(false);
@@ -178,18 +196,9 @@ export default function TripDetailsCard({ trip, refresh }) {
             <div className="trips-popup-detail-field">
               <p className="trips-popup-detail-label ">Req. Note:</p>
               <p className="trips-popup-detail-data long-data-field">
-                {tripDetails.note}
+                {tripDetails.description}
               </p>
             </div>
-
-            {trip.status !== "pending" && (
-              <div className="trips-popup-detail-field">
-                <p className="trips-popup-detail-label ">Req. Reply:</p>
-                <p className="trips-popup-detail-data long-data-field">
-                  {tripDetails.reply}
-                </p>
-              </div>
-            )}
 
             {trip.status === "pending" && (
               <div className="trips-popup-btn-section">
@@ -203,7 +212,10 @@ export default function TripDetailsCard({ trip, refresh }) {
                     >
                       <p>Edit</p>
                     </div>
-                    <div className="trips-popup-btn-cancle">
+                    <div
+                      className="trips-popup-btn-cancle"
+                      onClick={deleteTrip}
+                    >
                       <p>Cancel Request</p>
                     </div>
                   </>

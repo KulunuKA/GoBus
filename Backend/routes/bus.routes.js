@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const {
   addBus,
-  updateBus,
+  updateBusStatus,
   deleteBus,
   getBusesPassenger,
   getBus,
@@ -10,8 +10,8 @@ const busOwnerAuth = require("../middlewares/busOwnerAuth");
 const BusRouter = Router();
 
 BusRouter.post("/add", busOwnerAuth, addBus);
-BusRouter.put("/update/:id", busOwnerAuth, updateBus);
-BusRouter.put("/employee/update/:id", updateBus);
+BusRouter.put("/update/:id", busOwnerAuth, updateBusStatus);
+BusRouter.put("/employee/update/:id", updateBusStatus);
 BusRouter.delete("/delete/:id", busOwnerAuth, deleteBus);
 BusRouter.get("/get", getBusesPassenger);
 BusRouter.get("/get/:id", getBus);

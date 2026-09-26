@@ -31,6 +31,9 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
     ac: false,
     district: "",
     city: "",
+    fuel_consumption: "",
+    max_fuel_level: "",
+    current_fuel_level: "",
     pictures: ["", "", ""],
     timetable: [],
     route_id: null,
@@ -181,6 +184,31 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
       newErrors.city = "City is required";
     } else if (values.city.length < 2) {
       newErrors.city = "City name must be at least 2 characters long";
+    }
+
+    if (!values.fuel_consumption) {
+      newErrors.fuel_consumption = "Average Fuel Consumption is required";
+    } else if (values.fuel_consumption < 1) {
+      newErrors.fuel_consumption =
+        "Average Fuel Consumption must be a positive value";
+    }
+
+    if (!values.max_fuel_level) {
+      newErrors.max_fuel_level = "Max Fuel Level is required";
+    } else if (values.max_fuel_level < 1) {
+      newErrors.max_fuel_level = "Max Fuel Level must be a positive value";
+    }
+
+    if (!values.current_fuel_level) {
+      newErrors.current_fuel_level = "Current Fuel Level is required";
+    } else if (values.current_fuel_level < 1) {
+      newErrors.current_fuel_level =
+        "Current Fuel Level must be a positive value";
+    }
+
+    if (values.current_fuel_level > values.max_fuel_level) {
+      newErrors.current_fuel_level =
+        "Current level must be equal or lower than the Max level";
     }
 
     // Bus Type validation
@@ -404,6 +432,35 @@ export default function BusForm({ isOpen, onCancel, refresh }) {
                 error={errors.seatNumber}
                 errorMessage={errors.seatNumber}
               />
+              <MyInput
+                label={"Average Fuel Consumption"}
+                type="number"
+                onChange={inputHandle("fuel_consumption")}
+                value={busData.fuel_consumption}
+                error={errors.fuel_consumption}
+                errorMessage={errors.fuel_consumption}
+                placeholder={"Kilometers per liter (km/L)"}
+              />
+              <MyInput
+                label={"Maximum Fuel Level"}
+                type="number"
+                onChange={inputHandle("max_fuel_level")}
+                value={busData.max_fuel_level}
+                error={errors.max_fuel_level}
+                errorMessage={errors.max_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
+              <MyInput
+                label={"Current Fuel Level"}
+                type="number"
+                onChange={inputHandle("current_fuel_level")}
+                value={busData.current_fuel_level}
+                error={errors.current_fuel_level}
+                errorMessage={errors.current_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
               <div className="bt-select">
                 <label>District</label>
                 <DropDown
