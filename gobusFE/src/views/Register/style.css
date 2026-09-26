@@ -67,7 +67,7 @@
   flex-direction: row;
   gap: 10px;
 }
-.p-title p:nth-child(2){
+.p-title p:nth-child(2) {
   color: #05944f;
 }
 
@@ -116,7 +116,17 @@
   }
 }
 
-.p-footer {
+.p-dual-input {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.p-dual-input .p-dual-myInput {
+  width: 45%;
+}
+
+.double-input-field-form .p-footer {
   width: 100%;
   display: flex;
   flex-direction: column;
