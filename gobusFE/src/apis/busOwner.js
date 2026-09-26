@@ -77,3 +77,7 @@ export const handleTrips = async (id, status) => {
     options
   );
 };
+
+export const getIncome = async (id) => {
+  return await axiosInstance.get(`auth/busowner/income/${id}`, options);
+};

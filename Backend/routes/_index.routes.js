@@ -8,7 +8,9 @@ const { login } = require("../controllers/user.controller");
 const RouteRouter = require("./route.routes");
 const TripRouter = require("./trip.routes");
 const ComplaintRouter = require("./complaint.routes");
-const AdminRouter = require("./admin.routes")
+const AdminRouter = require("./admin.routes");
+const SupportTicketRouter = require("./supportTicket.routes");
+const ChatRouter = require("./chat.routes");
 
 const router = Router();
 
@@ -21,6 +23,8 @@ router.use("/busowner", BusOwnerRouter);
 router.use("/route", RouteRouter);
 router.use("/trip", TripRouter);
 router.use("/complaint", ComplaintRouter);
+router.use("/customer-supports", SupportTicketRouter);
+router.use("/chatRoom", ChatRouter);
 
 //admin
 router.use("/admin", AdminRouter);

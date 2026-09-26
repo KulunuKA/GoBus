@@ -35,7 +35,7 @@ export default function Navbar() {
     dispatch(clearStorePassenger());
   };
 
-  function truncateUsernmae(username) {
+  function truncateUsername(username) {
     if (username.length > 14) {
       return username.substring(0, 14) + "...";
     }
@@ -61,8 +61,8 @@ export default function Navbar() {
     };
   }, [lastScroll]);
 
-
-  const username = passengerRedux?.username || busOwnerRedux?.authorityName || "User";
+  const username =
+    passengerRedux?.username || busOwnerRedux?.authorityName || "User";
 
   return (
     <nav className={`navbar ${visible ? "visible" : "hidden"}`}>
@@ -153,7 +153,7 @@ export default function Navbar() {
               <div className="user-data-dropdown">
                 <div className="user-name-image-dropdown">
                   <div className="user-name-dropdown">
-                    <h2>{username}</h2>
+                    <h2>{truncateUsername(username)}</h2>
                   </div>
                   <div className="user-image-dropdown">
                     <img src={man} alt="" />
@@ -190,7 +190,10 @@ export default function Navbar() {
                   <img src={chatting} alt="" />
                   <p>Messages</p>
                 </a>
-                <a href="#" className="dropdown-link">
+                <a
+                  href="/customer-support/support-inbox"
+                  className="dropdown-link"
+                >
                   <img src={support} alt="" />
                   <p>Support Inbox</p>
                 </a>

@@ -6,3 +6,26 @@
   height: 100vh;
   background-color: #f5f5f5;
 }
+
+.tickets-body-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+tr.unchecked {
+  background-color: rgba(200, 230, 201, 0.621);
+}
+
+tr.checked {
+  background-color: none;
+}
+
+tr.closed {
+  opacity: 0.6;
+}
