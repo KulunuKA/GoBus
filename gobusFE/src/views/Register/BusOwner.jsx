@@ -124,7 +124,7 @@ export default function BusOwner() {
           <p>GoBus Bus Owner</p>
         </div>
         <div className="p-content">
-          <div className="p-form" style={{ height: 550 }}>
+          <div className="p-form" style={{ height: 450 }}>
             <section className="p-inputs">
               <MyInput
                 label={"Authority Name"}
@@ -136,16 +136,34 @@ export default function BusOwner() {
                 error={inputErr.authorityName}
                 errorMessage={inputErr.authorityName}
               />
-              <MyInput
-                label="Email"
-                prefix={<MailOutlined />}
-                placeholder="example@gmail.com"
-                type="email"
-                value={userData.email}
-                onChange={handleInput("email")}
-                error={inputErr.email}
-                errorMessage={inputErr.email}
-              />
+              <div className="p-dual-input">
+                <MyInput
+                  label="Email"
+                  prefix={<MailOutlined />}
+                  placeholder="example@gmail.com"
+                  type="email"
+                  value={userData.email}
+                  onChange={handleInput("email")}
+                  error={inputErr.email}
+                  errorMessage={inputErr.email}
+                  className="p-dual-myInput"
+                  // width="220px"
+                />
+
+                <MyInput
+                  label={"phone"}
+                  prefix={<PhoneOutlined />}
+                  placeholder={"phone"}
+                  value={userData.phone}
+                  type="text"
+                  onChange={handleInput("phone")}
+                  error={inputErr.phone}
+                  errorMessage={inputErr.phone}
+                  className="p-dual-myInput"
+                  // width="220px"
+                />
+              </div>
+
               <MyInput
                 label="Password"
                 prefix={<LockOutlined />}
@@ -167,16 +185,6 @@ export default function BusOwner() {
                 errorMessage={inputErr.address}
               />
 
-              <MyInput
-                label={"phone"}
-                prefix={<PhoneOutlined />}
-                placeholder={"phone"}
-                value={userData.phone}
-                type="text"
-                onChange={handleInput("phone")}
-                error={inputErr.phone}
-                errorMessage={inputErr.phone}
-              />
               <section className="check">
                 <section>
                   <input type="checkbox" />
