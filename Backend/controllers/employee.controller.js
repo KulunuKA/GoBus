@@ -109,7 +109,7 @@ const getAllEmployeeByOwner = async (req, res, next) => {
 
 const employeeLogin = async (req, res, next) => {
   try {
-    console.log("employee login", req.body);
+
     const { busNumber, password } = req.body;
     if (!busNumber || !password) {
       return next(new AppError(400, "Invalid required fields"));
@@ -126,9 +126,39 @@ const employeeLogin = async (req, res, next) => {
     }
 
     res.status(200).send({
-      data: bus,
+      data: bus[0],
       code: 0,
       msg: "Login successfully",
+    });
+  } catch (error) {
+    next(new AppError(400, error.message));
+  }
+};
+
+//add daily income of bus
+const addDailyIncome = async (req, res, next) => {
+  try {
+    const income = req.body;
+    const busID = req.params.id;
+
+    console.log(income, busID);
+
+    if (!busID || !income) {
+      return next(new AppError(400, "Invalid required fields"));
+    }
+
+    const bus = await Bus.findById(busID);
+    if (!bus) {
+      return next(new AppError(404, "No bus found with that ID"));
+    }
+
+    bus.daily_income.push(income);
+    await bus.save();
+
+    res.status(200).send({
+      data: bus,
+      code: 0,
+      msg: "Added daily income successfully",
     });
   } catch (error) {
     next(new AppError(400, error.message));
@@ -141,4 +171,5 @@ module.exports = {
   updateEmployee,
   getAllEmployeeByOwner,
   employeeLogin,
+  addDailyIncome,
 };

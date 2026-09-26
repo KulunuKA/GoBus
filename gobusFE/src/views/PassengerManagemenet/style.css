@@ -9,15 +9,15 @@
   color: #2d3436;
 }
 
-/* Body Styling */
+
 .pm-body {
   padding: 20px;
   background-color: #f5f5f5;
 }
 
-.pm-body-header {
+.apm-body-header {
   display: flex;
-  justify-content: space-between;
+  gap: 300px;
   align-items: center;
   background-color: white;
   padding: 15px;
@@ -25,6 +25,6 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
-.pm-body-header div {
-  width: 300px;
+.apm-body-header div {
+  width: 400px;
 }

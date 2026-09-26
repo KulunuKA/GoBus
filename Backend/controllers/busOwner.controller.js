@@ -1,6 +1,8 @@
 const BusOwner = require("../models/busOwner");
 const Trip = require("../models/trip");
+const Bus = require("../models/bus");
 const AppError = require("../utils/appError");
+const { sendEmail, generateEmailHTML } = require("../utils/sendEmail");
 
 //register bus owner
 const registerBusOwner = async (req, res, next) => {
@@ -95,7 +97,10 @@ const handleTrip = async (req, res, next) => {
       return next(new AppError(400, "Please provide the status"));
     }
 
-    const isCheck = await Trip.findById(req.params.id);
+    const isCheck = await Trip.findById(req.params.id).populate(
+      "userID",
+      "username email"
+    );
     if (!isCheck) {
       return next(new AppError(404, "Trip not found"));
     }
@@ -105,6 +110,40 @@ const handleTrip = async (req, res, next) => {
       { status: req.body.status },
       { new: true, runValidators: true }
     );
+
+    const user = await Trip.findById(req.params.id)
+      .populate("userID", "username email")
+      .populate({
+        path: "busID",
+        select: "name",
+        populate: {
+          path: "ownerID",
+          select: "authorityName email phone",
+        },
+      });
+
+    if (req.body.status === "approved" || req.body.status === "rejected") {
+      const email = user.userID.email;
+      const username = user.userID.username;
+      const subject =
+        req.body.status === "approved"
+          ? "Trip Request Approved"
+          : "Trip Request Rejected";
+
+      const htmlContent = generateEmailHTML({
+        username,
+        status: req.body.status,
+        authorityName: user.busID.ownerID.authorityName,
+        ownerEmail: user.busID.ownerID.email,
+        ownerPhone: user.busID.ownerID.phone,
+      });
+
+      await sendEmail(email, subject, htmlContent);
+    }
+
+    if (!trip) {
+      return next(new AppError(404, "Trip not found"));
+    }
 
     res.status(200).send({
       code: 0,
@@ -143,10 +182,50 @@ const getTripRequests = async (req, res, next) => {
   }
 };
 
+const getIncomeHistory = async (req, res, next) => {
+  try {
+    const ownerID = req.params.id;
+    const busID = req.query.busID;
+
+    if (!ownerID) {
+      return next(new AppError(400, "Please provide the bus owner ID"));
+    }
+
+    const busOwner = await Bus.find({ ownerID });
+
+    if (!busOwner) {
+      return next(new AppError(404, "Bus owner not found"));
+    }
+
+    const publicBuses = busOwner.filter(
+      (bus) => bus.busType === "public transport"
+    );
+
+    const dailyIncome = [];
+
+    publicBuses.forEach((bus) => {
+      dailyIncome.push({
+        busNumber: bus.busNumber,
+        income: bus.daily_income,
+      });
+    });
+
+    res.status(200).send({
+      code: 0,
+      msg: "Total daily income calculated successfully",
+      data: dailyIncome,
+    });
+  } catch (error) {
+    console.log(error);
+    next(new AppError(400, error.message));
+  }
+};
+
 module.exports = {
   registerBusOwner,
   updateBusOwner,
   deleteBusOwner,
   handleTrip,
   getTripRequests,
+  getIncomeHistory,
 };

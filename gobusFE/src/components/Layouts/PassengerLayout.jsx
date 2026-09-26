@@ -6,7 +6,11 @@ import { Outlet, useLocation } from "react-router-dom";
 export default function PassengerLayout() {
   const location = useLocation();
   const pathName = location.pathname;
-  const hidePages = ["/userprofile", "/activity"];
+  const hidePages = [
+    "/userprofile",
+    "/activity",
+    "/customer-support/support-inbox",
+  ];
 
   const hideNavBar = hidePages.includes(pathName);
 

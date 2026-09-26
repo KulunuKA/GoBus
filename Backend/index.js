@@ -17,6 +17,9 @@ const io = new Server(server, {
   },
 });
 
+const chatSocket = require("./sockets/chatSocket");
+chatSocket(io);
+
 const busLocations = {};
 
 io.on("connection", (socket) => {

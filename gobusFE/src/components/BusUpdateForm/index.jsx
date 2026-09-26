@@ -7,6 +7,7 @@ import MyButton from "../../components/button";
 import {
   citiesWithDistrict,
   sriLankanDistricts,
+  onlyCities,
 } from "../../assets/district_city";
 import { Upload } from "antd";
 import Loading from "../../components/Loading";
@@ -18,7 +19,7 @@ import { busOwnerData } from "../../store/busOwnerSlice";
 import { useSelector } from "react-redux";
 
 export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
-  const { id } = useSelector(busOwnerData);
+  const { id, routesId, employeesId } = useSelector(busOwnerData);
   const busTypes = ["Public transport", "Special service", "Both"];
   const [busData, setBusData] = useState({
     ownerID: id,
@@ -26,17 +27,29 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     password: data.password,
     busNumber: data.busNumber,
     seatNumber: data.seatNumber,
+    fuel_consumption: data.fuel_consumption,
+    max_fuel_level: data.max_fuel_level,
+    current_fuel_level: data.current_fuel_level,
     busType: data.busType,
     ac: data.ac,
     district: data.district,
     city: data.city,
     pictures: data.pictures,
+    timetable: data.timetable,
+    route_id: data.route_id,
+    driverID: data.driverID,
   });
+
   const [imgLoading, setImgLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(null);
   const [isImgErr, setIsImgErr] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [timetableRounds, setTimetableRounds] = useState(
+    data.timetable.length > 0
+      ? data.timetable
+      : [{ startPlace: "", endPlace: "", startTime: "", endTime: "" }]
+  );
 
   const inputHandle = (field) => (e) => {
     setBusData({ ...busData, [field]: e.target.value });
@@ -118,21 +131,29 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
       newErrors.seatNumber = "Seat Number must be between 1 and 60";
     }
 
-    // Timetable validation for public transport
-    if (values.busType === "public transport") {
-      const validTimetable = timetableRounds.filter(
-        (round) =>
-          round.round &&
-          round.startPlace &&
-          round.startTime &&
-          round.endPlace &&
-          round.endTime
-      );
+    if (!values.fuel_consumption) {
+      newErrors.fuel_consumption = "Average Fuel Consumption is required";
+    } else if (values.fuel_consumption < 1) {
+      newErrors.fuel_consumption =
+        "Average Fuel Consumption must be a positive value";
+    }
 
-      if (validTimetable.length === 0) {
-        newErrors.timetable =
-          "At least one complete timetable entry is required for public transport";
-      }
+    if (!values.max_fuel_level) {
+      newErrors.max_fuel_level = "Max Fuel Level is required";
+    } else if (values.max_fuel_level < 1) {
+      newErrors.max_fuel_level = "Max Fuel Level must be a positive value";
+    }
+
+    if (!values.current_fuel_level) {
+      newErrors.current_fuel_level = "Current Fuel Level is required";
+    } else if (values.current_fuel_level < 1) {
+      newErrors.current_fuel_level =
+        "Current Fuel Level must be a positive value";
+    }
+
+    if (values.current_fuel_level > values.max_fuel_level) {
+      newErrors.current_fuel_level =
+        "Current level must be equal or lower than the Max level";
     }
 
     if (values.pictures.some((pic) => pic === "")) {
@@ -175,6 +196,15 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
     );
   }
 
+  const handleTimetableChange = (index, field, value) => {
+    const updatedTimetable = [...timetableRounds];
+    updatedTimetable[index] = {
+      ...updatedTimetable[index],
+      [field]: value,
+    };
+    setTimetableRounds(updatedTimetable);
+  };
+
   const handleSubmit = async (id) => {
     try {
       const isValid = validateForm(busData);
@@ -207,6 +237,90 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
         message: "Something went wrong!",
       });
     }
+  };
+
+  const renderTimetableFields = () => {
+    return timetableRounds.map((round, index) => (
+      <div className="timetable-round" key={index}>
+        <h4 className="round-title">Round {index + 1}</h4>
+        <div className="timetable-grid">
+          <div className="timetable-field">
+            <label>Start Place</label>
+            <DropDown
+              placeholder={"Select trip start"}
+              value={round.startPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "startPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>Start Time</label>
+            <MyInput
+              type="time"
+              value={round.startTime}
+              onChange={(e) =>
+                handleTimetableChange(index, "startTime", e.target.value)
+              }
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Place</label>
+            <DropDown
+              placeholder={"Select trip end"}
+              value={round.endPlace}
+              onChange={(value) =>
+                handleTimetableChange(index, "endPlace", value)
+              }
+              options={onlyCities.map((e) => ({
+                label: e,
+                value: e,
+              }))}
+            />
+          </div>
+
+          <div className="timetable-field">
+            <label>End Time</label>
+            <MyInput
+              type="time"
+              value={round.endTime}
+              onChange={(e) => {
+                console.log(e.target.value);
+                handleTimetableChange(index, "endTime", e.target.value);
+              }}
+            />
+          </div>
+        </div>
+        {index === timetableRounds.length - 1 && (
+          <div className="timetable-actions">
+            {index > 0 && (
+              <MyButton
+                name="Remove"
+                width={120}
+                color="#EE5252"
+                onClick={() => {
+                  const updated = [...timetableRounds];
+                  updated.pop();
+                  setTimetableRounds(updated);
+                }}
+              />
+            )}
+            <MyButton
+              name="Add Round"
+              width={120}
+              color="#2D3436"
+              onClick={() => addNewRound(index + 1)}
+            />
+          </div>
+        )}
+      </div>
+    ));
   };
   return (
     <>
@@ -253,6 +367,36 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
                 onChange={inputHandle("seatNumber")}
                 value={busData.seatNumber}
               />
+
+              <MyInput
+                label={"Average Fuel Consumption"}
+                type="number"
+                onChange={inputHandle("fuel_consumption")}
+                value={busData.fuel_consumption}
+                error={errors.fuel_consumption}
+                errorMessage={errors.fuel_consumption}
+                placeholder={"Kilometers per liter (km/L)"}
+              />
+              <MyInput
+                label={"Maximum Fuel Level"}
+                type="number"
+                onChange={inputHandle("max_fuel_level")}
+                value={busData.max_fuel_level}
+                error={errors.max_fuel_level}
+                errorMessage={errors.max_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
+              <MyInput
+                label={"Current Fuel Level"}
+                type="number"
+                onChange={inputHandle("current_fuel_level")}
+                value={busData.current_fuel_level}
+                error={errors.current_fuel_level}
+                errorMessage={errors.current_fuel_level}
+                placeholder={"Liter (L)"}
+              />
+
               <div className="bt-select">
                 <label>District</label>
                 <DropDown
@@ -317,6 +461,46 @@ export default function BusUpdateForm({ isOpen, onCancel, refresh, data }) {
                 />
               </div>
             </div>
+
+            {busData.busType == "public transport" && (
+              <div className="timetable-container">
+                <h3 className="timetable-header">Bus Timetable</h3>
+                {renderTimetableFields()}
+              </div>
+            )}
+
+            {busData.busType === "public transport" && (
+              <div className="bt-select">
+                <label>Route</label>
+                <DropDown
+                  options={routesId.map((e) => ({
+                    label: e.start + " - " + e.end,
+                    value: e._id,
+                  }))}
+                  value={busData.route_id.route_number}
+                  onChange={(value) => {
+                    setBusData({ ...busData, route_id: value });
+                  }}
+                />
+              </div>
+            )}
+
+            {busData.busType === "public transport" && (
+              <div className="bt-select">
+                <label>Driver</label>
+                <DropDown
+                  options={employeesId.map((e) => ({
+                    label: e.name,
+                    value: e._id,
+                  }))}
+                  value={busData.driverID.name}
+                  placeholder={"Select driver"}
+                  onChange={(value) => {
+                    setBusData({ ...busData, driverID: value });
+                  }}
+                />
+              </div>
+            )}
 
             <div className="ab-btn">
               <MyButton
