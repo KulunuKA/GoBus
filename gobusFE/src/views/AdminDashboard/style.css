@@ -1,8 +1,85 @@
-.Admin-dashboard{
+.admin-dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f6f8;
+  }
+  
+  .admin-sidebar {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    width: 200px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-}
+  }
+  
+  .admin-sidebar h2 {
+    margin-bottom: 20px;
+  }
+  
+  .admin-sidebar ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .admin-sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .admin-sidebar a {
+    display: block;
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-sidebar a:hover {
+    background-color: #555;
+  }
+  
+  .admin-main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .admin-header {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-header h1 {
+    margin: 0;
+    color: #333;
+  }
+  
+  .ad-main-charts {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; 
+  }
+  
+  .chart-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Distributes available space equally among chart cards */
+    min-width: 300px; /* Minimum width for each chart card */
+  }
+  
+  .chart-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #555;
+    text-align: center;
+  }
+  
+ 

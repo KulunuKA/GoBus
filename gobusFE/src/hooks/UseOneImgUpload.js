@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CLOUD_NAME, PRESET_KEY } from "../../keys";
+import { CLOUD_NAME, PRESET_KEY } from "../../Keys";
 
 const preset_key = PRESET_KEY;
 const cloud_name = CLOUD_NAME;

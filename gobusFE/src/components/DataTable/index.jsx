@@ -13,6 +13,7 @@ export default function DataTable({
   onDelete,
   loading,
   onView,
+  isDelete = true,
 }) {
   return (
     <>
@@ -50,7 +51,6 @@ export default function DataTable({
                           alt="Item"
                           className="table-image"
                         />
-                        {/* Console log added */}
                       </>
                     ) : col.type === "boolean" ? (
                       row[col.key] ? (
@@ -58,7 +58,7 @@ export default function DataTable({
                       ) : (
                         "False"
                       )
-                    ) :col.key  (
+                    ) : (
                       row[col.key]
                     )}
                   </td>
@@ -66,6 +66,7 @@ export default function DataTable({
                 <td>
                   <div className="table-actions">
                     <MyButton
+                      size="small"
                       name="Edit"
                       color={"rgba(5, 148, 79, 1)"}
                       icon={<EditOutlined />}
@@ -74,15 +75,18 @@ export default function DataTable({
                         onEdit(row);
                       }}
                     />
-                    <MyButton
-                      name="Delete"
-                      color={"#e74c3c"}
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete(row);
-                      }}
-                    />
+                    {isDelete && (
+                      <MyButton
+                        size="small"
+                        name="Delete"
+                        color={"#e74c3c"}
+                        icon={<DeleteOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(row);
+                        }}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>

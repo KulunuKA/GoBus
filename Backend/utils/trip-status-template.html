@@ -1,0 +1,97 @@
+<!-- trip-status-template.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+        color: #333;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .header {
+        background-color: #047e43;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      .content {
+        padding: 30px;
+      }
+      .footer {
+        background-color: #eeeeee;
+        text-align: center;
+        font-size: 13px;
+        color: #666;
+        padding: 15px;
+      }
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #047e43;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+      .status-approved {
+        color: #047e43;
+        font-weight: bold;
+      }
+      .status-rejected {
+        color: #c0392b;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <h2>Trip Request Status</h2>
+      </div>
+      <img
+        src="https://res.cloudinary.com/difzxsfeq/image/upload/v1746732778/logo-no-background_vzxxjl.png"
+        alt=""
+        style="width: 200px; margin: 20px auto; display: block"
+      />
+      <div class="content">
+        <p>Dear <strong>{{username}}</strong>,</p>
+
+        <p>
+          Your trip request has been
+          <span class="{{statusClass}}">{{statusText}}</span>.
+        </p>
+
+        {{#if isApproved}}
+        <p>
+          We are excited to confirm your trip with us. If you have any questions
+          or need to make changes, feel free to contact us.
+        </p>
+        {{else}}
+        <p>
+          Unfortunately, your trip request could not be accepted at this time.
+          Please contact us for further information or to try again later.
+        </p>
+        {{/if}}
+
+        <p>Thank you,<br /><strong>Bus Owner Team</strong></p>
+
+        <a href="#" class="button">View Trip Details</a>
+      </div>
+      <div class="footer">
+        Contact us at: {{ownerEmail}} | Phone: {{ownerPhone}}<br />
+        Authority: {{authorityName}}
+      </div>
+    </div>
+  </body>
+</html>

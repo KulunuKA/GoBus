@@ -6,6 +6,7 @@ const {
   addEmployee,
   getAllEmployeeByOwner,
   employeeLogin,
+  addDailyIncome,
 } = require("../controllers/employee.controller");
 const busOwnerAuth = require("../middlewares/busOwnerAuth");
 
@@ -14,5 +15,6 @@ EmployeeRouter.get("/get/:id", busOwnerAuth, getAllEmployeeByOwner);
 EmployeeRouter.put("/update/:id", busOwnerAuth, updateEmployee);
 EmployeeRouter.delete("/delete/:id", busOwnerAuth, deleteEmployee);
 EmployeeRouter.post("/login", employeeLogin);
+EmployeeRouter.post("/addincome/:id", addDailyIncome);
 
 module.exports = EmployeeRouter;
