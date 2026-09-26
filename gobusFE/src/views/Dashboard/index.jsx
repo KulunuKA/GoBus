@@ -97,6 +97,8 @@ export default function Dashboard() {
 
   const dataHeaders = ["AuthorityName", "Email", "Phone", "Address"];
 
+  const busDataTitle = ["Authority Name", "Email", "Phone", "Address"];
+
   const handleUpdate = async () => {
     try {
       setBtnLoading(true);
